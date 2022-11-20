@@ -1,0 +1,133 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const paths = require('./paths');
+
+// Make sure that including paths.js after env.js will read .env variables.
+delete require.cache[require.resolve('./paths')];
+
+const NODE_ENV = process.env.NODE_ENV;
+if (!NODE_ENV) {
+	throw new Error(
+		'The NODE_ENV environment variable is required but was not specified.'
+	);
+}
+
+// https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
+const dotenvFiles = [
+	`${paths.dotenv}.${NODE_ENV}.local`,
+	// Don't include `.env.local` for `test` environment
+	// since normally you expect tests to produce the same
+	// results for everyone
+	NODE_ENV !== 'test' && `${paths.dotenv}.local`,
+	`${paths.dotenv}.${NODE_ENV}`,
+	paths.dotenv,
+].filter(Boolean);
+
+// Load environment variables from .env* files. Suppress warnings using silent
+// if this file is missing. dotenv will never modify any environment variables
+// that have already been set.  Variable expansion is supported in .env files.
+// https://github.com/motdotla/dotenv
+// https://github.com/motdotla/dotenv-expand
+dotenvFiles.forEach(dotenvFile => {
+	if (fs.existsSync(dotenvFile)) {
+		require('dotenv-expand')(
+			require('dotenv').config({
+				path: dotenvFile,
+			})
+		);
+	}
+});
+
+// We support resolving modules according to `NODE_PATH`.
+// This lets you use absolute paths in imports inside large monorepos:
+// https://github.com/facebook/create-react-app/issues/253.
+// It works similar to `NODE_PATH` in Node itself:
+// https://nodejs.org/api/modules.html#modules_loading_from_the_global_folders
+// Note that unlike in Node, only *relative* paths from `NODE_PATH` are honored.
+// Otherwise, we risk importing Node.js core modules into an app instead of webpack shims.
+// https://github.com/facebook/create-react-app/issues/1023#issuecomment-265344421
+// We also resolve them to make sure all tools using them work consistently.
+const appDirectory = fs.realpathSync(process.cwd());
+process.env.NODE_PATH = (process.env.NODE_PATH || '')
+	.split(path.delimiter)
+	.filter(folder => folder && !path.isAbsolute(folder))
+	.map(folder => path.resolve(appDirectory, folder))
+	.join(path.delimiter);
+
+// Grab NODE_ENV and REACT_APP_* environment variables and prepare them to be
+// injected into the application via DefinePlugin in webpack configuration.
+const REACT_APP = /^REACT_APP_/i;
+
+function getClientEnvironment(publicUrl) {
+	const raw = Object.keys(process.env)
+		.filter(key => REACT_APP.test(key))
+		.reduce(
+			(env, key) => {
+				env[key] = process.env[key];
+				return env;
+			},
+			{
+				// Useful for determining whether we’re running in production mode.
+				// Most importantly, it switches React into the correct mode.
+				NODE_ENV: process.env.NODE_ENV || 'development',
+				// Useful for resolving the correct path to static assets in `public`.
+				// For example, <img src={process.env.PUBLIC_URL + '/img/logo.png'} />.
+				// This should only be used as an escape hatch. Normally you would put
+				// images into the `src` and `import` them in code to get their paths.
+				PUBLIC_URL: publicUrl,
+				// We support configuring the sockjs pathname during development.
+				// These settings let a developer run multiple simultaneous projects.
+				// They are used as the connection `hostname`, `pathname` and `port`
+				// in webpackHotDevClient. They are used as the `sockHost`, `sockPath`
+				// and `sockPort` options in webpack-dev-server.
+				WDS_SOCKET_HOST: process.env.WDS_SOCKET_HOST,
+				WDS_SOCKET_PATH: process.env.WDS_SOCKET_PATH,
+				WDS_SOCKET_PORT: process.env.WDS_SOCKET_PORT,
+				// Whether or not react-refresh is enabled.
+				// It is defined here so it is available in the webpackHotDevClient.
+				FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
+
+				SERVICE_CURRENT: process.env.SERVICE_CURRENT,
+				SERVICE_HTTP: process.env.SERVICE_HTTP,
+				SERVICE_REGISTRY: process.env.SERVICE_REGISTRY,
+				SERVICE_LOGS: process.env.SERVICE_LOGS,
+				SERVICE_MAIL: process.env.SERVICE_MAIL,
+				SERVICE_SSO: process.env.SERVICE_SSO,
+				SERVICE_DATA_TYPE: process.env.SERVICE_DATA_TYPE,
+
+				PAGE_SIGN_UP: process.env.PAGE_SIGN_UP,
+				PAGE_SIGN_IN: process.env.PAGE_SIGN_IN,
+				PAGE_RECOVERY: process.env.PAGE_RECOVERY,
+
+				LANG_DEFAULT: process.env.LANG_DEFAULT,
+
+				DATA_TYPE_INT: process.env.DATA_TYPE_INT,
+				DATA_TYPE_FLOAT: process.env.DATA_TYPE_FLOAT,
+				DATA_TYPE_BOOLEAN: process.env.DATA_TYPE_BOOLEAN,
+				DATA_TYPE_TEXT: process.env.DATA_TYPE_TEXT,
+				DATA_TYPE_RICHTEXT: process.env.DATA_TYPE_RICHTEXT,
+				DATA_TYPE_PHONE: process.env.DATA_TYPE_PHONE,
+				DATA_TYPE_EMAIL: process.env.DATA_TYPE_EMAIL,
+				DATA_TYPE_URL: process.env.DATA_TYPE_URL,
+				DATA_TYPE_PASSWORD: process.env.DATA_TYPE_PASSWORD,
+				DATA_TYPE_TIME: process.env.DATA_TYPE_TIME,
+				DATA_TYPE_DATE: process.env.DATA_TYPE_DATE,
+				DATA_TYPE_DATETIME: process.env.DATA_TYPE_DATETIME,
+				DATA_TYPE_FILE: process.env.DATA_TYPE_FILE,
+				DATA_TYPE_DOCUMENT: process.env.DATA_TYPE_DOCUMENT,
+			}
+		);
+	// Stringify all values so we can feed into webpack DefinePlugin
+	const stringified = {
+		'process.env': Object.keys(raw).reduce((env, key) => {
+			env[key] = JSON.stringify(raw[key]);
+			return env;
+		}, {}),
+	};
+
+	return { raw, stringified };
+}
+
+module.exports = getClientEnvironment;
