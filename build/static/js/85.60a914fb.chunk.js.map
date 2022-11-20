@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/85.60a914fb.chunk.js","mappings":"wJACO,IAAMA,EAAiB,WAAH,kB","sources":["@nest-datum-ui/components/Language/data/en/Menu/App/Layout/index.js"],"sourcesContent":["\nexport const DashboardTitle = () => `Dashboard`;"],"names":["DashboardTitle"],"sourceRoot":""}
