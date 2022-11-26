@@ -45,7 +45,7 @@ export const fireRefresh = ({
 					url,
 					path,
 				})(snackbar);
-			}, 70000);
+			}, 50000);
 		}
 		else {
 			return navigate(`/${process.env.PAGE_SIGN_IN}`);

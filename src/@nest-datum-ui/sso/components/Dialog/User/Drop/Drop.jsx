@@ -21,13 +21,14 @@ let Drop = ({
 	const onDrop = React.useCallback(async (e) => {
 		await actionApiFromDrop({
 			entityId,
-			storeName: 'ssoUserList',
+			storeName,
 			withAccessToken: true,
 			url: process.env.SERVICE_SSO,
 			path: 'user',
 		})(enqueueSnackbar);
 		await actionDialogClose(id)();
 	}, [
+		storeName,
 		id,
 		entityId,
 		enqueueSnackbar,

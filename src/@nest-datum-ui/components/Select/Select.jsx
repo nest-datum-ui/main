@@ -31,8 +31,7 @@ let Select = ({
 	return <React.Fragment>
 		<Box
 			width="100%" 
-			position="relative"
-			paddingTop="6px">
+			position="relative">
 			<FormControl 
 				fullWidth 
 				variant={variant}

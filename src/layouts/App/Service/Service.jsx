@@ -16,6 +16,9 @@ let Service = () => {
 		timeout = setTimeout(async () => {
 			if (serviceKey) {
 				switch (serviceKey) {
+					case 'files':
+						Component = (await import('@nest-datum-ui/files') || {})['default'];
+						break;
 					case 'logs':
 						Component = (await import('@nest-datum-ui/logs') || {})['default'];
 						break;

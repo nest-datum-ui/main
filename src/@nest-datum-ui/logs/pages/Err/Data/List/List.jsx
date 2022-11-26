@@ -25,7 +25,7 @@ let List = () => {
 	]);
 
 	return <React.Fragment>
-		<Box pb={2}>
+		<Box py={2}>
 			<Typography
 				component="div"
 				variant="h5">
@@ -45,8 +45,8 @@ let List = () => {
 			</Button>
 		</Box>
 		<FormFilterErr />
-		<TableErr />
-		<DialogErrDrop />
+		<TableErr storeName="logsErrList" />
+		<DialogErrDrop storeName="logsErrList" />
 	</React.Fragment>;
 };
 

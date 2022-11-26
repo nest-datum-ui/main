@@ -10,13 +10,14 @@ export const fireFormCreate = ({
 	url,
 	path,
 	withAccessToken = false,
-}) => async (snackbar = () => {}, navigate = () => {}, prefix = 'api') => {
+	notRedirect = false,
+}) => async (snackbar = () => {}, navigate = () => {}, callback = () => {}, prefix = 'api') => {
 	let apiPath = '';
 
 	try {
 		await actionApiFormProp(entityId, 'loader', true)();
 
-		const data = { ...Store().getState()[prefix].form[entityId] };
+		let data = { ...Store().getState()[prefix].form[entityId] };
 
 		delete data['loader'];
 		delete data['options'];
@@ -28,19 +29,70 @@ export const fireFormCreate = ({
 				? { accessToken: localStorage.getItem(`${process.env.SITE_URL}_accessToken`) }
 				: {},
 		}).toString()}`;
-		const request = await axios.post(apiPath, data);
-		const newId = request.data.id;
-		const pathnameSplit = window.location.pathname.split('/');
 
-		Store().dispatch({
-			type: prefix +'.formCreate',
-			payload: request.data,
-		});
-		pathnameSplit.splice(pathnameSplit.length - 1, 1);
+		let key,
+			filesResponses = [];
 
-		const newPath = `${pathnameSplit.join('/')}/${newId}`;
+		for (key in data) {
+			if (data[key]
+				&& typeof data[key] === 'object'
+				&& data[key].constructor.name === 'FileList') {
+				const formData = new FormData();
+				let i = 0;
 
-		navigate(newPath);
+				while (i < data[key].length) {
+					formData.append('files', data[key][i]);
+					i++;
+				}
+				formData.append('systemId', data[key]['systemId']);
+				formData.append('path', data[key]['path']);
+				
+				const request = await axios.post(`${process.env.SERVICE_FILES}/file?${new URLSearchParams({
+					...withAccessToken
+						? { accessToken: localStorage.getItem(`${process.env.SITE_URL}_accessToken`) }
+						: {},
+				}).toString()}`, formData);
+				
+				filesResponses.push(request.data);
+				delete data[key];
+			}
+		}
+
+		//TODO: filesManageSystem - зарезирвированный id
+		if (entityId !== 'filesManageSystem') {
+				const request = await axios.post(apiPath, data);
+				const newId = request.data.id;
+
+				Store().dispatch({
+					type: prefix +'.formCreate',
+					payload: {
+						data: request.data,
+						callback,
+						filesResponses,
+					},
+				});
+				if (!notRedirect) {
+					const pathnameSplit = window.location.pathname.split('/');
+					
+					pathnameSplit.splice(pathnameSplit.length - 1, 1);
+
+					const newPath = `${pathnameSplit.join('/')}/${newId}`;
+
+					navigate(newPath);
+				}
+		}
+		else {
+			Store().dispatch({
+				type: prefix +'.formCreate',
+				payload: {
+					data: {
+						id: entityId,
+					},
+					callback,
+					filesResponses,
+				},
+			});
+		}
 	}
 	catch (err) {
 		const errorMessage = err.response
@@ -62,24 +114,27 @@ export const fireFormCreate = ({
  * @return {object} New state
  */
 export const reducerFormCreate = (state, action) => {
-	if (!state.form[action.payload.id]
-		|| typeof state.form[action.payload.id] !== 'object'
-		|| Array.isArray(state.form[action.payload.id])) {
-		state.form[action.payload.id] = {
+	if (!state.form[action.payload['data'].id]
+		|| typeof state.form[action.payload['data'].id] !== 'object'
+		|| Array.isArray(state.form[action.payload['data'].id])) {
+		state.form[action.payload['data'].id] = {
 			loader: false,
 			options: [],
 			settins: [],
 			errors: {},
 		};
 	}
-	if (((typeof action.payload.id === 'number'
-			&& !Number.isNaN(action.payload.id))
-		|| (action.payload.id
-			&& typeof action.payload.id === 'string'))) {
-		state.form[action.payload.id] = {
-			...state.form[action.payload.id],
-			...(action.payload || {}),
+	if (((typeof action.payload['data'].id === 'number'
+			&& !Number.isNaN(action.payload['data'].id))
+		|| (action.payload['data'].id
+			&& typeof action.payload['data'].id === 'string'))) {
+		state.form[action.payload['data'].id] = {
+			...state.form[action.payload['data'].id],
+			...(action.payload['data'] || {}),
 		};
+	}
+	if (typeof action.payload['callback'] === 'function') {
+		setTimeout(() => action.payload['callback'](action.payload['data'], action.payload['filesResponses'], state), 0);
 	}
 	return ({ ...state });
 };

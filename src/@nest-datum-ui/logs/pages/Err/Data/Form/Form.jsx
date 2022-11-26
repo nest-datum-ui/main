@@ -59,8 +59,8 @@ let Form = () => {
 					</React.Fragment>}
 			</Typography>
 		</Box>
-		<FormErr />
-		<DialogErrDrop />
+		<FormErr storeName={entityId} />
+		<DialogErrDrop storeName={entityId} />
 	</React.Fragment>;
 };
 

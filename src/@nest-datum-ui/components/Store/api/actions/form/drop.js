@@ -15,6 +15,7 @@ export const fireFormDrop = ({
 	path,
 	withAccessToken = false,
 	allowInsecureDeletion = false,
+	notRedirect = false,
 }) => async (snackbar = () => {}, prefix = 'api') => {
 	let apiPath = '';
 
@@ -49,14 +50,16 @@ export const fireFormDrop = ({
 							id: entityId,
 						}
 					});
-					const pathnameSplit = window
-						.location
-						.pathname
-						.replace(/\/+$/, '')
-						.split('/');
+					if (!notRedirect) {
+						const pathnameSplit = window
+							.location
+							.pathname
+							.replace(/\/+$/, '')
+							.split('/');
 
-					if (pathnameSplit[pathnameSplit.length - 1] === entityId) {
-						window.location.href = window.location.pathname;
+						if (pathnameSplit[pathnameSplit.length - 1] === entityId) {
+							window.location.href = window.location.pathname;
+						}
 					}
 				}
 				else {

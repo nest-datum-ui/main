@@ -12,7 +12,7 @@ export const fireFormRestore = ({
 	url,
 	path,
 	withAccessToken = false,
-}) => async (snackbar = () => {}, prefix = 'api') => {
+}) => async (snackbar = () => {}, callback = () => {}, prefix = 'api') => {
 	let apiPath = '';
 
 	try {
@@ -45,6 +45,8 @@ export const fireFormRestore = ({
 			actionApiListProp(storeName, 'data', false, [ entityIndex, 'isDeleted' ])();
 		}
 		await actionApiListProp(storeName, 'loader', false)();
+
+		callback(formData, listData, entityIndex);
 	}
 	catch (err) {
 		const errorMessage = err.response

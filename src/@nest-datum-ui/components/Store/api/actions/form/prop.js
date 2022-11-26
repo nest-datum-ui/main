@@ -3,7 +3,7 @@ import Store from '@nest-datum-ui/components/Store';
 /**
  * @return {Function}
  */
-export const fireFormProp = (id, propName, propValue, path) => (prefix = 'api') => {
+export const fireFormProp = (id, propName, propValue, path) => (callback = () => {}, prefix = 'api') => {
 	Store().dispatch({
 		type: prefix +'.formProp',
 		payload: {
@@ -11,6 +11,7 @@ export const fireFormProp = (id, propName, propValue, path) => (prefix = 'api') 
 			propName, 
 			propValue,
 			path,
+			callback,
 		},
 	});
 };
@@ -56,6 +57,9 @@ export const reducerFormProp = (state, action) => {
 		}
 		state.form[action.payload.id] = { ...state.form[action.payload.id] };
 	}
+
+	setTimeout(() => action.payload.callback(state), 0);
+
 	return ({ 
 		...state,
 		form: {

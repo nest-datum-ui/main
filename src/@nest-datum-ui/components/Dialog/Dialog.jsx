@@ -84,7 +84,9 @@ let Dialog = ({
 								{ ...(typeof loader === 'boolean')
 									? { disabled: loader }
 									: {} }
-								onClick={onCloseLocal}>
+								onClick={typeof props['onClose'] === 'function'
+									? props['onClose']
+									: onCloseLocal}>
 								<CloseIcon color="error" />
 							</IconButton>
 						</Grid>

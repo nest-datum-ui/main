@@ -1,28 +1,29 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { fireListSet as actionBreadcrumbsListSet } from 'components/Store/breadcrumbs/actions/list/set.js';
-import { fireListClear as actionBreadcrumbsListClear } from 'components/Store/breadcrumbs/actions/list/clear.js';
-import selectorMainExtract from 'components/Store/main/selectors/extract.js';
+import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
+import { fireListClear as actionBreadcrumbsListClear } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/clear.js';
+import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Store from 'components/Store';
+import Store from '@nest-datum-ui/components/Store';
 
 let Breadcrumbs = () => {
-	const breadcrumbs = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'storage', 'data' ])) ?? [];
+	const loader = useSelector(selectorMainExtract([ 'api', 'form', 'filesManageSystem', 'loader' ]));
+	const breadcrumbs = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'filesManageList', 'data' ])) ?? [];
 	const onFolder = React.useCallback((id, index) => (e) => {
 		const breadcrumbs = (Store()
 			.getState()['breadcrumbs']
 			.list
-			.storage || {})
+			.filesManageList || {})
 			.data || [];
 
-		actionBreadcrumbsListSet('storage', [ ...breadcrumbs.slice(0, index) ])();
+		actionBreadcrumbsListSet('filesManageList', [ ...breadcrumbs.slice(0, index) ])();
 	}, [
 	]);
 
 	React.useEffect(() => () => {
-		actionBreadcrumbsListClear('storage')();
+		actionBreadcrumbsListClear('filesManageList')();
 	}, [
 	]);
 
@@ -35,6 +36,7 @@ let Breadcrumbs = () => {
 					</Typography>
 					: <Button
 						key={index}
+						disabled={loader}
 						onClick={onFolder(item.id, index + 1)}
 						color="primary"
 						size="small"

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import MenuPrimary from '@nest-datum-ui/mail/components/Menu/Primary';
+import MenuPrimary from '@nest-datum-ui/logs/components/Menu/Primary';
 
 let Layout = ({ children }) => {
 	return <React.Fragment>

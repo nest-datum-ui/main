@@ -45,8 +45,8 @@ let List = () => {
 			</Button>
 		</Box>
 		<FormFilterTemplate />
-		<TableTemplate />
-		<DialogTemplateDrop />
+		<TableTemplate storeName="mailTemplateList" />
+		<DialogTemplateDrop storeName="mailTemplateList" />
 	</React.Fragment>;
 };
 

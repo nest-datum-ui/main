@@ -1,39 +1,70 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { fireOpen as actionDialogOpen } from 'components/Store/dialog/actions/open.js';
-import selectorMainExtract from 'components/Store/main/selectors/extract.js';
-import selectorApiExtractByKey from 'components/Store/api/selectors/extractByKey.js';
+import { useNavigate } from 'react-router-dom';
+import { fireOpen as actionDialogOpen } from '@nest-datum-ui/components/Store/dialog/actions/open.js';
+import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
+import { fireFormProp as actionApiFormProp } from '@nest-datum-ui/components/Store/api/actions/form/prop.js';
+import { fireFormCreate as actionApiFormCreate } from '@nest-datum-ui/components/Store/api/actions/form/create.js';
+import { fireFormClear as actionApiFormClear } from '@nest-datum-ui/components/Store/api/actions/form/clear.js';
+import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import UploadIcon from '@mui/icons-material/Upload';
-import onUpload from './onUpload.js';
+import Store from '@nest-datum-ui/components/Store';
+import Link from '@nest-datum-ui/components/Link';
 
 let Manage = () => {
 	const { enqueueSnackbar } = useSnackbar();
-	const { serviceKey } = useParams();
-	const service = useSelector(selectorApiExtractByKey('registryPoolList', serviceKey));
-	const gateway = (((service || {}).servServOptions || []).find((item) => item.servOptionId === 'serv-option-gateway-url') || {}).content;	
-	const breadcrumbs = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'storage', 'data' ])) ?? [];
-	const currentFolderId = (breadcrumbs[breadcrumbs.length - 1] || {}).key || '';
-	const currentFolderPath = (breadcrumbs[breadcrumbs.length - 1] || {}).path || '';
+	const navigate = useNavigate();
+	const loader = useSelector(selectorMainExtract([ 'api', 'form', 'filesManageSystem', 'loader' ]));
+	const systemId = useSelector(selectorMainExtract([ 'api', 'form', 'filesManageSystem', 'systemId' ]));
+	const breadcrumbs = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'filesManageList', 'data' ])) || [];
+	const currentPath = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'filesManageList', 'data', breadcrumbs.length - 1, 'path' ]));
 	const onChange = React.useCallback((e) => {
-		onUpload(e, gateway, {
-			id: currentFolderId,
-			path: currentFolderPath,
-		}, enqueueSnackbar);
+		e.target.files['systemId'] = systemId;
+		e.target.files['path'] = currentPath;
+
+		actionApiFormProp('filesManageSystem', 'loader', true)();
+		actionApiListProp('filesManageFileList', 'loader', true)();
+		actionApiFormProp('filesManageSystem', 'files', e.target.files)(() => {
+			actionApiFormCreate({
+				entityId: 'filesManageSystem',
+				url: process.env.SERVICE_FILES,
+				path: 'file',
+				withAccessToken: true,
+			})(enqueueSnackbar, navigate, async (response, files) => {
+				const filesManageFileList = [ ...((Store()
+					.getState()
+					.api
+					.list
+					.filesManageFileList || {})
+					.data || []) ];
+
+				await actionApiListProp('filesManageFileList', 'data', [ 
+					...filesManageFileList,
+					...files[0], 
+				])();
+				await actionApiListProp('filesManageFileList', 'loader', false)();
+				await actionApiFormProp('filesManageSystem', 'loader', false)();
+			});
+		});
 	}, [
-		gateway,
-		currentFolderId,
-		currentFolderPath,
+		systemId,
+		currentPath,
 		enqueueSnackbar,
+		navigate,
 	]);
 	const onAddFolder = React.useCallback(() => {
-		actionDialogOpen('storage-folder-create', { 
-			type: 'folder', 
+		actionDialogOpen('filesManageFolderStore', { 
+			entityId: '0', 
 		})();
+	}, [
+	]);
+
+	React.useEffect(() => () => {
+		actionApiFormClear('filesManageSystem')();
 	}, [
 	]);
 
@@ -46,13 +77,16 @@ let Manage = () => {
 				xs={false}>
 				<Button
 					disableElevation
-					component="div"
+					disabled={loader}
 					variant="contained"
 					color="secondary"
 					size="small"
 					startIcon={<AddIcon />}
-					onClick={onAddFolder}>
-					Добавить папку
+					onClick={onAddFolder}
+					component={Link}
+					to="0"
+					disableUnmountFlag>
+					Create folder
 				</Button>
 			</Grid>
 			<Grid
@@ -60,12 +94,13 @@ let Manage = () => {
 				xs={false}>
 				<Button
 					disableElevation
+					disabled={loader}
 					component="label"
 					variant="contained"
 					color="secondary"
 					size="small"
 					startIcon={<UploadIcon />}>
-					Загрузить
+					Upload files
 					<input 
 						multiple
 						name="files"

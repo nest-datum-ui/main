@@ -42,8 +42,8 @@ let List = () => {
 			</Button>
 		</Box>
 		<FormFilterUser />
-		<TableDataUser />
-		<DialogUserDrop />
+		<TableDataUser storeName="ssoUserList" />
+		<DialogUserDrop storeName="ssoUserList" />
 	</React.Fragment>;
 };
 

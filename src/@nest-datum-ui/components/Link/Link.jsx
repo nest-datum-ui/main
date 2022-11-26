@@ -6,18 +6,22 @@ import { fireHide as actionLoaderHide } from '@nest-datum-ui/components/Store/lo
 let timeout;
 let Link = ({ 
 	onClick = () => {},
+	disableUnmountFlag,
 	...props
 }, ref) => {
 	const onHandle = React.useCallback((e) => {
-		actionLoaderShow('unmount')();
-		clearTimeout(timeout);
+		if (!disableUnmountFlag) {
+			actionLoaderShow('unmount')();
+			clearTimeout(timeout);
 
-		timeout = setTimeout(() => {
-			actionLoaderHide('unmount')();
-		}, 600);
+			timeout = setTimeout(() => {
+				actionLoaderHide('unmount')();
+			}, 600);
+		}
 		onClick(e);
 	}, [
 		onClick,
+		disableUnmountFlag,
 	]);
 
 	return <React.Fragment>

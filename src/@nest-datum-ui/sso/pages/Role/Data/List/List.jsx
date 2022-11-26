@@ -45,8 +45,8 @@ let List = () => {
 			</Button>
 		</Box>
 		<FormFilterRole />
-		<TableRole />
-		<DialogRoleDrop />
+		<TableRole storeName="ssoRoleList" />
+		<DialogRoleDrop storeName="ssoRoleList" />
 	</React.Fragment>;
 };
 

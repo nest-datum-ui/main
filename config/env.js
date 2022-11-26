@@ -96,6 +96,8 @@ function getClientEnvironment(publicUrl) {
 				SERVICE_MAIL: process.env.SERVICE_MAIL,
 				SERVICE_SSO: process.env.SERVICE_SSO,
 				SERVICE_DATA_TYPE: process.env.SERVICE_DATA_TYPE,
+				SERVICE_FILES: process.env.SERVICE_FILES,
+				SERVICE_PAGES: process.env.SERVICE_PAGES,
 
 				PAGE_SIGN_UP: process.env.PAGE_SIGN_UP,
 				PAGE_SIGN_IN: process.env.PAGE_SIGN_IN,

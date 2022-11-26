@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Store from '@nest-datum-ui/components/Store';
+import { fireListProp as actionApiListProp } from './prop.js';
 
 /**
  * @return {Function}
@@ -19,6 +20,8 @@ export const fireListGet = ({
 	let apiPath = '';
 
 	try {
+		await actionApiListProp(id, 'loader', true)();
+
 		const realQuery = query;
 		const realFilter = filter ?? {};
 		const realSort = sort ?? {};

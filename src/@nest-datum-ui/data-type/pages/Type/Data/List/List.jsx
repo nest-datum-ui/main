@@ -45,8 +45,8 @@ let List = () => {
 			</Button>
 		</Box>
 		<FormFilterType />
-		<TableType />
-		<DialogTypeDrop />
+		<TableType storeName="dataTypeTypeList" />
+		<DialogTypeDrop storeName="dataTypeTypeList" />
 	</React.Fragment>;
 };
 

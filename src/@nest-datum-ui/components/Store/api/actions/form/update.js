@@ -10,7 +10,7 @@ export const fireFormUpdate = ({
 	url,
 	path,
 	withAccessToken = false,
-}) => async (snackbar = () => {}, prefix = 'api') => {
+}) => async (snackbar = () => {}, callback = () => {}, prefix = 'api') => {
 	let apiPath = '';
 
 	try {
@@ -44,6 +44,7 @@ export const fireFormUpdate = ({
 		}
 
 		snackbar('Entity successfully updated.', { variant: 'success' });
+		callback(entityId, data, options);
 		actionApiFormProp(entityId, 'loader', false)();
 	}
 	catch (err) {

@@ -1,48 +1,37 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fireListSet as actionBreadcrumbsListSet } from 'components/Store/breadcrumbs/actions/list/set.js';
-import selectorApiExtractByKey from 'components/Store/api/selectors/extractByKey.js';
+import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import FormSettingFilter from 'components/Form/Setting/Filter';
-import TableDataSetting from 'components/Table/Setting';
-import DialogSettingDrop from 'components/Dialog/Setting/Drop';
-import Link from 'components/Link';
+import FormSettingFilter from '@nest-datum-ui/components/Form/Setting/Filter';
+import TableSetting from '@nest-datum-ui/components/Table/Setting';
+import DialogSettingDrop from '@nest-datum-ui/components/Dialog/Setting/Drop';
+import Link from '@nest-datum-ui/components/Link';
 
 let List = () => {
-	const { serviceKey } = useParams();
-	const service = useSelector(selectorApiExtractByKey('registryPoolList', serviceKey));
-	const serviceName = (service || {}).name;
-	const gateway = (((service || {}).servServOptions || []).find((item) => item.servOptionId === 'serv-option-gateway-url') || {}).content;
-
 	React.useEffect(() => {
-		if (serviceName
-			&& serviceKey) {
-			actionBreadcrumbsListSet('app', [{
-				key: '/',
-				text: '...',
-			}, {
-				key: serviceKey,
-				text: serviceName,
-			}, {
-				key: `/${serviceKey}/settings`,
-				text: 'Settings',
-			}])();
-		}
+		actionBreadcrumbsListSet('app', [{
+			key: '/',
+			text: '...',
+		}, {
+			key: 'files',
+			text: 'Files',
+		}, {
+			key: `/files/settings`,
+			text: 'Settings',
+		}])();
 	}, [
-		serviceName,
-		serviceKey,
 	]);
 
 	return <React.Fragment>
-		<Box py={2}>
+		<Box
+			pt={1} 
+			pb={2}>
 			<Typography
 				component="div"
 				variant="h5">
-				Список настроек
+				Settings list
 			</Typography>
 		</Box>
 		<Box py={2}>
@@ -53,20 +42,20 @@ let List = () => {
 				size="small"
 				startIcon={<AddIcon />}
 				component={Link}
-				to={`/${serviceKey}/settings/0`}>
-				Добавить
+				to={`/files/settings/0`}>
+				Create
 			</Button>
 		</Box>
 		<FormSettingFilter storeName="filesSettingsList" />
-		<TableDataSetting
+		<TableSetting
 			withAccessToken
 			storeName="filesSettingsList"
-			url={gateway}
+			url={process.env.SERVICE_FILES}
 			path="setting" />
 		<DialogSettingDrop
 			withAccessToken
 			storeName="filesSettingsList"
-			url={gateway}
+			url={process.env.SERVICE_FILES}
 			path="setting" />
 	</React.Fragment>;
 };

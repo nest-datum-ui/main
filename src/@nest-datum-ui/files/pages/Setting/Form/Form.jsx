@@ -1,53 +1,41 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fireListSet as actionBreadcrumbsListSet } from 'components/Store/breadcrumbs/actions/list/set.js';
-import selectorApiExtractByKey from 'components/Store/api/selectors/extractByKey.js';
-import selectorMainExtract from 'components/Store/main/selectors/extract.js';
+import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
+import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import FormSetting from 'components/Form/Setting';
-import DialogSettingDrop from 'components/Dialog/Setting/Drop';
+import FormSetting from '@nest-datum-ui/components/Form/Setting';
+import DialogSettingDrop from '@nest-datum-ui/components/Dialog/Setting/Drop';
 
 let Form = () => {
-	const { 
-		serviceKey,
-		entityId, 
-	} = useParams();
-	const service = useSelector(selectorApiExtractByKey('registryPoolList', serviceKey));
+	const { entityId } = useParams();
 	const isDeleted = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isDeleted' ]));
-	const serviceName = (service || {}).name;
-	const gateway = (((service || {}).servServOptions || []).find((item) => item.servOptionId === 'serv-option-gateway-url') || {}).content;
-
+	
 	React.useEffect(() => {
-		if (serviceName
-			&& serviceKey) {
-			actionBreadcrumbsListSet('app', [{
-				key: '/',
-				text: '...',
-			}, {
-				key: serviceKey,
-				text: serviceName,
-			}, {
-				key: `/${serviceKey}/settings`,
-				text: 'Settings',
-			}, {
-				key: `/${serviceKey}/settings/${entityId}`,
-				text: (entityId === '0')
-					? 'Create new setting'
-					: <span
-						style={{
-							textDecoration: isDeleted
-								? 'line-through'
-								: 'initial',
-						}}>
-						{entityId}
-					</span>,
-			}])();
-		}
+		actionBreadcrumbsListSet('app', [{
+			key: '/',
+			text: '...',
+		}, {
+			key: 'files',
+			text: 'Files',
+		}, {
+			key: `/files/settings`,
+			text: 'Settings',
+		}, {
+			key: `/files/settings/${entityId}`,
+			text: (entityId === '0')
+				? 'Create new setting'
+				: <span
+					style={{
+						textDecoration: isDeleted
+							? 'line-through'
+							: 'initial',
+					}}>
+					{entityId}
+				</span>,
+		}])();
 	}, [
-		serviceName,
-		serviceKey,
 		entityId,
 		isDeleted,
 	]);
@@ -58,9 +46,9 @@ let Form = () => {
 				component="div"
 				variant="h5">
 				{(entityId === '0')
-					? 'Добавить настройку'
+					? 'Add setting'
 					: <React.Fragment>
-						Редактировать настройку <b
+						Edit setting <b
 							style={{
 								textDecoration: isDeleted
 									? 'line-through'
@@ -73,13 +61,13 @@ let Form = () => {
 		</Box>
 		<FormSetting
 			withAccessToken
-			storeName="serviceSettingsList"
-			url={gateway}
+			storeName="filesSettingsList"
+			url={process.env.SERVICE_FILES}
 			path="setting" />
 		<DialogSettingDrop
 			withAccessToken
-			storeName="serviceSettingsList"
-			url={gateway}
+			storeName="filesSettingsList"
+			url={process.env.SERVICE_FILES}
 			path="setting" />
 	</React.Fragment>;
 };

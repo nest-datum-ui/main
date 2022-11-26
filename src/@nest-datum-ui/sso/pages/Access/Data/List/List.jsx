@@ -45,8 +45,8 @@ let List = () => {
 			</Button>
 		</Box>
 		<FormFilterAccess />
-		<TableAccess />
-		<DialogAccessDrop />
+		<TableAccess storeName="ssoAccessList" />
+		<DialogAccessDrop storeName="ssoAccessList" />
 	</React.Fragment>;
 };
 

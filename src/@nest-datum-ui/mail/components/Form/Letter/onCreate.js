@@ -65,8 +65,6 @@ const onCreate = async ({
 			await actionApiFormProp(entityId, 'errors', errors)();
 			await actionApiFormProp(entityId, 'loader', false)();
 
-			console.log('errors', errors);
-
 			throw new Error('Check that the form is filled out correctly.');
 		}
 

@@ -6,12 +6,12 @@ import {
 import Layout from './layouts';
 import PageErrDataList from './pages/Err/Data/List';
 import PageErrDataForm from './pages/Err/Data/Form';
-// import PageWarningDataList from './pages/Warning/Data/List';
-// import PageWarningDataForm from './pages/Warning/Data/Form';
-// import PageNotificationDataList from './pages/Notification/Data/List';
-// import PageNotificationDataForm from './pages/Notification/Data/Form';
-// import PageTrafficDataList from './pages/Traffic/Data/List';
-// import PageTrafficDataForm from './pages/Traffic/Data/Form';
+import PageWarningDataList from './pages/Warning/Data/List';
+import PageWarningDataForm from './pages/Warning/Data/Form';
+import PageNotificationDataList from './pages/Notification/Data/List';
+import PageNotificationDataForm from './pages/Notification/Data/Form';
+import PageTrafficDataList from './pages/Traffic/Data/List';
+import PageTrafficDataForm from './pages/Traffic/Data/Form';
 import PageSettingList from './pages/Setting/List';
 import PageSettingForm from './pages/Setting/Form';
 
@@ -33,7 +33,7 @@ let Sso = () => {
 				<Route
 					path="err/:entityId"
 					element={<PageErrDataForm />} />
-				{/*<Route
+				<Route
 					path="warning"
 					element={<PageWarningDataList />} />
 				<Route
@@ -50,7 +50,7 @@ let Sso = () => {
 					element={<PageTrafficDataList />} />
 				<Route
 					path="traffic/:entityId"
-					element={<PageTrafficDataForm />} />*/}
+					element={<PageTrafficDataForm />} />
 				<Route
 					path="settings"
 					element={<PageSettingList />} />

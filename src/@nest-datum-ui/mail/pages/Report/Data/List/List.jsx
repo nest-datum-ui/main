@@ -45,8 +45,8 @@ let List = () => {
 			</Button>
 		</Box>
 		<FormFilterReport />
-		<TableReport />
-		<DialogReportDrop />
+		<TableReport storeName="mailReportList" />
+		<DialogReportDrop storeName="mailReportList" />
 	</React.Fragment>;
 };
 

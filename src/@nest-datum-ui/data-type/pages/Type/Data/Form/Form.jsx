@@ -59,8 +59,8 @@ let Form = () => {
 					</React.Fragment>}
 			</Typography>
 		</Box>
-		<FormType />
-		<DialogTypeDrop />
+		<FormType storeName={entityId} />
+		<DialogTypeDrop storeName={entityId} />
 	</React.Fragment>;
 };
 

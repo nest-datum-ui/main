@@ -45,8 +45,8 @@ let List = () => {
 			</Button>
 		</Box>
 		<FormFilterLetter />
-		<TableLetter />
-		<DialogLetterDrop />
+		<TableLetter storeName="mailLetterList" />
+		<DialogLetterDrop storeName="mailLetterList" />
 	</React.Fragment>;
 };
 
