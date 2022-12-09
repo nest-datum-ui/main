@@ -30,6 +30,8 @@ export const fireFormUpdate = ({
 				: {},
 		}).toString()}`;
 
+		console.log('data', data);
+
 		await axios.patch(apiPath, data);
 
 		if (Array.isArray(options)

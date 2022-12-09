@@ -98,27 +98,13 @@ function getClientEnvironment(publicUrl) {
 				SERVICE_DATA_TYPE: process.env.SERVICE_DATA_TYPE,
 				SERVICE_FILES: process.env.SERVICE_FILES,
 				SERVICE_PAGES: process.env.SERVICE_PAGES,
+				SERVICE_FORMS: process.env.SERVICE_FORMS,
 
 				PAGE_SIGN_UP: process.env.PAGE_SIGN_UP,
 				PAGE_SIGN_IN: process.env.PAGE_SIGN_IN,
 				PAGE_RECOVERY: process.env.PAGE_RECOVERY,
 
 				LANG_DEFAULT: process.env.LANG_DEFAULT,
-
-				DATA_TYPE_INT: process.env.DATA_TYPE_INT,
-				DATA_TYPE_FLOAT: process.env.DATA_TYPE_FLOAT,
-				DATA_TYPE_BOOLEAN: process.env.DATA_TYPE_BOOLEAN,
-				DATA_TYPE_TEXT: process.env.DATA_TYPE_TEXT,
-				DATA_TYPE_RICHTEXT: process.env.DATA_TYPE_RICHTEXT,
-				DATA_TYPE_PHONE: process.env.DATA_TYPE_PHONE,
-				DATA_TYPE_EMAIL: process.env.DATA_TYPE_EMAIL,
-				DATA_TYPE_URL: process.env.DATA_TYPE_URL,
-				DATA_TYPE_PASSWORD: process.env.DATA_TYPE_PASSWORD,
-				DATA_TYPE_TIME: process.env.DATA_TYPE_TIME,
-				DATA_TYPE_DATE: process.env.DATA_TYPE_DATE,
-				DATA_TYPE_DATETIME: process.env.DATA_TYPE_DATETIME,
-				DATA_TYPE_FILE: process.env.DATA_TYPE_FILE,
-				DATA_TYPE_DOCUMENT: process.env.DATA_TYPE_DOCUMENT,
 			}
 		);
 	// Stringify all values so we can feed into webpack DefinePlugin

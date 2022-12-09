@@ -23,9 +23,7 @@ let Reference = ({
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
 	const data = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'data' ]));
 	const dataReady = Array.isArray(data) && (data || []).length > 0;
-	const location = window.location.pathname;
-	const entityName = (location.split('/'))[2];
-	const entityNameUpperCase = entityName.charAt(0).toUpperCase() + entityName.slice(1);
+	const pathEntityUpperCase = pathEntity.charAt(0).toUpperCase() + pathEntity.slice(1);
 
 	React.useEffect(() => {
 		if (!unmount
@@ -40,14 +38,14 @@ let Reference = ({
 				page: 1, 
 				limit: 9999,
 				relations: {
-					[`${entityName}${entityNameUpperCase}Options`]: {
-						[`${entityName}${entityNameUpperCase}${entityNameUpperCase}Options`]: true,
+					[`${pathEntity}${pathEntityUpperCase}Options`]: {
+						[`${pathEntity}${pathEntityUpperCase}${pathEntityUpperCase}Options`]: true,
 					},
 				},
 				filter: {
 					isDeleted: false,
-					[`${entityName}${entityNameUpperCase}Options`]: {
-						[`${entityName}Id`]: entityId,
+					[`${pathEntity}${pathEntityUpperCase}Options`]: {
+						[`${pathEntity}Id`]: entityId,
 					},
 				},
 			})(enqueueSnackbar);
@@ -59,8 +57,8 @@ let Reference = ({
 		path,
 		url,
 		withAccessToken,
-		entityName,
-		entityNameUpperCase,
+		pathEntity,
+		pathEntityUpperCase,
 		enqueueSnackbar,
 	]);
 
@@ -71,12 +69,16 @@ let Reference = ({
 			onSetDefault({
 				storeName,
 				entityId,
+				pathEntity,
+				pathEntityUpperCase,
 			});
 		}
 	}, [
 		dataReady,
 		storeName,
 		entityId,
+		pathEntity,
+		pathEntityUpperCase,
 	]);
 
 	React.useEffect(() => () => {

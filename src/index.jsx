@@ -8,16 +8,16 @@ import { SnackbarProvider } from 'notistack';
 import { Provider as ProviderTheme } from '@nest-datum-ui/components/Theme';
 import { Provider as ProviderStore } from '@nest-datum-ui/components/Store';
 import { Provider as ProviderLanguage } from '@nest-datum-ui/components/Language';
-import PageNotFound from '@nest-datum-ui/pages/NotFound';
-import PageAppDashboard from '@nest-datum-ui/pages/App/Dashboard';
+import RouteNotFound from '@nest-datum-ui/routes/NotFound';
+import RouteAppDashboard from '@nest-datum-ui/routes/App/Dashboard';
 import Layout from 'layouts';
 import LayoutApp from 'layouts/App';
 import LayoutAppService from 'layouts/App/Service';
-import SSOPageSignIn from '@nest-datum-ui/sso/pages/SignIn';
-import SSOPageSignUp from '@nest-datum-ui/sso/pages/SignUp';
-import SSOPageRecovery from '@nest-datum-ui/sso/pages/Recovery';
-import SSOPageReset from '@nest-datum-ui/sso/pages/Reset';
-import SSOPageVerify from '@nest-datum-ui/sso/pages/Verify';
+import SSORouteSignIn from '@nest-datum-ui-lib/sso/routes/SignIn';
+import SSORouteSignUp from '@nest-datum-ui-lib/sso/routes/SignUp';
+import SSORouteRecovery from '@nest-datum-ui-lib/sso/routes/Recovery';
+import SSORouteReset from '@nest-datum-ui-lib/sso/routes/Reset';
+import SSORouteVerify from '@nest-datum-ui-lib/sso/routes/Verify';
 import GlobalStyles from './globalStyles.js';
 
 const container = document.getElementById('root');
@@ -35,32 +35,32 @@ root.render(
 								element={<Layout />}>
 								<Route
 									path="sign-in"
-									element={<SSOPageSignIn />} />
+									element={<SSORouteSignIn />} />
 								<Route
 									path="sign-up"
-									element={<SSOPageSignUp />} />
+									element={<SSORouteSignUp />} />
 								<Route
 									path="recovery"
-									element={<SSOPageRecovery />} />
+									element={<SSORouteRecovery />} />
 								<Route
 									path="reset"
-									element={<SSOPageReset />} />
+									element={<SSORouteReset />} />
 								<Route
 									path="verify"
-									element={<SSOPageVerify />} />
+									element={<SSORouteVerify />} />
 								<Route
 									path=""
 									element={<LayoutApp />}>
 									<Route
 										index
-										element={<PageAppDashboard />} />
+										element={<RouteAppDashboard />} />
 									<Route
 										path=":serviceKey/*"
 										element={<LayoutAppService />} />
 								</Route>
 								<Route
 									path="*"
-									element={<PageNotFound />} />*/}
+									element={<RouteNotFound />} />*/}
 							</Route>
 						</Routes>
 					</BrowserRouter>

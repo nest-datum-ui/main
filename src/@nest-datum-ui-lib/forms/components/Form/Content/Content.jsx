@@ -1,0 +1,216 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { 
+	useParams,
+	useNavigate, 
+} from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { fireFormProp as actionApiFormProp } from '@nest-datum-ui/components/Store/api/actions/form/prop.js';
+import { fireFormGet as actionApiFormGet } from '@nest-datum-ui/components/Store/api/actions/form/get.js';
+import { fireFormClear as actionApiFormClear } from '@nest-datum-ui/components/Store/api/actions/form/clear.js';
+import { fireOpen as actionDialogOpen } from '@nest-datum-ui/components/Store/dialog/actions/open.js';
+import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import SaveIcon from '@mui/icons-material/Save';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SelectContentStatus from '@nest-datum-ui-lib/forms/components/Select/Content/Status';
+import SelectForm from '@nest-datum-ui-lib/forms/components/Select/Form';
+import Loader from '@nest-datum-ui/components/Loader';
+import InputText from '@nest-datum-ui/components/Input/Text';
+import InputBool from '@nest-datum-ui/components/Input/Bool';
+import onCreate from './onCreate.js';
+
+let Content = () => {
+	const { enqueueSnackbar } = useSnackbar();
+	const { entityId } = useParams();
+	const navigate = useNavigate();
+	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
+	const loader = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'loader' ]));
+	const id = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'id' ]));
+	const contentStatusId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'contentStatusId' ]));
+	const formId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'formId' ]));
+	const isNotDelete = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isNotDelete' ]));
+	const isDeleted = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isDeleted' ]));
+	const errorId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'id' ]));
+	const errorContentStatusId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'contentStatusId' ]));
+	const errorFormId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'formId' ]));
+	const errorIsNotDelete = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'isNotDelete' ]));
+	const onSubmit = React.useCallback((e) => {
+		e.preventDefault();
+
+		onCreate({
+			gateway: process.env.SERVICE_FORMS,
+			entityId,
+			path: 'content',
+			withAccessToken: true,
+			enqueueSnackbar,
+			navigate,
+		});
+	}, [
+		entityId,
+		enqueueSnackbar,
+		navigate,
+	]);
+	const onChangeId = React.useCallback((e) => {
+		actionApiFormProp(entityId, 'id', e.target.value)();
+	}, [
+		entityId,
+	]);
+	const onChangeContentStatusId = React.useCallback((e, newValue) => {
+		actionApiFormProp(entityId, 'contentStatusId', e.target.value)();
+	}, [
+		entityId,
+	]);
+	const onChangeFormId = React.useCallback((e, newValue) => {
+		actionApiFormProp(entityId, 'formId', e.target.value)();
+	}, [
+		entityId,
+	]);
+	const onChangeIsNotDelete = React.useCallback((e, newValue) => {
+		actionApiFormProp(entityId, 'isNotDelete', newValue)();
+	}, [
+		entityId,
+	]);
+	const onDelete = React.useCallback((e) => {
+		actionDialogOpen('optionDrop', { entityId })();
+	}, [
+		entityId,
+	]);
+
+	React.useEffect(() => {
+		if (!unmount
+			&& entityId
+			&& entityId !== '0') {
+			actionApiFormGet({
+				entityId,
+				url: process.env.SERVICE_FORMS,
+				path: 'content',
+				withAccessToken: true,
+			})(enqueueSnackbar, navigate);
+		}
+	}, [
+		unmount,
+		entityId,
+		enqueueSnackbar,
+		navigate,
+	]);
+
+	React.useEffect(() => () => {
+		actionApiFormClear(entityId)();
+	}, [
+		entityId,
+	]);
+
+	return <React.Fragment>
+		<Loader	visible={typeof loader === 'undefined' || unmount} />
+		<form 
+			onSubmit={onSubmit}
+			style={{
+				display: (typeof loader === 'undefined' || unmount)
+					? 'none'
+					: 'initial',
+			}}>
+			<Box py={2}>
+				<InputText
+					disabled={loader}
+					name="id"
+					label="id"
+					helperText="Unique identificator"
+					placeholder="For example: test-entity-id"
+					value={id || ''}
+					onChange={onChangeId}
+					error={errorId} />
+			</Box>
+			<Box py={2}>
+				<SelectContentStatus
+					disabled={loader}
+					label="Status"
+					name="contentStatusId"
+					value={contentStatusId || ''}
+					onChange={onChangeContentStatusId}
+					error={errorContentStatusId} />
+			</Box>
+			<Box py={2}>
+				<SelectForm
+					disabled={loader}
+					label="Form"
+					name="formId"
+					value={formId || ''}
+					onChange={onChangeFormId}
+					error={errorFormId} />
+			</Box>
+			<Box py={2}>
+				<InputBool
+					disabled={loader}
+					name="isNotDelete"
+					label="Make entry undeletable"
+					value={!!isNotDelete}
+					onChange={onChangeIsNotDelete}
+					error={errorIsNotDelete} />
+			</Box>
+			<Grid
+				container
+				spacing={3}
+				alignItems="center"
+				justifyContent="flex-end">
+				<Grid
+					item
+					xs={false}>
+					<Button
+						disableElevation
+						disabled={loader}
+						type="submit"
+						variant="contained"
+						color="secondary"
+						startIcon={loader
+							? <Loader
+								visible
+								wrapper={{
+									sx: {
+										padding: '0px',
+									},
+								}}
+								sx={{
+									minWidth: '24px',
+									maxWidth: '24px',
+									minHeight: '24px',
+									maxHeight: '24px',
+								}} />
+							: <SaveIcon />}>
+						Save
+					</Button>
+				</Grid>
+				{(!isNotDelete
+					&& entityId
+					&& typeof entityId === 'string'
+					&& entityId !== '0')
+					? <Grid
+						item
+						xs={false}>
+						<Button
+							disableElevation
+							disabled={loader}
+							variant="contained"
+							color="error"
+							startIcon={<DeleteIcon />}
+							onClick={onDelete}>
+							{isDeleted
+								? 'Delete permanently'
+								: 'Delete'}
+						</Button>
+					</Grid>
+					: <React.Fragment />}
+			</Grid>
+		</form>
+	</React.Fragment>;
+};
+
+Content = React.memo(Content);
+Content.defaultProps = {
+};
+Content.propTypes = {
+};
+
+export default Content;

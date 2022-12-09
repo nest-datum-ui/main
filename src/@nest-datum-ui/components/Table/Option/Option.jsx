@@ -183,7 +183,7 @@ let Option = ({
 						? <TableBody>
 							{data.map((item, index) => {
 								return <TableRow key={item.id}>
-									<TableCell sx={{ minWidth: '16%' }}>
+									<TableCell sx={{ minWidth: '17%' }}>
 										<Typography 
 											component={Link}
 											to={item.id}
@@ -198,7 +198,7 @@ let Option = ({
 											{item.id}
 										</Typography>
 									</TableCell>
-									<TableCell sx={{ minWidth: '19%' }}>
+									<TableCell sx={{ minWidth: '24%' }}>
 										<Typography 
 											component={Link}
 											to={item.id}
@@ -230,7 +230,7 @@ let Option = ({
 											{item.dataTypeId}
 										</Typography>
 									</TableCell>
-									<TableCell sx={{ minWidth: '30%' }}>
+									<TableCell sx={{ minWidth: '23%' }}>
 										<Box 
 											pb={1}>
 											<Typography 
@@ -277,7 +277,7 @@ let Option = ({
 											</Box>
 											: <React.Fragment />}
 									</TableCell>
-									<TableCell sx={{ width: '15%' }}>
+									<TableCell sx={{ width: '16%' }}>
 										<Box pb={1}>
 											<Typography	
 												component="div"

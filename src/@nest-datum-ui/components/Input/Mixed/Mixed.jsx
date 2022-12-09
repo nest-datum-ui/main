@@ -3,19 +3,11 @@ import PropTypes from 'prop-types';
 import Loader from '@nest-datum-ui/components/Loader';
 
 const DataTypes = {
-	int: () => React.lazy(() => import('@nest-datum-ui/components/Input/Int')),
-	float: () => React.lazy(() => import('@nest-datum-ui/components/Input/Float')),
-	bool: () => React.lazy(() => import('@nest-datum-ui/components/Input/Bool')),
-	text: () => React.lazy(() => import('@nest-datum-ui/components/Input/Text')),
-	richtext: () => React.lazy(() => import('@nest-datum-ui/components/Input/Richtext')),
-	phone: () => React.lazy(() => import('@nest-datum-ui/components/Input/Phone')),
-	email: () => React.lazy(() => import('@nest-datum-ui/components/Input/Email')),
-	url: () => React.lazy(() => import('@nest-datum-ui/components/Input/Url')),
-	password: () => React.lazy(() => import('@nest-datum-ui/components/Input/Password')),
-	file: () => React.lazy(() => import('@nest-datum-ui/components/Input/File')),
-	time: () => React.lazy(() => import('@nest-datum-ui/components/Input/Time')),
-	date: () => React.lazy(() => import('@nest-datum-ui/components/Input/Date')),
-	datetime: () => React.lazy(() => import('@nest-datum-ui/components/Input/DateTime')),
+	'data-type-type-integer': () => React.lazy(() => import('@nest-datum-ui/components/Input/Int')),
+	'data-type-type-float': () => React.lazy(() => import('@nest-datum-ui/components/Input/Float')),
+	'data-type-type-boolean': () => React.lazy(() => import('@nest-datum-ui/components/Input/Bool')),
+	'data-type-type-text': () => React.lazy(() => import('@nest-datum-ui/components/Input/Text')),
+	'data-type-type-file': () => React.lazy(() => import('@nest-datum-ui/components/Input/File')),
 };
 let Mixed = ({
 	dataTypeId,

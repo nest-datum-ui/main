@@ -4,24 +4,22 @@ import Store from '@nest-datum-ui/components/Store';
 const onSetDefault = async ({
 	storeName,
 	entityId,
+	pathEntity,
+	pathEntityUpperCase,
 }) => {
-	const location = window.location.pathname;
-	const entityName = (location.split('/'))[2];
-	const entityNameUpperCase = entityName.charAt(0).toUpperCase() + entityName.slice(1);
-
 	const listData = [ ...Store()
 		.getState()['api']
 		.list[storeName]
 		.data ];
 
 	const newListData = listData.map(({
-		[`${entityName}${entityNameUpperCase}Options`]: entityEntityOptions,
+		[`${pathEntity}${pathEntityUpperCase}Options`]: entityEntityOptions,
 		...optionData
 	}) => {
 		const values = [];
 
 		entityEntityOptions.forEach(({
-			[`${entityName}${entityNameUpperCase}${entityNameUpperCase}Options`]: entityEntityEntityOptions,
+			[`${pathEntity}${pathEntityUpperCase}${pathEntityUpperCase}Options`]: entityEntityEntityOptions,
 			...referenceData
 		}) => {
 			entityEntityEntityOptions.forEach(({

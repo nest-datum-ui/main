@@ -1,9 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { 
-	useLocation,
-	useParams, 
-} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
 import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
@@ -21,7 +18,6 @@ import Loader from '@nest-datum-ui/components/Loader';
 import Link from '@nest-datum-ui/components/Link';
 
 let Layout = () => {
-	const { serviceKey } = useParams();
 	const { enqueueSnackbar } = useSnackbar();
 	const {
 		MenuAppLayout: {
@@ -43,7 +39,6 @@ let Layout = () => {
 		})(enqueueSnackbar);
 	}, [
 		enqueueSnackbar,
-		serviceKey,
 	]);
 
 	React.useEffect(() => () => {
