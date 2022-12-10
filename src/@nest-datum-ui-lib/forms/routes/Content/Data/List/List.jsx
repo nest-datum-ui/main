@@ -40,7 +40,7 @@ let List = () => {
 				size="small"
 				startIcon={<AddIcon />}
 				component={Link}
-				to={`/forms/Content/0`}>
+				to={`/forms/content/0`}>
 				Create
 			</Button>
 		</Box>

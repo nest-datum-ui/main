@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import FormOption from '@nest-datum-ui/components/Form/Option';
 import DialogOptionDrop from '@nest-datum-ui/components/Dialog/Option/Drop';
-import SelectTemplateMultipleReference from '@nest-datum-ui-lib/mail/components/Select/Template/Multiple/Reference';
+import FormTemplateOption from '@nest-datum-ui-lib/mail/components/Form/Template/Option';
 
 let Form = () => {
 	const { entityId } = useParams();
@@ -68,9 +68,22 @@ let Form = () => {
 			storeName="mailTemplateOptionsList"
 			url={process.env.SERVICE_MAIL}
 			path="template-option"
-			selectMultipleReferenceComponent={(props) => {
-				return <SelectTemplateMultipleReference { ...props } />;
-			}} />
+			FormOptionComponent={FormTemplateOption}
+			pathRelation="template"
+			pathCreate={`template/${entityId}/option`}
+			relationTitle="Templates"
+			relationDescription="List of templates that will own the current option."
+			filterOptions={() => ({
+				templateTemplateOptions: {
+					templateOptionId: entityId,
+				},
+			})}
+			manyToManyColumns={() => ([
+				[ 'id', 'ID' ], 
+				[ 'name', 'Name' ],
+				[ 'description', 'Description' ],
+				[ 'createdAt', 'Create at' ],
+			])} />
 		<DialogOptionDrop
 			withAccessToken
 			storeName="mailTemplateOptionsList"

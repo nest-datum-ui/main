@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import FormOption from '@nest-datum-ui/components/Form/Option';
 import DialogOptionDrop from '@nest-datum-ui/components/Dialog/Option/Drop';
-import SelectProviderMultipleReference from '@nest-datum-ui-lib/files/components/Select/Provider/Multiple/Reference';
+import FormProviderOption from '@nest-datum-ui-lib/files/components/Form/Provider/Option';
 
 let Form = () => {
 	const { entityId } = useParams();
@@ -68,9 +68,22 @@ let Form = () => {
 			storeName="filesProviderOptionsList"
 			url={process.env.SERVICE_FILES}
 			path="provider-option"
-			selectMultipleReferenceComponent={(props) => {
-				return <SelectProviderMultipleReference { ...props } />;
-			}} />
+			FormOptionComponent={FormProviderOption}
+			pathRelation="provider"
+			pathCreate={`provider/${entityId}/option`}
+			relationTitle="Providers"
+			relationDescription="List of providers that will own the current option."
+			filterOptions={() => ({
+				providerProviderOptions: {
+					providerOptionId: entityId,
+				},
+			})}
+			manyToManyColumns={() => ([
+				[ 'id', 'ID' ], 
+				[ 'name', 'Name' ],
+				[ 'description', 'Description' ],
+				[ 'createdAt', 'Create at' ],
+			])} />
 		<DialogOptionDrop
 			withAccessToken
 			storeName="filesProviderOptionsList"

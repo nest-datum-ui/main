@@ -27,6 +27,7 @@ import TableCellSort, {
 	onChange as onTableCellSortChange,
 } from '@nest-datum-ui/components/Table/Cell/Sort';
 import MenuTypeContext from '@nest-datum-ui-lib/data-type/components/Menu/Type/Context';
+import validateDate from '@nest-datum-ui/utils/validate/date.js';
 
 let Type = ({
 	withAccessToken,
@@ -187,7 +188,7 @@ let Type = ({
 									<TableCell sx={{ minWidth: '18%' }}>
 										<Typography 
 											component={Link}
-											to={item.id}
+											to={`/data-type/type/${item.id}`}
 											color={item.isDeleted
 												? 'textSecondary'
 												: 'inherit'}
@@ -202,7 +203,7 @@ let Type = ({
 									<TableCell sx={{ minWidth: '28%' }}>
 										<Typography 
 											component={Link}
-											to={item.id}
+											to={`/data-type/type/${item.id}`}
 											variant="h6"
 											color={item.isDeleted
 												? 'textSecondary'
@@ -237,28 +238,32 @@ let Type = ({
 										</Typography>
 									</TableCell>
 									<TableCell sx={{ width: '18%' }}>
-										<Box pb={1}>
-											<Typography	
-												component="div"
-												variant="caption"
-												color="textSecondary">
-												Created at:
-											</Typography>
-											<Typography component="div">
-												<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
-											</Typography>
-										</Box>
-										<Box>
-											<Typography	
-												component="div"
-												variant="caption"
-												color="textSecondary">
-												Updated at:
-											</Typography>
-											<Typography component="div">
-												<b>{format(new Date(item.updatedAt), 'dd MMMM, hh:mm')}</b>
-											</Typography>
-										</Box>
+										{validateDate(item.createdAt)
+											? <Box pb={1}>
+												<Typography	
+													component="div"
+													variant="caption"
+													color="textSecondary">
+													Created at:
+												</Typography>
+												<Typography component="div">
+													<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
+												</Typography>
+											</Box>
+											: <React.Fragment />}
+										{validateDate(item.updatedAt)
+											? <Box>
+												<Typography	
+													component="div"
+													variant="caption"
+													color="textSecondary">
+													Updated at:
+												</Typography>
+												<Typography component="div">
+													<b>{format(new Date(item.updatedAt), 'dd MMMM, hh:mm')}</b>
+												</Typography>
+											</Box>
+											: <React.Fragment />}
 									</TableCell>
 									<TableCell sx={{ width: '1%' }}>
 										<IconButton onClick={onMenu(item.id)}>

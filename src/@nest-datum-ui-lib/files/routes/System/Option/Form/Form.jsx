@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import FormOption from '@nest-datum-ui/components/Form/Option';
 import DialogOptionDrop from '@nest-datum-ui/components/Dialog/Option/Drop';
-import SelectSystemMultipleReference from '@nest-datum-ui-lib/files/components/Select/System/Multiple/Reference';
+import FormSystemOption from '@nest-datum-ui-lib/files/components/Form/System/Option';
 
 let Form = () => {
 	const { entityId } = useParams();
@@ -68,9 +68,22 @@ let Form = () => {
 			storeName="filesSystemOptionsList"
 			url={process.env.SERVICE_FILES}
 			path="system-option"
-			selectMultipleReferenceComponent={(props) => {
-				return <SelectSystemMultipleReference { ...props } />;
-			}} />
+			FormOptionComponent={FormSystemOption}
+			pathRelation="system"
+			pathCreate={`system/${entityId}/option`}
+			relationTitle="Systems"
+			relationDescription="List of systems that will own the current option."
+			filterOptions={() => ({
+				systemSystemOptions: {
+					systemOptionId: entityId,
+				},
+			})}
+			manyToManyColumns={() => ([
+				[ 'id', 'ID' ], 
+				[ 'name', 'Name' ],
+				[ 'description', 'Description' ],
+				[ 'createdAt', 'Create at' ],
+			])} />
 		<DialogOptionDrop
 			withAccessToken
 			storeName="filesSystemOptionsList"

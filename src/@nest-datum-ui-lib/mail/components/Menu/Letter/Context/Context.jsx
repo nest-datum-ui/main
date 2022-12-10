@@ -48,7 +48,7 @@ let Context = ({
 		<Menu { ...props }>
 			<MenuItem
 				component={Link}
-				to={entityId}
+				to={`/mail/letter/${entityId}`}
 				onClick={onClose}>
 				<ListItemIcon>
 					<EditIcon />

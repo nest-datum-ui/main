@@ -16,10 +16,12 @@ import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectFormStatus from '@nest-datum-ui-lib/forms/components/Select/Form/Status';
+import FormFormField from '@nest-datum-ui-lib/forms/components/Form/Form/Field';
 import Loader from '@nest-datum-ui/components/Loader';
 import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
 import FormOptionEntityReference from '@nest-datum-ui/components/Form/Option/Entity/Reference';
+import TableManyToMany from '@nest-datum-ui/components/Table/ManyToMany';
 import onCreate from './onCreate.js';
 
 let Form = () => {
@@ -84,6 +86,18 @@ let Form = () => {
 		actionDialogOpen('optionDrop', { entityId })();
 	}, [
 		entityId,
+	]);
+	const manyToManyFilterOptions = React.useCallback(() => ({
+		formId: entityId,
+	}), [
+		entityId,
+	]);
+	const manyToManyColumns = React.useCallback(() => ([
+		[ 'id', 'ID' ], 
+		[ 'fieldId', 'Field' ], 
+		[ 'userId', 'User' ], 
+		[ 'createdAt', 'Create at' ],
+	]), [
 	]);
 
 	React.useEffect(() => {
@@ -176,6 +190,27 @@ let Form = () => {
 				url={process.env.SERVICE_FORMS}
 				path="form-option"
 				pathEntity="form" />
+			{(entityId
+				&& typeof entityId === 'string'
+				&& entityId !== '0')
+				? <TableManyToMany
+					withAccessToken
+					url={process.env.SERVICE_FORMS}
+					path="form/field"
+					storeName="formsFormFieldRelation"
+					filterOptions={manyToManyFilterOptions}
+					columns={manyToManyColumns}
+					title="Fields"
+					description="Fields of current form.">
+					<FormFormField
+						withAccessToken
+						entityId={entityId}
+						url={process.env.SERVICE_FORMS}
+						path="form/field"
+						pathCreate={`form/${entityId}/field`}
+						storeName="formsFormFieldRelation" />
+				</TableManyToMany>
+				: <React.Fragment />}
 			<Grid
 				container
 				spacing={3}

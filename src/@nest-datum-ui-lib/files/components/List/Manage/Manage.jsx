@@ -163,8 +163,6 @@ let FileDataMap = ({
 	}, [
 	]);
 
-	console.log('========', loader);
-
 	return <React.Fragment>
 		<Grid
 			item

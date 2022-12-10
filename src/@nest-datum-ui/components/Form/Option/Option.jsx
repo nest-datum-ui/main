@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { 
 	useParams,
@@ -19,14 +20,22 @@ import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
 import SelectDataType from '@nest-datum-ui/components/Select/DataType';
 import Loader from '@nest-datum-ui/components/Loader';
+import TableManyToMany from '@nest-datum-ui/components/Table/ManyToMany';
 import DefaultValue from './DefaultValue';
 import onSave from './onSave.js';
 
 let Option = ({
+	storeName,
 	withAccessToken,
 	url,
 	path,
-	selectMultipleReferenceComponent,
+	pathRelation,
+	pathCreate,
+	relationTitle,
+	relationDescription,
+	FormOptionComponent,
+	filterOptions,
+	manyToManyColumns,
 }) => {
 	const { enqueueSnackbar } = useSnackbar();
 	const { entityId } = useParams();
@@ -210,29 +219,26 @@ let Option = ({
 					onChange={onChangeRegex}
 					error={errorRegex} />
 			</Box>
-			{typeof selectMultipleReferenceComponent === 'function'
-				? <Box py={2}>
-					{selectMultipleReferenceComponent({
-						loader,
-						id,
-						name,
-						description,
-						dataTypeId,
-						regex,
-						isRequired,
-						isMultiline,
-						isNotDelete,
-						isDeleted,
-						errorId,
-						errorName,
-						errorDescription,
-						errorDataTypeId,
-						errorRegex,
-						errorIsRequired,
-						errorIsMultiline,
-						errorIsNotDelete,
-					})}
-				</Box>
+			{(entityId
+				&& typeof entityId === 'string'
+				&& entityId !== '0')
+				? <TableManyToMany
+					withAccessToken
+					url={url}
+					path={pathRelation}
+					storeName={`${storeName}Option`}
+					filterOptions={filterOptions}
+					columns={manyToManyColumns}
+					title={relationTitle}
+					description={relationDescription}>
+					<FormOptionComponent
+						withAccessToken
+						entityId={entityId}
+						url={url}
+						path={pathRelation}
+						pathCreate={pathCreate}
+						storeName={`${storeName}Option`} />
+				</TableManyToMany>
 				: <React.Fragment />}
 			<Box py={2}>
 				<InputBool
@@ -322,6 +328,8 @@ Option = React.memo(Option);
 Option.defaultProps = {
 };
 Option.propTypes = {
+	filterOptions: PropTypes.func,
+	manyToManyColumns: PropTypes.func,
 };
 
 export default Option;

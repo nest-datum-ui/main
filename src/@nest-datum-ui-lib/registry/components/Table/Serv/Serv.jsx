@@ -14,6 +14,7 @@ import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import Loader from '@nest-datum-ui/components/Loader';
 import TablePagination from '@nest-datum-ui/components/Table/Pagination';
+import validateDate from '@nest-datum-ui/utils/validate/date.js';
 
 let Serv = ({
 	withAccessToken,
@@ -186,18 +187,21 @@ let Serv = ({
 										</Typography>
 									</TableCell>
 									<TableCell sx={{ width: '18%' }}>
-										<Box pb={1}>
-											<Typography	
-												component="div"
-												variant="caption"
-												color="textSecondary">
-												Created at:
-											</Typography>
-											<Typography component="div">
-												<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
-											</Typography>
-										</Box>
-										{item.updatedAt
+										{validateDate(item.createdAt)
+											? <Box pb={1}>
+												<Typography	
+													component="div"
+													variant="caption"
+													color="textSecondary">
+													Created at:
+												</Typography>
+												<Typography component="div">
+													<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
+												</Typography>
+											</Box>
+											: <React.Fragment />}
+										{(item.updatedAt
+											&& validateDate(item.updatedAt))
 											? <Box pb={1}>
 												<Typography	
 													component="div"
@@ -210,7 +214,8 @@ let Serv = ({
 												</Typography>
 											</Box>
 											: <React.Fragment />}
-										{item.restartedAt
+										{(item.restartedAt
+											&& validateDate(item.restartedAt))
 											? <Box>
 												<Typography	
 													component="div"

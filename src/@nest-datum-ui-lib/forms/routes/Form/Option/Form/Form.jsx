@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import FormOption from '@nest-datum-ui/components/Form/Option';
 import DialogOptionDrop from '@nest-datum-ui/components/Dialog/Option/Drop';
-import SelectFormMultipleReference from '@nest-datum-ui-lib/forms/components/Select/Form/Multiple/Reference';
+import FormFormOption from '@nest-datum-ui-lib/forms/components/Form/Form/Option';
 
 let Form = () => {
 	const { entityId } = useParams();
@@ -65,9 +65,22 @@ let Form = () => {
 			storeName="formsFormOptionsList"
 			url={process.env.SERVICE_FORMS}
 			path="form-option"
-			selectMultipleReferenceComponent={(props) => {
-				return <SelectFormMultipleReference { ...props } />;
-			}} />
+			FormOptionComponent={FormFormOption}
+			pathRelation="form"
+			pathCreate={`form/${entityId}/option`}
+			relationTitle="Forms"
+			relationDescription="List of forms that will own the current option."
+			filterOptions={() => ({
+				formFormOptions: {
+					formOptionId: entityId,
+				},
+			})}
+			manyToManyColumns={() => ([
+				[ 'id', 'ID' ], 
+				[ 'name', 'Name' ],
+				[ 'description', 'Description' ],
+				[ 'createdAt', 'Create at' ],
+			])} />
 		<DialogOptionDrop
 			withAccessToken
 			storeName="formsFormOptionsList"

@@ -74,7 +74,6 @@ let Primary = () => {
 						},
 					} } />
 		</Tabs>
-		{console.log('tab', tab, pathname)}
 		<Box 
 			py={tab === 0
 				? 2

@@ -13,6 +13,7 @@ export const fireListGet = ({
 	page = 1, 
 	limit = 20, 
 	query, 
+	select,
 	filter, 
 	sort, 
 	relations,
@@ -23,6 +24,7 @@ export const fireListGet = ({
 		await actionApiListProp(id, 'loader', true)();
 
 		const realQuery = query;
+		const realSelect = select ?? {};
 		const realFilter = filter ?? {};
 		const realSort = sort ?? {};
 		const realRelations = relations ?? {};
@@ -32,6 +34,9 @@ export const fireListGet = ({
 			limit,
 			...realQuery
 				? { query: realQuery }
+				: {},
+			...Object.keys(realSelect).length > 0
+				? { select: JSON.stringify(realSelect) }
 				: {},
 			...Object.keys(realFilter).length > 0
 				? { filter: JSON.stringify(realFilter) }
@@ -58,6 +63,7 @@ export const fireListGet = ({
 				total: request.data.total,
 				data: request.data.rows,
 				query: realQuery,
+				select: realSelect,
 				filter: realFilter,
 				sort: realSort,
 				relations: realRelations,

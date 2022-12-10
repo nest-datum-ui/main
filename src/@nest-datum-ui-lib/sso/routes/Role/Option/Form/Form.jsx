@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import FormOption from '@nest-datum-ui/components/Form/Option';
 import DialogOptionDrop from '@nest-datum-ui/components/Dialog/Option/Drop';
-import SelectRoleMultipleReference from '@nest-datum-ui-lib/sso/components/Select/Role/Multiple/Reference';
+import FormRoleOption from '@nest-datum-ui-lib/sso/components/Form/Role/Option';
 
 let Form = () => {
 	const { entityId } = useParams();
@@ -68,9 +68,22 @@ let Form = () => {
 			storeName="ssoRoleOptionsList"
 			url={process.env.SERVICE_SSO}
 			path="role-option"
-			selectMultipleReferenceComponent={(props) => {
-				return <SelectRoleMultipleReference { ...props } />;
-			}} />
+			FormOptionComponent={FormRoleOption}
+			pathRelation="role"
+			pathCreate={`role/${entityId}/option`}
+			relationTitle="Roles"
+			relationDescription="List of roles that will own the current option."
+			filterOptions={() => ({
+				roleRoleOptions: {
+					roleOptionId: entityId,
+				},
+			})}
+			manyToManyColumns={() => ([
+				[ 'id', 'ID' ], 
+				[ 'name', 'Name' ],
+				[ 'description', 'Description' ],
+				[ 'createdAt', 'Create at' ],
+			])} />
 		<DialogOptionDrop
 			withAccessToken
 			storeName="ssoRoleOptionsList"

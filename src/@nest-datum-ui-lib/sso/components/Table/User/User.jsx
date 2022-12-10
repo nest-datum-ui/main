@@ -27,6 +27,7 @@ import TableCellSort, {
 } from '@nest-datum-ui/components/Table/Cell/Sort';
 import Link from '@nest-datum-ui/components/Link';
 import MenuUserContext from '@nest-datum-ui-lib/sso/components/Menu/User/Context';
+import validateDate from '@nest-datum-ui/utils/validate/date.js';
 
 let User = ({
 	withAccessToken,
@@ -187,7 +188,7 @@ let User = ({
 									<TableCell sx={{ minWidth: '20%' }}>
 										<Typography 
 											component={Link}
-											to={item.id}
+											to={`/sso/user/${item.id}`}
 											color={item.isDeleted
 												? 'textSecondary'
 												: 'inherit'}
@@ -249,28 +250,32 @@ let User = ({
 										</Typography>
 									</TableCell>
 									<TableCell sx={{ width: '22%' }}>
-										<Box pb={1}>
-											<Typography	
-												component="div"
-												variant="caption"
-												color="textSecondary">
-												Created at:
-											</Typography>
-											<Typography component="div">
-												<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
-											</Typography>
-										</Box>
-										<Box pb={1}>
-											<Typography	
-												component="div"
-												variant="caption"
-												color="textSecondary">
-												Updated at:
-											</Typography>
-											<Typography component="div">
-												<b>{format(new Date(item.updatedAt), 'dd MMMM, hh:mm')}</b>
-											</Typography>
-										</Box>
+										{validateDate(item.createdAt)
+											? <Box pb={1}>
+												<Typography	
+													component="div"
+													variant="caption"
+													color="textSecondary">
+													Created at:
+												</Typography>
+												<Typography component="div">
+													<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
+												</Typography>
+											</Box>
+											: <React.Fragment />}
+										{validateDate(item.updatedAt)
+											? <Box pb={1}>
+												<Typography	
+													component="div"
+													variant="caption"
+													color="textSecondary">
+													Updated at:
+												</Typography>
+												<Typography component="div">
+													<b>{format(new Date(item.updatedAt), 'dd MMMM, hh:mm')}</b>
+												</Typography>
+											</Box>
+											: <React.Fragment />}
 										<Box>
 											{item['emailVerifiedAt']
 												? <React.Fragment>

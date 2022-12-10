@@ -27,6 +27,7 @@ import TableCellSort, {
 	onChange as onTableCellSortChange,
 } from '@nest-datum-ui/components/Table/Cell/Sort';
 import MenuReportContext from '@nest-datum-ui-lib/mail/components/Menu/Report/Context';
+import validateDate from '@nest-datum-ui/utils/validate/date.js';
 
 let Report = ({
 	withAccessToken,
@@ -249,17 +250,19 @@ let Report = ({
 										</Typography>
 									</TableCell>
 									<TableCell sx={{ width: '16%' }}>
-										<Box pb={1}>
-											<Typography	
-												component="div"
-												variant="caption"
-												color="textSecondary">
-												Created at:
-											</Typography>
-											<Typography component="div">
-												<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
-											</Typography>
-										</Box>
+										{validateDate(item.createdAt)
+											? <Box pb={1}>
+												<Typography	
+													component="div"
+													variant="caption"
+													color="textSecondary">
+													Created at:
+												</Typography>
+												<Typography component="div">
+													<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
+												</Typography>
+											</Box>
+											: <React.Fragment />}
 									</TableCell>
 									<TableCell sx={{ width: '1%' }}>
 										<IconButton onClick={onMenu(item.id)}>
