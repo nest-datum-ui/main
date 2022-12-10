@@ -20,7 +20,7 @@ import Loader from '@nest-datum-ui/components/Loader';
 import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
 import InputEmail from '@nest-datum-ui/components/Input/Email';
-import FormOptionEntityReference from '@nest-datum-ui/components/Form/Option/Entity/Reference';
+import FormOptionManyToMany from '@nest-datum-ui/components/Form/Option/ManyToMany';
 import onCreate from './onCreate.js';
 
 let Template = () => {
@@ -205,7 +205,7 @@ let Template = () => {
 					onChange={onChangeIsNotDelete}
 					error={errorIsNotDelete} />
 			</Box>
-			<FormOptionEntityReference
+			<FormOptionManyToMany
 				withAccessToken
 				entityId={entityId}
 				url={process.env.SERVICE_MAIL}

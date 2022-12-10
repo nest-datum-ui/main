@@ -23,7 +23,7 @@ import InputEmail from '@nest-datum-ui/components/Input/Email';
 import InputPassword from '@nest-datum-ui/components/Input/Password';
 import InputDateTime from '@nest-datum-ui/components/Input/DateTime';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
-import FormOptionEntity from '@nest-datum-ui/components/Form/Option/Entity';
+import FormOptionOneToMany from '@nest-datum-ui/components/Form/Option/OneToMany';
 import onStore from './onStore.js';
 
 let User = () => {
@@ -250,7 +250,7 @@ let User = () => {
 					onChange={onChangeIsNotDelete}
 					error={errorIsNotDelete} />
 			</Box>
-			<FormOptionEntity
+			<FormOptionOneToMany
 				withAccessToken
 				entityId={entityId}
 				url={process.env.SERVICE_SSO}

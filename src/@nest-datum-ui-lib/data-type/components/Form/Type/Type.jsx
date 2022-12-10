@@ -19,7 +19,7 @@ import SelectTypeStatus from '@nest-datum-ui-lib/data-type/components/Select/Typ
 import Loader from '@nest-datum-ui/components/Loader';
 import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
-import FormOptionEntityReference from '@nest-datum-ui/components/Form/Option/Entity/Reference';
+import FormOptionManyToMany from '@nest-datum-ui/components/Form/Option/ManyToMany';
 import onCreate from './onCreate.js';
 
 let Type = () => {
@@ -170,7 +170,7 @@ let Type = () => {
 					onChange={onChangeIsNotDelete}
 					error={errorIsNotDelete} />
 			</Box>
-			<FormOptionEntityReference
+			<FormOptionManyToMany
 				withAccessToken
 				entityId={entityId}
 				url={process.env.SERVICE_DATA_TYPE}

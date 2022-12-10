@@ -80,8 +80,6 @@ let ManyToMany = ({
 
 	React.useEffect(() => {
 		if (!unmount) {
-			console.log('select', select);
-
 			actionApiListGet({
 				id: storeName, 
 				url,

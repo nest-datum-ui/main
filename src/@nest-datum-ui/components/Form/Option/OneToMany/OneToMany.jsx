@@ -11,7 +11,7 @@ import Loader from '@nest-datum-ui/components/Loader';
 import Field from './Field';
 import onSetDefault from './onSetDefault.js';
 
-let Entity = ({
+let OneToMany = ({
 	withAccessToken,
 	entityId,
 	url,
@@ -129,14 +129,14 @@ let Entity = ({
 	</React.Fragment>;
 };
 
-Entity = React.memo(Entity);
-Entity.defaultProps = {
+OneToMany = React.memo(OneToMany);
+OneToMany.defaultProps = {
 };
-Entity.propTypes = {
+OneToMany.propTypes = {
 	withAccessToken: PropTypes.bool,
 	entityId: PropTypes.string.isRequired,
 	path: PropTypes.string.isRequired,
 	url: PropTypes.string.isRequired,
 };
 
-export default Entity;
+export default OneToMany;

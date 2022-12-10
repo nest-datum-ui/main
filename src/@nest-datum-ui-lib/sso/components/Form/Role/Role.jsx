@@ -16,10 +16,12 @@ import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectRoleStatus from '@nest-datum-ui-lib/sso/components/Select/Role/Status';
+import FormRoleAccess from '@nest-datum-ui-lib/sso/components/Form/Role/Access';
 import Loader from '@nest-datum-ui/components/Loader';
 import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
-import FormOptionEntityReference from '@nest-datum-ui/components/Form/Option/Entity/Reference';
+import FormOptionManyToMany from '@nest-datum-ui/components/Form/Option/ManyToMany';
+import TableManyToMany from '@nest-datum-ui/components/Table/ManyToMany';
 import onCreate from './onCreate.js';
 
 let Role = () => {
@@ -84,6 +86,18 @@ let Role = () => {
 		actionDialogOpen('optionDrop', { entityId })();
 	}, [
 		entityId,
+	]);
+	const manyToManyFilterOptions = React.useCallback(() => ({
+		roleId: entityId,
+	}), [
+		entityId,
+	]);
+	const manyToManyColumns = React.useCallback(() => ([
+		[ 'id', 'ID' ], 
+		[ 'accessId', 'Access' ], 
+		[ 'userId', 'User' ], 
+		[ 'createdAt', 'Create at' ],
+	]), [
 	]);
 
 	React.useEffect(() => {
@@ -170,12 +184,33 @@ let Role = () => {
 					onChange={onChangeIsNotDelete}
 					error={errorIsNotDelete} />
 			</Box>
-			<FormOptionEntityReference
+			<FormOptionManyToMany
 				withAccessToken
 				entityId={entityId}
 				url={process.env.SERVICE_SSO}
 				path="role-option"
 				pathEntity="role" />
+			{(entityId
+				&& typeof entityId === 'string'
+				&& entityId !== '0')
+				? <TableManyToMany
+					withAccessToken
+					url={process.env.SERVICE_SSO}
+					path="role/access"
+					storeName="ssoRoleAccessRelation"
+					filterOptions={manyToManyFilterOptions}
+					columns={manyToManyColumns}
+					title="Accesses"
+					description="Accesses of current role.">
+					<FormRoleAccess
+						withAccessToken
+						entityId={entityId}
+						url={process.env.SERVICE_SSO}
+						path="role/access"
+						pathCreate={`role/${entityId}/access`}
+						storeName="ssoRoleAccessRelation" />
+				</TableManyToMany>
+				: <React.Fragment />}
 			<Grid
 				container
 				spacing={3}
