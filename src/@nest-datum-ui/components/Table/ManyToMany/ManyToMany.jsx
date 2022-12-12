@@ -34,6 +34,7 @@ let ManyToMany = ({
 	children,
 }) => {
 	const { enqueueSnackbar } = useSnackbar();
+	const [ filterOptionsMemo ] = React.useState(() => filterOptions);
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
 	const loader = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'loader' ]));
 	const total = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'total' ])) ?? 0;
@@ -57,16 +58,6 @@ let ManyToMany = ({
 		: ([ 'id' ]), [
 		columns,
 	]);
-	const select = React.useMemo(() => {
-		const output = {};
-
-		tableColumns.forEach(([ column ]) => {
-			output[column] = true;
-		});
-		return output;
-	}, [
-		tableColumns,
-	]);
 	const onAdd = React.useCallback((e) => {
 		actionDialogOpen(`${storeName}Item`, { relationId: '0' })();
 	}, [
@@ -87,8 +78,7 @@ let ManyToMany = ({
 				withAccessToken,
 				page, 
 				limit, 
-				filter: filterOptions(),
-				select,
+				filter: filterOptionsMemo(),
 			})(enqueueSnackbar);
 		}
 	}, [
@@ -96,11 +86,10 @@ let ManyToMany = ({
 		withAccessToken,
 		url,
 		path,
-		filterOptions,
+		filterOptionsMemo,
 		unmount,
 		page,
 		limit,
-		select,
 		enqueueSnackbar,
 	]);
 

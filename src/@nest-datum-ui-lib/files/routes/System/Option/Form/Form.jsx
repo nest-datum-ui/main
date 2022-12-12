@@ -67,21 +67,17 @@ let Form = () => {
 			withAccessToken
 			storeName="filesSystemOptionsList"
 			url={process.env.SERVICE_FILES}
-			path="system-option"
 			FormOptionComponent={FormSystemOption}
-			pathRelation="system"
+			path="system-option"
+			pathRelation="system/option"
 			pathCreate={`system/${entityId}/option`}
 			relationTitle="Systems"
 			relationDescription="List of systems that will own the current option."
 			filterOptions={() => ({
-				systemSystemOptions: {
-					systemOptionId: entityId,
-				},
+				systemOptionId: entityId,
 			})}
 			manyToManyColumns={() => ([
-				[ 'id', 'ID' ], 
-				[ 'name', 'Name' ],
-				[ 'description', 'Description' ],
+				[ 'systemId', 'System' ],
 				[ 'createdAt', 'Create at' ],
 			])} />
 		<DialogOptionDrop

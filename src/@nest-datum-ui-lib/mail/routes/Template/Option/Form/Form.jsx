@@ -67,21 +67,17 @@ let Form = () => {
 			withAccessToken
 			storeName="mailTemplateOptionsList"
 			url={process.env.SERVICE_MAIL}
-			path="template-option"
 			FormOptionComponent={FormTemplateOption}
-			pathRelation="template"
+			path="template-option"
+			pathRelation="template/option"
 			pathCreate={`template/${entityId}/option`}
 			relationTitle="Templates"
 			relationDescription="List of templates that will own the current option."
 			filterOptions={() => ({
-				templateTemplateOptions: {
-					templateOptionId: entityId,
-				},
+				templateOptionId: entityId,
 			})}
 			manyToManyColumns={() => ([
-				[ 'id', 'ID' ], 
-				[ 'name', 'Name' ],
-				[ 'description', 'Description' ],
+				[ 'templateId', 'Template' ],
 				[ 'createdAt', 'Create at' ],
 			])} />
 		<DialogOptionDrop

@@ -67,21 +67,17 @@ let Form = () => {
 			withAccessToken
 			storeName="ssoRoleOptionsList"
 			url={process.env.SERVICE_SSO}
-			path="role-option"
 			FormOptionComponent={FormRoleOption}
-			pathRelation="role"
+			path="role-option"
+			pathRelation="role/option"
 			pathCreate={`role/${entityId}/option`}
 			relationTitle="Roles"
 			relationDescription="List of roles that will own the current option."
 			filterOptions={() => ({
-				roleRoleOptions: {
-					roleOptionId: entityId,
-				},
+				roleOptionId: entityId,
 			})}
 			manyToManyColumns={() => ([
-				[ 'id', 'ID' ], 
-				[ 'name', 'Name' ],
-				[ 'description', 'Description' ],
+				[ 'roleId', 'Role' ],
 				[ 'createdAt', 'Create at' ],
 			])} />
 		<DialogOptionDrop

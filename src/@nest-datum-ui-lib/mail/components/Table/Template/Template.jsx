@@ -188,13 +188,13 @@ let Template = ({
 									<TableCell sx={{ minWidth: '18%' }}>
 										<Typography 
 											component={Link}
-											to={item.id}
+											to={`/mail/template/${item.id}`}
 											color={item.isDeleted
-												? 'line-through'
+												? 'textSecondary'
 												: 'inherit'}
 											sx={{
 												textDecoration: item.isDeleted
-													? 'textSecondary'
+													? 'line-through'
 													: 'inherit',
 											}}>
 											{item.id}
@@ -203,7 +203,7 @@ let Template = ({
 									<TableCell sx={{ minWidth: '28%' }}>
 										<Typography 
 											component={Link}
-											to={item.id}
+											to={`/mail/template/${item.id}`}
 											variant="h6"
 											color={item.isDeleted
 												? 'textSecondary'

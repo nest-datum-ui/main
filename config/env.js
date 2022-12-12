@@ -99,6 +99,7 @@ function getClientEnvironment(publicUrl) {
 				SERVICE_FILES: process.env.SERVICE_FILES,
 				SERVICE_PAGES: process.env.SERVICE_PAGES,
 				SERVICE_FORMS: process.env.SERVICE_FORMS,
+				SERVICE_CV: process.env.SERVICE_CV,
 
 				PAGE_SIGN_UP: process.env.PAGE_SIGN_UP,
 				PAGE_SIGN_IN: process.env.PAGE_SIGN_IN,

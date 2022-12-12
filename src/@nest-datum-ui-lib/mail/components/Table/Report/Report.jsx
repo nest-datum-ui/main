@@ -196,13 +196,13 @@ let Report = ({
 									<TableCell sx={{ minWidth: '15%' }}>
 										<Typography 
 											component={Link}
-											to={item.id}
+											to={`/mail/report/${item.id}`}
 											color={item.isDeleted
-												? 'line-through'
+												? 'textSecondary'
 												: 'inherit'}
 											sx={{
 												textDecoration: item.isDeleted
-													? 'textSecondary'
+													? 'line-through'
 													: 'inherit',
 											}}>
 											{item.id}
@@ -212,7 +212,6 @@ let Report = ({
 										<Typography 
 											component={Link}
 											to={item.id}
-											variant="h6"
 											color={item.isDeleted
 												? 'textSecondary'
 												: 'secondary'}

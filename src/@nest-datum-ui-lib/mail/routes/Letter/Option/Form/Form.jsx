@@ -67,21 +67,17 @@ let Form = () => {
 			withAccessToken
 			storeName="mailLetterOptionsList"
 			url={process.env.SERVICE_MAIL}
-			path="letter-option"
 			FormOptionComponent={FormLetterOption}
-			pathRelation="letter"
+			path="letter-option"
+			pathRelation="letter/option"
 			pathCreate={`letter/${entityId}/option`}
 			relationTitle="Letters"
 			relationDescription="List of letters that will own the current option."
 			filterOptions={() => ({
-				letterLetterOptions: {
-					letterOptionId: entityId,
-				},
+				letterOptionId: entityId,
 			})}
 			manyToManyColumns={() => ([
-				[ 'id', 'ID' ], 
-				[ 'name', 'Name' ],
-				[ 'description', 'Description' ],
+				[ 'letterId', 'Letter' ],
 				[ 'createdAt', 'Create at' ],
 			])} />
 		<DialogOptionDrop

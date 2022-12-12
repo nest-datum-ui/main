@@ -67,21 +67,17 @@ let Form = () => {
 			withAccessToken
 			storeName="formsFieldOptionsList"
 			url={process.env.SERVICE_FORMS}
-			path="field-option"
-			pathRelation="field"
-			pathCreate={`field/${entityId}/option`}
 			FormOptionComponent={FormFieldOption}
+			path="field-option"
+			pathRelation="field/option"
+			pathCreate={`field/${entityId}/option`}
 			relationTitle="Fields"
 			relationDescription="List of fields that will own the current option."
 			filterOptions={() => ({
-				fieldFieldOptions: {
-					fieldOptionId: entityId,
-				},
+				fieldOptionId: entityId,
 			})}
 			manyToManyColumns={() => ([
-				[ 'id', 'ID' ], 
-				[ 'name', 'Name' ],
-				[ 'description', 'Description' ],
+				[ 'fieldId', 'Field' ],
 				[ 'createdAt', 'Create at' ],
 			])} />
 		<DialogOptionDrop

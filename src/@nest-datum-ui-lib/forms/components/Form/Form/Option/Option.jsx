@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import Loader from '@nest-datum-ui/components/Loader';
-import SelectField from '@nest-datum-ui-lib/forms/components/Select/Field';
+import SelectForm from '@nest-datum-ui-lib/forms/components/Select/Form';
 import onCreate from './onCreate.js';
 
 let Option = ({ 
@@ -67,7 +67,7 @@ let Option = ({
 	return <React.Fragment>
 		<Loader	visible={typeof loader === 'undefined'} />
 		<Box py={2}>
-			<SelectField
+			<SelectForm
 				disabled={loader}
 				name="formId"
 				label="Select form"

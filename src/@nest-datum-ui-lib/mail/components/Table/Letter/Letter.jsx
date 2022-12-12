@@ -190,7 +190,7 @@ let Letter = ({
 											component={Link}
 											to={`/mail/letter/${item.id}`}
 											color={item.isDeleted
-												? 'line-through'
+												? 'textSecondary'
 												: 'inherit'}
 											sx={{
 												textDecoration: item.isDeleted
@@ -204,7 +204,6 @@ let Letter = ({
 										<Typography 
 											component={Link}
 											to={`/mail/letter/${item.id}`}
-											variant="h6"
 											color={item.isDeleted
 												? 'textSecondary'
 												: 'secondary'}
