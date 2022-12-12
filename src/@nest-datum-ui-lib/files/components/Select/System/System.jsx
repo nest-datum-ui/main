@@ -49,6 +49,10 @@ let System = ({
 			page, 
 			limit, 
 			query,
+			relations: {
+				systemSystemOptions: true,
+				systemSystemSystemOptions: true,
+			},
 		})(enqueueSnackbar);
 	}, [
 		enqueueSnackbar,

@@ -101,11 +101,11 @@ let Manage = () => {
 					size="small"
 					startIcon={<UploadIcon />}>
 					Upload files
+					{/*accept="image/png, image/jpeg, image/jpg, image/gif"*/}
 					<input 
 						multiple
 						name="files"
 						type="file"
-						accept="image/png, image/jpeg, image/jpg, image/gif"
 						onChange={onChange}
 						style={{
 							display: 'none',

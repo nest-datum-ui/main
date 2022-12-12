@@ -62,11 +62,11 @@ let InputFile = ({
 					color="primary"
 					startIcon={<InsertDriveFileIcon />}>
 					Select file
+					{/*accept="image/png, image/jpeg"*/}
 					<input 
 						id={`input-file-${name}`}
 						name={name}
 						type="file"
-						accept="image/png, image/jpeg"
 						onChange={onFile}
 						style={{
 							display: 'none',

@@ -10,6 +10,7 @@ import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store
 import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
 import { fireOpen as actionMenuOpen } from '@nest-datum-ui/components/Store/menu/actions/open.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
+import selectorFindArray from '@nest-datum-ui/components/Store/main/selectors/findArray.js';
 import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -18,6 +19,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FolderIcon from '@mui/icons-material/Folder';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import Loader from '@nest-datum-ui/components/Loader';
 import MenuFolderContext from '@nest-datum-ui-lib/files/components/Menu/Folder/Context';
 import MenuFileContext from '@nest-datum-ui-lib/files/components/Menu/File/Context';
@@ -211,6 +213,12 @@ let FileDataMap = ({
 										paddingBottom: '100%',
 									},
 								}}>
+								{(type === 'pdf')
+									? <PictureAsPdfIcon
+										sx={{
+											fontSize: '500%',
+										}} />
+									: <React.Fragment />}
 							{loader
 								? <Loader 
 									visible
@@ -285,19 +293,55 @@ let Manage = () => {
 	const folderData = useSelector(selectorMainExtract([ 'api', 'list', 'filesManageFolderList', 'data' ]));
 	const folderLoader = useSelector(selectorMainExtract([ 'api', 'list', 'filesManageFolderList', 'loader' ]));
 	const folderDataLength = useSelector(selectorMainExtract([ 'api', 'list', 'filesManageFolderList', 'data', 'length' ]));
+	const folderRootData = useSelector(selectorMainExtract([ 'api', 'list', 'filesManageFolderRoot', 'data' ]));
+	const systemId = useSelector(selectorMainExtract([ 'api', 'form', 'filesManageSystem', 'systemId' ]));
+	const system = useSelector(selectorFindArray([ 'api', 'list', 'filesSystemSelect', 'data' ], (item) => item['id'] === systemId));
 	const query = utilsUrlSearchPathItem('query', location.search);
 	const select = utilsUrlSearchPathItem('select', location.search);
 	const filter = utilsUrlSearchPathItem('filter', location.search);
 	const sort = utilsUrlSearchPathItem('sort', location.search);
+	const parentId = ((folderRootData || [])[0] || {})['id'];
+	const systemSystemOption = system['systemSystemOptions'].find((item) => item['systemOptionId'] === 'files-system-option-root');
+	const systemSystemOptionContent = systemSystemOption
+		? system['systemSystemSystemOptions'].find((item) => item['systemSystemOptionId'] === systemSystemOption['id'])
+		: undefined;
+	const rootPath = (systemSystemOptionContent || {})['content'];
 
 	React.useEffect(() => {
-		actionBreadcrumbsListSet('filesManageList', [{
-			key: 'files-folder-root',
-			text: '...',
-			path: '/',
-		}])();
+		if (rootPath) {
+			actionApiListGet({
+				id: 'filesManageFolderRoot', 
+				url: process.env.SERVICE_FILES,
+				path: 'folder',
+				withAccessToken: true,
+				limit: 1,
+				filter: {
+					systemId,
+					path: rootPath,
+				},
+			})(enqueueSnackbar);
+		}
 	}, [
+		rootPath,
+		systemId,
+		enqueueSnackbar,
 	]);
+
+	React.useEffect(() => {
+		if (rootPath
+			&& parentId) {
+			actionBreadcrumbsListSet('filesManageList', [{
+				key: parentId,
+				text: '...',
+				path: rootPath,
+			}])();
+		}
+	}, [
+		rootPath,
+		parentId,
+	]);
+
+	console.log('currentFolderId', parentId, rootPath, currentFolderId);
 	
 	React.useEffect(() => {
 		if (currentFolderId) {
@@ -310,6 +354,7 @@ let Manage = () => {
 				query,
 				filter: {
 					parentId: currentFolderId,
+					systemId,
 					...filter
 						? { ...JSON.parse(decodeURI(filter)) }
 						: {},
@@ -330,6 +375,7 @@ let Manage = () => {
 				query,
 				filter: {
 					parentId: currentFolderId,
+					systemId,
 					...filter
 						? { ...JSON.parse(decodeURI(filter)) }
 						: {},
@@ -343,6 +389,7 @@ let Manage = () => {
 			})(enqueueSnackbar);
 		}
 	}, [
+		systemId,
 		query,
 		select,
 		filter,
