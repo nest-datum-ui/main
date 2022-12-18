@@ -50,6 +50,11 @@ let Type = ({
 				page, 
 				limit, 
 				query,
+				relations: {
+					typeTypeOptions: {
+						typeOption: true,
+					},
+				},
 			})(enqueueSnackbar);
 		}
 	}, [

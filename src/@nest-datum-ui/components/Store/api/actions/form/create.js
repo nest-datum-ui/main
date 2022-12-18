@@ -26,7 +26,7 @@ export const fireFormCreate = ({
 
 		apiPath = `${url}/${path}?${new URLSearchParams({
 			...withAccessToken
-				? { accessToken: localStorage.getItem(`${process.env.SITE_URL}_accessToken`) }
+				? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
 				: {},
 		}).toString()}`;
 
@@ -49,12 +49,17 @@ export const fireFormCreate = ({
 				
 				const request = await axios.post(`${process.env.SERVICE_FILES}/file?${new URLSearchParams({
 					...withAccessToken
-						? { accessToken: localStorage.getItem(`${process.env.SITE_URL}_accessToken`) }
+						? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
 						: {},
 				}).toString()}`, formData);
 				
 				filesResponses.push(request.data);
-				delete data[key];
+				data[key] = JSON.stringify({
+					systemId: request.data[0]['systemId'],
+					src: request.data[0]['path'],
+					id: request.data[0]['id'],
+					type: request.data[0]['type'],
+				});
 			}
 		}
 

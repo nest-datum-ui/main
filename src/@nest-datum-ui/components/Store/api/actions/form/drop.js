@@ -24,7 +24,7 @@ export const fireFormDrop = ({
 
 		apiPath = `${url}/${path}/${entityId}?${new URLSearchParams({
 			...withAccessToken
-				? { accessToken: localStorage.getItem(`${process.env.SITE_URL}_accessToken`) }
+				? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
 				: {},
 		}).toString()}`;
 

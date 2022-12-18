@@ -28,6 +28,7 @@ let ManyToMany = ({
 	url,
 	path,
 	filterOptions,
+	relationOptions,
 	columns,
 	title,
 	description,
@@ -35,6 +36,7 @@ let ManyToMany = ({
 }) => {
 	const { enqueueSnackbar } = useSnackbar();
 	const [ filterOptionsMemo ] = React.useState(() => filterOptions);
+	const [ relationOptionsMemo ] = React.useState(() => relationOptions);
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
 	const loader = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'loader' ]));
 	const total = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'total' ])) ?? 0;
@@ -71,6 +73,8 @@ let ManyToMany = ({
 
 	React.useEffect(() => {
 		if (!unmount) {
+			const relations = relationOptionsMemo();
+
 			actionApiListGet({
 				id: storeName, 
 				url,
@@ -79,6 +83,9 @@ let ManyToMany = ({
 				page, 
 				limit, 
 				filter: filterOptionsMemo(),
+				...(Object.keys(relations || {}).length > 0)
+					? { relations }
+					: {},
 			})(enqueueSnackbar);
 		}
 	}, [
@@ -87,6 +94,7 @@ let ManyToMany = ({
 		url,
 		path,
 		filterOptionsMemo,
+		relationOptionsMemo,
 		unmount,
 		page,
 		limit,
@@ -159,8 +167,17 @@ let ManyToMany = ({
 						<TableHead>
 							<TableRow>
 							{Array.isArray(tableColumns)
-								? tableColumns.map(([ column, title ]) => {
-									return <TableCell key={column}>
+								? tableColumns.map(([ 
+									column, 
+									title, 
+									width, 
+									render,
+								]) => {
+									return <TableCell 
+										key={column}
+										{ ...width
+											? { width }
+											: {} }>
 										<Typography 
 											component="div"
 											variant="caption"
@@ -170,7 +187,10 @@ let ManyToMany = ({
 									</TableCell>
 								})
 								: <React.Fragment />}
-								<TableCell />
+								<TableCell
+									style={{
+										verticalAlign: 'top',
+									}} />
 							</TableRow>
 						</TableHead>
 						{(!loader && !unmount)
@@ -178,24 +198,50 @@ let ManyToMany = ({
 								{data.map((item, index) => {
 									return <TableRow key={item.id || index}>
 										{Array.isArray(tableColumns)
-											? tableColumns.map(([ column, title ]) => {
-												return <TableCell key={column}>
-													<Typography 
-														component="div"
-														color={item.isDeleted
-															? 'textSecondary'
-															: 'inherit'}
-														sx={{
-															textDecoration: item.isDeleted
-																? 'line-through'
-																: 'inherit',
-														}}>
-														{item[column]}
-													</Typography>
+											? tableColumns.map(([ 
+												column, 
+												title,
+												width,
+												render, 
+											], i) => {
+												return <TableCell 
+													key={column}
+													{ ...width
+														? { width }
+														: {} }
+													style={{
+														verticalAlign: 'top',
+													}}>
+													{(typeof render === 'function')
+														? render(column, item, i, data)
+														: <Typography 
+															component="div"
+															color={item.isDeleted
+																? 'textSecondary'
+																: 'inherit'}
+															sx={{
+																textDecoration: item.isDeleted
+																	? 'line-through'
+																	: 'inherit',
+															}}>
+															{(item[column] || '')
+																.split("\n")
+																.map((line, ii) => {
+																	return <Box 
+																		key={ii}
+																		pb={1}>
+																		{line}
+																	</Box>;
+																})}
+														</Typography>}
 												</TableCell>
 											})
 											: <React.Fragment />}
-											<TableCell width="1%">
+											<TableCell 
+												width="1%"
+												style={{
+													verticalAlign: 'top',
+												}}>
 												<IconButton onClick={onDrop(item.id)}>
 													<CloseIcon color="error" />
 												</IconButton>
@@ -251,6 +297,7 @@ ManyToMany.propTypes = {
 ManyToMany.defaultProps = {
 	withAccessToken: true,
 	filterOptions: () => ({}),
+	relationOptions: () => ({}),
 	columns: () => ([ 'id' ]),
 };
 

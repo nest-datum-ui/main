@@ -15,8 +15,8 @@ export const fireRefresh = ({
 	try {
 		apiPath = `${url}/${path}`;
 
-		const accessToken = localStorage.getItem(`${process.env.SITE_URL}_accessToken`);
-		const refreshToken = localStorage.getItem(`${process.env.SITE_URL}_refreshToken`);
+		const accessToken = localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`);
+		const refreshToken = localStorage.getItem(`${process.env.SERVICE_CURRENT}_refreshToken`);
 
 		if (accessToken
 			&& refreshToken) {
@@ -25,8 +25,8 @@ export const fireRefresh = ({
 				refreshToken,
 			});
 
-			localStorage.setItem(`${process.env.SITE_URL}_accessToken`, request.data.accessToken);
-			localStorage.setItem(`${process.env.SITE_URL}_refreshToken`, request.data.refreshToken);
+			localStorage.setItem(`${process.env.SERVICE_CURRENT}_accessToken`, request.data.accessToken);
+			localStorage.setItem(`${process.env.SERVICE_CURRENT}_refreshToken`, request.data.refreshToken);
 
 			Store().dispatch({
 				type: prefix +'.refresh',

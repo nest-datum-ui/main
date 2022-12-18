@@ -17,9 +17,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
-import SelectDataType from '@nest-datum-ui/components/Select/DataType';
+import SelectDataType from '@nest-datum-ui-lib/data-type/components/Select/Type';
 import Loader from '@nest-datum-ui/components/Loader';
-import Value from './Value';
+import MixedValue from '@nest-datum-ui/components/Form/MixedValue';
 import onSave from './onSave.js';
 
 let Setting = ({
@@ -82,6 +82,7 @@ let Setting = ({
 		entityId,
 	]);
 	const onChangeDataTypeId = React.useCallback((e, newValue) => {
+		actionApiFormProp(entityId, 'value', '')();
 		actionApiFormProp(entityId, 'dataTypeId', e.target.value)();
 	}, [
 		entityId,
@@ -190,7 +191,10 @@ let Setting = ({
 			{dataTypeId
 				? <React.Fragment>
 					<Box py={2}>
-						<Value entityId={entityId} />
+						<MixedValue 
+							entityId={entityId}
+							name="value"
+							label="Value" />
 					</Box>
 				</React.Fragment>
 				: <React.Fragment />}

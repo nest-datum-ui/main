@@ -8,7 +8,7 @@ import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import SelectDataType from '@nest-datum-ui/components/Select/DataType';
+import SelectDataType from '@nest-datum-ui-lib/data-type/components/Select/Type';
 
 const DataTypes = {
 	text: {

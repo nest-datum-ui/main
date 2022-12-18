@@ -201,7 +201,7 @@ let FileDataMap = ({
 										|| type === 'svg'
 										|| type === 'gif'))
 									? {
-										backgroundImage: `url("${process.env.SERVICE_FILES}${path}?accessToken=${localStorage.getItem(`${process.env.SITE_URL}_accessToken`)}")`,
+										backgroundImage: `url("${process.env.SERVICE_FILES}${path}?accessToken=${localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`)}")`,
 										backgroundSize: 'cover',
 										backgroundPosition: 'center',
 										backgroundRepeat: 'no-repeat',
@@ -341,8 +341,6 @@ let Manage = () => {
 		parentId,
 	]);
 
-	console.log('currentFolderId', parentId, rootPath, currentFolderId);
-	
 	React.useEffect(() => {
 		if (currentFolderId) {
 			actionApiListGet({

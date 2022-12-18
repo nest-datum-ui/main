@@ -34,8 +34,8 @@ export const fireLogin = ({
 				password: data.password,
 			});
 
-			localStorage.setItem(`${process.env.SITE_URL}_accessToken`, request.data.accessToken);
-			localStorage.setItem(`${process.env.SITE_URL}_refreshToken`, request.data.refreshToken);
+			localStorage.setItem(`${process.env.SERVICE_CURRENT}_accessToken`, request.data.accessToken);
+			localStorage.setItem(`${process.env.SERVICE_CURRENT}_refreshToken`, request.data.refreshToken);
 
 			Store().dispatch({
 				type: prefix +'.login',

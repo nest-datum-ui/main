@@ -190,11 +190,11 @@ let Field = ({
 											component={Link}
 											to={item.id}
 											color={item.isDeleted
-												? 'line-through'
+												? 'textSecondary'
 												: 'inherit'}
 											sx={{
 												textDecoration: item.isDeleted
-													? 'textSecondary'
+													? 'line-through'
 													: 'inherit',
 											}}>
 											{item.id}

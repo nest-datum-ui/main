@@ -12,14 +12,18 @@ import { fireOpen as actionDialogOpen } from '@nest-datum-ui/components/Store/di
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SelectContentStatus from '@nest-datum-ui-lib/forms/components/Select/Content/Status';
 import SelectForm from '@nest-datum-ui-lib/forms/components/Select/Form';
+import FormContentField from '@nest-datum-ui-lib/forms/components/Form/Content/Field';
 import Loader from '@nest-datum-ui/components/Loader';
 import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
+import TableManyToMany from '@nest-datum-ui/components/Table/ManyToMany';
 import onCreate from './onCreate.js';
 
 let Content = () => {
@@ -77,6 +81,116 @@ let Content = () => {
 		actionDialogOpen('optionDrop', { entityId })();
 	}, [
 		entityId,
+	]);
+	const manyToManyFilterOptions = React.useCallback(() => ({
+		contentId: entityId,
+	}), [
+		entityId,
+	]);
+	const manyToManyRelationOptions = React.useCallback(() => ({
+		field: true,
+	}), [
+	]);
+	const manyToManyColumns = React.useCallback(() => ([
+		[ 'fieldId', 'Field', '20%', (column, data) => {
+			return <React.Fragment>
+				<Box pb={1}>
+					<Typography	
+						component="div"
+						variant="h6">
+						{(data['field'] || {})['name'] || ''}
+					</Typography>
+				</Box>
+				<Typography	
+					component="div"
+					variant="caption">
+					{(data['field'] || {})['description'] || ''}
+				</Typography>
+			</React.Fragment>;
+		} ], 
+		[ 'value', 'Value', '40%', (column, data) => {
+			return <React.Fragment>
+				{((data['field'] || {})['dataTypeId'] === 'data-type-type-file')
+					? <React.Fragment>
+						{(() => {
+							let content = '';
+
+							try {
+								content = JSON.parse(data[column]);
+							}
+							catch (err) {
+							}
+
+							return <Box
+								sx={{
+									width: '100%',
+									height: '100%',
+									...(!loader
+										&& (content['type'] === 'png'
+											|| content['type'] === 'jpeg'
+											|| content['type'] === 'jpg'
+											|| content['type'] === 'svg'
+											|| content['type'] === 'gif'))
+										? {
+											backgroundColor: '#f7f7f7',
+											backgroundImage: `url("${process.env.SERVICE_FILES}${content['src']}?accessToken=${localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`)}")`,
+											backgroundSize: 'cover',
+											backgroundPosition: 'center',
+											backgroundRepeat: 'no-repeat',
+											'&:after': {
+												content: '""',
+												display: 'block',
+												paddingBottom: '100%',
+											},
+										}
+										: {},
+									}}>
+									{(content['type'] === 'pdf')
+										? <PictureAsPdfIcon
+											sx={{
+												fontSize: '500%',
+											}} />
+										: <React.Fragment />}
+								{loader
+									? <Loader 
+										visible
+										wrapper={{
+											sx: {
+												padding: '0px',
+											},
+										}}
+										sx={{
+											minWidth: '80px',
+											maxWidth: '80px',
+											minHeight: '80px',
+											maxHeight: '80px',
+										}} />
+									: <React.Fragment />}
+								<Typography component="div">
+									{(content['src'].indexOf('http') === 0)
+										? content['src']
+										: `${process.env.SERVICE_FILES}${content['src']}`}
+								</Typography>
+							</Box>
+						})()}
+					</React.Fragment>
+					: <Typography component="div">
+						{(data[column] || '')
+							.split("\n")
+							.map((line, ii) => {
+								return <Box 
+									key={ii}
+									pb={1}>
+									{line}
+								</Box>;
+							})}
+					</Typography>}
+			</React.Fragment>;
+		} ], 
+		[ 'userId', 'User', '20' ], 
+		[ 'createdAt', 'Create at', '20%' ],
+	]), [
+		loader,
 	]);
 
 	React.useEffect(() => {
@@ -150,6 +264,30 @@ let Content = () => {
 					onChange={onChangeIsNotDelete}
 					error={errorIsNotDelete} />
 			</Box>
+			{(entityId
+				&& typeof entityId === 'string'
+				&& entityId !== '0'
+				&& formId)
+				? <TableManyToMany
+					withAccessToken
+					url={process.env.SERVICE_FORMS}
+					path="content/field"
+					storeName="formsContentFieldRelation"
+					filterOptions={manyToManyFilterOptions}
+					relationOptions={manyToManyRelationOptions}
+					columns={manyToManyColumns}
+					title="Fields"
+					description="Fields of current form content.">
+					<FormContentField
+						withAccessToken
+						formId={formId}
+						entityId={entityId}
+						url={process.env.SERVICE_FORMS}
+						path="content/field"
+						pathCreate={`content/${entityId}/field`}
+						storeName="formsContentFieldRelation" />
+				</TableManyToMany>
+				: <React.Fragment />}
 			<Grid
 				container
 				spacing={3}

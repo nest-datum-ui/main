@@ -20,7 +20,7 @@ import Loader from '@nest-datum-ui/components/Loader';
 import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
 import FormOptionManyToMany from '@nest-datum-ui/components/Form/Option/ManyToMany';
-import SelectDataType from '@nest-datum-ui/components/Select/DataType';
+import SelectDataType from '@nest-datum-ui-lib/data-type/components/Select/Type';
 import onCreate from './onCreate.js';
 
 let Field = () => {

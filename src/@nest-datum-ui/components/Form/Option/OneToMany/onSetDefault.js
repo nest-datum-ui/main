@@ -47,22 +47,48 @@ const onSetDefault = async ({
 					id,
 					content,
 					[`${entityName}OptionId`]: entityOptionId,
-				}) => ({
-					parentId,
-					entityOptionId: optionData['id'],
-					entityId,
-					content,
-					isDeleted,
-					id,
-				}))
-				: [{
-					parentId: value['parentId'],
-					entityOptionId: optionData['id'],
-					entityId,
-					content: value['content'] ?? (optionData['defaultValue'] || ''),
-					isDeleted: false,
-					id: Date.now(),
-				}],
+				}) => {
+					let contentProcessed = content ?? (optionData['defaultValue'] || '');
+
+					if (optionData['dataTypeId'] === 'data-type-type-file') {
+						try {
+							const contentFromJson = JSON.parse(contentProcessed);
+
+							contentProcessed = contentFromJson;
+						}
+						catch (err) {
+						}
+					}
+					return ({
+						parentId,
+						entityOptionId: optionData['id'],
+						entityId,
+						content: contentProcessed,
+						isDeleted,
+						id,
+					});
+				})
+				: (() => {
+					let contentProcessed = value['content'] ?? (optionData['defaultValue'] || '');
+
+					if (optionData['dataTypeId'] === 'data-type-type-file') {
+						try {
+							const contentFromJson = JSON.parse(contentProcessed);
+
+							contentProcessed = contentFromJson;
+						}
+						catch (err) {
+						}
+					}
+					return [{
+						parentId: value['parentId'],
+						entityOptionId: optionData['id'],
+						entityId,
+						content: contentProcessed,
+						isDeleted: false,
+						id: Date.now(),
+					}]
+				})(),
 		});
 	});
 

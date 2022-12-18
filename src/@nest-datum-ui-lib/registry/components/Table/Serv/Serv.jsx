@@ -141,11 +141,11 @@ let Serv = ({
 									<TableCell sx={{ minWidth: '18%' }}>
 										<Typography 
 											color={item.isDeleted
-												? 'line-through'
+												? 'textSecondary'
 												: 'inherit'}
 											sx={{
 												textDecoration: item.isDeleted
-													? 'textSecondary'
+													? 'line-through'
 													: 'inherit',
 											}}>
 											{item.id}

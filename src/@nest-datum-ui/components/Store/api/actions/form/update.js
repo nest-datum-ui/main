@@ -26,7 +26,7 @@ export const fireFormUpdate = ({
 
 		apiPath = `${url}/${path}/${entityId}?${new URLSearchParams({
 			...withAccessToken
-				? { accessToken: localStorage.getItem(`${process.env.SITE_URL}_accessToken`) }
+				? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
 				: {},
 		}).toString()}`;
 
@@ -36,11 +36,74 @@ export const fireFormUpdate = ({
 			&& options.length > 0) {
 			apiPath = `${url}/${path}/${entityId}/options?${new URLSearchParams({
 				...withAccessToken
-					? { accessToken: localStorage.getItem(`${process.env.SITE_URL}_accessToken`) }
+					? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
 					: {},
 			}).toString()}`;
 
-			await axios.post(apiPath, options.map((option) => option.values));
+			let i = 0,
+				optionsPayload = [];
+
+			while (i < options.length) {
+				if (options[i]['dataTypeId'] === 'data-type-type-file') {
+					if (Array.isArray(options[i].values)) {
+						let ii = 0,
+							values = [];
+
+						while (ii < options[i].values.length) {
+							try {
+								delete options[i].values[ii]['errorSystemId'];
+								delete (options[i].values[ii].content || {})['errorSystemId'];
+
+								const fileNode = document.getElementById(`input-file-option-value-${options[i].values[ii]['id']}`);
+
+								if (((options[i].values[ii].content || {}).src || '').indexOf('data:image/') === 0) {
+									const formDataFiles = new FormData();
+
+									formDataFiles.append('files', fileNode.files[0]);
+									formDataFiles.append('systemId', options[i].values[ii].content['systemId']);
+
+									const requestUploadFile = await axios.post(`${process.env.SERVICE_FILES}/file?${new URLSearchParams({
+										...withAccessToken
+											? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
+											: {},
+									}).toString()}`, formDataFiles);
+
+									values.push({
+										...options[i].values[ii],
+										content: JSON.stringify({
+											...options[i].values[ii].content,
+											src: requestUploadFile.data[0]['path'],
+										}),
+										id: options[i].values[ii]['id'],
+										parentId: options[i].values[ii]['parentId'],
+										entityId: options[i].values[ii]['entityId'],
+										entityOptionId: options[i].values[ii]['entityOptionId'],
+									});
+								}
+								else {
+									values.push({
+										...options[i].values[ii],
+										content: JSON.stringify(options[i].values[ii].content),
+										id: options[i].values[ii]['id'],
+										parentId: options[i].values[ii]['parentId'],
+										entityId: options[i].values[ii]['entityId'],
+										entityOptionId: options[i].values[ii]['entityOptionId'],
+									});
+								}
+							}
+							catch (err) {
+							}
+							ii++;
+						}
+						optionsPayload.push(values);
+					}
+				}
+				else {
+					optionsPayload.push(options[i].values);
+				}
+				i++;
+			}
+			await axios.post(apiPath, optionsPayload);
 		}
 
 		snackbar('Entity successfully updated.', { variant: 'success' });

@@ -64,6 +64,7 @@ let Form = () => {
 		</Box>
 		<FormOption
 			withAccessToken
+			type="oneToMany"
 			storeName="ssoUserOptionsList"
 			url={process.env.SERVICE_SSO}
 			path="user-option" />

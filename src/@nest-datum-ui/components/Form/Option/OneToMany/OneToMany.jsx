@@ -22,7 +22,11 @@ let OneToMany = ({
 	const storeName = `options${entityId}`;
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
 	const data = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'data' ]));
-	const dataReady = Array.isArray(data) && (data || []).length > 0;
+	const dataValues = useSelector(selectorMainExtract([ 'api', 'list', `${storeName}Values`, 'data' ]));
+	const dataReady = Array.isArray(data) 
+		&& (data || []).length > 0
+		&& Array.isArray(dataValues)
+		&& (dataValues || []).length > 0;
 
 	React.useEffect(() => {
 		if (!unmount

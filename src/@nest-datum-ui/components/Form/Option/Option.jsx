@@ -18,13 +18,14 @@ import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
-import SelectDataType from '@nest-datum-ui/components/Select/DataType';
+import SelectDataType from '@nest-datum-ui-lib/data-type/components/Select/Type';
 import Loader from '@nest-datum-ui/components/Loader';
 import TableManyToMany from '@nest-datum-ui/components/Table/ManyToMany';
-import DefaultValue from './DefaultValue';
+import MixedValue from '@nest-datum-ui/components/Form/MixedValue';
 import onSave from './onSave.js';
 
 let Option = ({
+	type,
 	storeName,
 	withAccessToken,
 	url,
@@ -206,7 +207,10 @@ let Option = ({
 			</Box>
 			{dataTypeId
 				? <Box py={2}>
-					<DefaultValue entityId={entityId} />
+					<MixedValue 
+						entityId={entityId}
+						name="defaultValue"
+						label="Default value" />
 				</Box>
 				: <React.Fragment />}
 			<Box py={2}>
@@ -219,7 +223,8 @@ let Option = ({
 					onChange={onChangeRegex}
 					error={errorRegex} />
 			</Box>
-			{(entityId
+			{(type === 'manyToMany'
+				&& entityId
 				&& typeof entityId === 'string'
 				&& entityId !== '0')
 				? <TableManyToMany
@@ -326,6 +331,7 @@ let Option = ({
 
 Option = React.memo(Option);
 Option.defaultProps = {
+	type: 'manyToMany',
 };
 Option.propTypes = {
 	filterOptions: PropTypes.func,

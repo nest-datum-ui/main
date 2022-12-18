@@ -26,11 +26,22 @@ const onSetDefault = async ({
 				content,
 				...value
 			}) => {
+				let contentProcessed = content ?? (optionData['defaultValue'] || '');
+
+				if (optionData['dataTypeId'] === 'data-type-type-file') {
+					try {
+						const contentFromJson = JSON.parse(contentProcessed);
+
+						contentProcessed = contentFromJson;
+					}
+					catch (err) {
+					}
+				}
 				values.push({
 					...value,
 					entityOptionId: entityEntityOptions[0]['id'],
 					entityId,
-					content: content ?? (optionData['defaultValue'] || ''),
+					content: contentProcessed,
 				});
 			});
 		});

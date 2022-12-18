@@ -7,7 +7,7 @@ const DataTypes = {
 	'data-type-type-float': () => React.lazy(() => import('@nest-datum-ui/components/Input/Float')),
 	'data-type-type-boolean': () => React.lazy(() => import('@nest-datum-ui/components/Input/Bool')),
 	'data-type-type-text': () => React.lazy(() => import('@nest-datum-ui/components/Input/Text')),
-	'data-type-type-file': () => React.lazy(() => import('@nest-datum-ui/components/Input/File')),
+	'data-type-type-file': () => React.lazy(() => import('@nest-datum-ui-lib/files/components/Input/File')),
 };
 let Mixed = ({
 	dataTypeId,
@@ -36,19 +36,20 @@ Mixed.propTypes = {
 
 let MixedMemo = ({
 	dataTypeId,
-	defaultValue,
+	// defaultValue,
 	...props
 }) => {
-	const [ defaultValueMemo ] = React.useState(() => defaultValue);
+	// const [ defaultValueMemo ] = React.useState(() => defaultValue);
+
+	/*...(typeof defaultValueMemo !== 'undefined'
+		&& defaultValueMemo !== null
+		&& !Number.isNaN(defaultValueMemo))
+		? { defaultValue: defaultValueMemo }
+		: {} */
 
 	return DataTypes[dataTypeId]
 		? <Mixed 
 			{ ...props } 
-			{ ...(typeof defaultValueMemo !== 'undefined'
-				&& defaultValueMemo !== null
-				&& !Number.isNaN(defaultValueMemo))
-				? { defaultValue: defaultValueMemo }
-				: {} }
 			dataTypeId={dataTypeId} />
 		: <React.Fragment />;
 };

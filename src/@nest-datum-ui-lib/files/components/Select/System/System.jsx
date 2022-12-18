@@ -78,7 +78,7 @@ let System = ({
 				minHeight: '24px',
 				maxHeight: '24px',
 			}} />
-		{(!loader)
+		{(!loader && (children || Array.isArray(data)))
 			? <React.Fragment>
 				<Select 
 					name={name}

@@ -19,6 +19,7 @@ let Item = ({
 	allowDrop,
 	...props
 }) => {
+	const [ defaultValue ] = React.useState(() => content);
 	// TODO: вынести функцию в отдельный файл
 	const onChange = React.useCallback((e) => {
 		const values = [ ...(((Store()
@@ -72,7 +73,7 @@ let Item = ({
 					dataTypeId={props['dataTypeId']}
 					required={props['isRequired']}
 					name={`option-value-${id}`}
-					defaultValue={content}
+					defaultValue={defaultValue}
 					onChange={onChange} />
 			</Grid>
 			{allowDrop
