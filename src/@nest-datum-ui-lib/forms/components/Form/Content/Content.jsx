@@ -120,58 +120,66 @@ let Content = () => {
 							}
 							catch (err) {
 							}
+							const resourceUrl = (content['src'].indexOf('http') === 0)
+								? content['src']
+								: (content['src'].includes('?accessToken=')
+									? `${process.env.SERVICE_FILES}${content['src']}`
+									: `${process.env.SERVICE_FILES}${content['src']}?accessToken=${localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`)}`);
 
-							return <Box
-								sx={{
-									width: '100%',
-									height: '100%',
-									...(!loader
-										&& (content['type'] === 'png'
-											|| content['type'] === 'jpeg'
-											|| content['type'] === 'jpg'
-											|| content['type'] === 'svg'
-											|| content['type'] === 'gif'))
-										? {
-											backgroundColor: '#f7f7f7',
-											backgroundImage: `url("${process.env.SERVICE_FILES}${content['src']}?accessToken=${localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`)}")`,
-											backgroundSize: 'cover',
-											backgroundPosition: 'center',
-											backgroundRepeat: 'no-repeat',
-											'&:after': {
-												content: '""',
-												display: 'block',
-												paddingBottom: '100%',
-											},
-										}
-										: {},
-									}}>
-									{(content['type'] === 'pdf')
-										? <PictureAsPdfIcon
+							return <a 
+								target="_blank"
+								rel="noreferrer"
+								href={resourceUrl}
+								style={{
+									display: 'block',
+								}}>
+								<Box
+									sx={{
+										width: '100%',
+										height: '100%',
+										...(!loader
+											&& (content['type'] === 'png'
+												|| content['type'] === 'jpeg'
+												|| content['type'] === 'jpg'
+												|| content['type'] === 'svg'
+												|| content['type'] === 'gif'))
+											? {
+												backgroundColor: '#f7f7f7',
+												backgroundImage: `url("${process.env.SERVICE_FILES}${content['src']}?accessToken=${localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`)}")`,
+												backgroundSize: 'cover',
+												backgroundPosition: 'center',
+												backgroundRepeat: 'no-repeat',
+												'&:after': {
+													content: '""',
+													display: 'block',
+													paddingBottom: '100%',
+												},
+											}
+											: {},
+										}}>
+										{(content['type'] === 'pdf')
+											? <PictureAsPdfIcon
+												sx={{
+													fontSize: '500%',
+												}} />
+											: <React.Fragment />}
+									{loader
+										? <Loader 
+											visible
+											wrapper={{
+												sx: {
+													padding: '0px',
+												},
+											}}
 											sx={{
-												fontSize: '500%',
+												minWidth: '80px',
+												maxWidth: '80px',
+												minHeight: '80px',
+												maxHeight: '80px',
 											}} />
 										: <React.Fragment />}
-								{loader
-									? <Loader 
-										visible
-										wrapper={{
-											sx: {
-												padding: '0px',
-											},
-										}}
-										sx={{
-											minWidth: '80px',
-											maxWidth: '80px',
-											minHeight: '80px',
-											maxHeight: '80px',
-										}} />
-									: <React.Fragment />}
-								<Typography component="div">
-									{(content['src'].indexOf('http') === 0)
-										? content['src']
-										: `${process.env.SERVICE_FILES}${content['src']}`}
-								</Typography>
-							</Box>
+								</Box>
+							</a>
 						})()}
 					</React.Fragment>
 					: <Typography component="div">
