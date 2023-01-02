@@ -17,7 +17,8 @@ import RouteTemplateOptionForm from './routes/Template/Option/Form';
 import RouteTemplateStatusList from './routes/Template/Status/List';
 import RouteTemplateStatusForm from './routes/Template/Status/Form';
 import RouteReportDataList from './routes/Report/Data/List';
-import RouteReportDataForm from './routes/Report/Data/Form';
+import RouteReportStatusList from './routes/Report/Status/List';
+import RouteReportStatusForm from './routes/Report/Status/Form';
 import RouteSettingList from './routes/Setting/List';
 import RouteSettingForm from './routes/Setting/Form';
 
@@ -73,8 +74,11 @@ let Sso = () => {
 					path="report"
 					element={<RouteReportDataList />} />
 				<Route
-					path="report/:entityId"
-					element={<RouteReportDataForm />} />
+					path="report/statuses"
+					element={<RouteReportStatusList />} />
+				<Route
+					path="report/statuses/:entityId"
+					element={<RouteReportStatusForm />} />
 				<Route
 					path="settings"
 					element={<RouteSettingList />} />

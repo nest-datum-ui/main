@@ -103,7 +103,7 @@ let Letter = () => {
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
+		actionDialogOpen('mailLetterDrop', { entityId })();
 	}, [
 		entityId,
 	]);

@@ -13,17 +13,24 @@ import MenuLayout from '@nest-datum-ui/components/Menu/Layout';
 import MenuBreadcrumbs from '@nest-datum-ui/components/Menu/Breadcrumbs';
 import FormAccountPrimary from '@nest-datum-ui/components/Form/Account/Primary';
 import Loader from '@nest-datum-ui/components/Loader';
+import Store from '@nest-datum-ui/components/Store';
 
-let App = () => {
-	const { enqueueSnackbar } = useSnackbar();
-	const navigate = useNavigate();
-	const authFlag = useSelector(selectorMainExtract([ 'auth', 'authFlag' ]));
-
+let App = ({
+	enqueueSnackbar,
+	navigate,
+	authFlag,
+}) => {
 	React.useEffect(() => {
-		actionAuthRefresh({
-			url: process.env.SERVICE_SSO,
-			path: 'user/refresh',
-		})(navigate, enqueueSnackbar);
+		const loginFlag = Store()
+			.getState()['auth']
+			.loginFlag;
+
+		if (!loginFlag) {
+			actionAuthRefresh({
+				url: process.env.SERVICE_SSO,
+				path: 'user/refresh',
+			})(navigate, enqueueSnackbar);
+		}
 	}, [
 		enqueueSnackbar,
 		navigate,
@@ -102,9 +109,26 @@ let App = () => {
 };
 
 App = React.memo(App);
-App.defaultProps = {
-};
-App.propTypes = {
+
+let AppWrapper = () => {
+	const { enqueueSnackbar } = useSnackbar();
+	const navigate = useNavigate();
+	const authFlag = useSelector(selectorMainExtract([ 'auth', 'authFlag' ]));
+	const [ enqueueSnackbarMemo ] = React.useState(() => enqueueSnackbar);
+	const [ navigateMemo ] = React.useState(() => navigate);
+
+	return <React.Fragment>
+		<App
+			enqueueSnackbar={enqueueSnackbarMemo}
+			navigate={navigateMemo}
+			authFlag={authFlag} />
+	</React.Fragment>;
 };
 
-export default App;
+AppWrapper = React.memo(AppWrapper);
+AppWrapper.defaultProps = {
+};
+AppWrapper.propTypes = {
+};
+
+export default AppWrapper;

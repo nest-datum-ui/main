@@ -240,7 +240,7 @@ let Report = ({
 									</TableCell>
 									<TableCell sx={{ minWidth: '15%' }}>
 										<Typography component="div">
-											{item.letterStatusId}
+											{item.reportStatusId}
 										</Typography>
 									</TableCell>
 									<TableCell sx={{ minWidth: '15%' }}>

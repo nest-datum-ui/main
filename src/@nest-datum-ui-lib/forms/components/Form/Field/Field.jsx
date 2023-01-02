@@ -96,7 +96,7 @@ let Field = () => {
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
+		actionDialogOpen('formsFieldDrop', { entityId })();
 	}, [
 		entityId,
 	]);

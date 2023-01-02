@@ -83,7 +83,7 @@ let Form = () => {
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
+		actionDialogOpen('formsFormDrop', { entityId })();
 	}, [
 		entityId,
 	]);

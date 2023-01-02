@@ -54,12 +54,7 @@ export const fireFormCreate = ({
 				}).toString()}`, formData);
 				
 				filesResponses.push(request.data);
-				data[key] = JSON.stringify({
-					systemId: request.data[0]['systemId'],
-					src: request.data[0]['path'],
-					id: request.data[0]['id'],
-					type: request.data[0]['type'],
-				});
+				data[key] = request.data[0]['id'];
 			}
 		}
 

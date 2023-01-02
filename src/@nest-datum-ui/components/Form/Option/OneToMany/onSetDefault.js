@@ -11,10 +11,10 @@ const onSetDefault = async ({
 		.getState()['api']
 		.list[`${storeName}Values`] || {})
 		.data || [] ];
-	const listOptionsData = [ ...Store()
+	const listOptionsData = [ ...(Store()
 		.getState()['api']
 		.list[storeName]
-		.data ];
+		.data || []) ];
 	const prepereListData = {};
 	const newListData = [];
 
@@ -50,7 +50,7 @@ const onSetDefault = async ({
 				}) => {
 					let contentProcessed = content ?? (optionData['defaultValue'] || '');
 
-					if (optionData['dataTypeId'] === 'data-type-type-file') {
+					if (optionData['dataTypeId'] === 'data-type-type-file-upload') {
 						try {
 							const contentFromJson = JSON.parse(contentProcessed);
 
@@ -63,7 +63,9 @@ const onSetDefault = async ({
 						parentId,
 						entityOptionId: optionData['id'],
 						entityId,
-						content: contentProcessed,
+						content: (optionData['dataTypeId'] === 'data-type-type-file-upload')
+							? ({ id: contentProcessed })
+							: contentProcessed,
 						isDeleted,
 						id,
 					});
@@ -71,7 +73,7 @@ const onSetDefault = async ({
 				: (() => {
 					let contentProcessed = value['content'] ?? (optionData['defaultValue'] || '');
 
-					if (optionData['dataTypeId'] === 'data-type-type-file') {
+					if (optionData['dataTypeId'] === 'data-type-type-file-upload') {
 						try {
 							const contentFromJson = JSON.parse(contentProcessed);
 
@@ -84,7 +86,9 @@ const onSetDefault = async ({
 						parentId: value['parentId'],
 						entityOptionId: optionData['id'],
 						entityId,
-						content: contentProcessed,
+						content: (optionData['dataTypeId'] === 'data-type-type-file-upload')
+							? ({ id: contentProcessed })
+							: contentProcessed,
 						isDeleted: false,
 						id: Date.now(),
 					}]

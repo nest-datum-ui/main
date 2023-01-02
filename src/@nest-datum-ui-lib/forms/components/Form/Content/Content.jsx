@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import FilesPaperPrimary from '@nest-datum-ui-lib/files/components/Paper/Primary';
 import SelectContentStatus from '@nest-datum-ui-lib/forms/components/Select/Content/Status';
 import SelectForm from '@nest-datum-ui-lib/forms/components/Select/Form';
 import FormContentField from '@nest-datum-ui-lib/forms/components/Form/Content/Field';
@@ -78,7 +78,7 @@ let Content = () => {
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
+		actionDialogOpen('formsContentDrop', { entityId })();
 	}, [
 		entityId,
 	]);
@@ -110,77 +110,12 @@ let Content = () => {
 		} ], 
 		[ 'value', 'Value', '40%', (column, data) => {
 			return <React.Fragment>
-				{((data['field'] || {})['dataTypeId'] === 'data-type-type-file')
+				{((data['field'] || {})['dataTypeId'] === 'data-type-type-file-upload')
 					? <React.Fragment>
-						{(() => {
-							let content = '';
-
-							try {
-								content = JSON.parse(data[column]);
-							}
-							catch (err) {
-							}
-							const resourceUrl = (content['src'].indexOf('http') === 0)
-								? content['src']
-								: (content['src'].includes('?accessToken=')
-									? `${process.env.SERVICE_FILES}${content['src']}`
-									: `${process.env.SERVICE_FILES}${content['src']}?accessToken=${localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`)}`);
-
-							return <a 
-								target="_blank"
-								rel="noreferrer"
-								href={resourceUrl}
-								style={{
-									display: 'block',
-								}}>
-								<Box
-									sx={{
-										width: '100%',
-										height: '100%',
-										...(!loader
-											&& (content['type'] === 'png'
-												|| content['type'] === 'jpeg'
-												|| content['type'] === 'jpg'
-												|| content['type'] === 'svg'
-												|| content['type'] === 'gif'))
-											? {
-												backgroundColor: '#f7f7f7',
-												backgroundImage: `url("${process.env.SERVICE_FILES}${content['src']}?accessToken=${localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`)}")`,
-												backgroundSize: 'cover',
-												backgroundPosition: 'center',
-												backgroundRepeat: 'no-repeat',
-												'&:after': {
-													content: '""',
-													display: 'block',
-													paddingBottom: '100%',
-												},
-											}
-											: {},
-										}}>
-										{(content['type'] === 'pdf')
-											? <PictureAsPdfIcon
-												sx={{
-													fontSize: '500%',
-												}} />
-											: <React.Fragment />}
-									{loader
-										? <Loader 
-											visible
-											wrapper={{
-												sx: {
-													padding: '0px',
-												},
-											}}
-											sx={{
-												minWidth: '80px',
-												maxWidth: '80px',
-												minHeight: '80px',
-												maxHeight: '80px',
-											}} />
-										: <React.Fragment />}
-								</Box>
-							</a>
-						})()}
+						{(typeof data[column] === 'string'
+							&& data[column].length <= 50)
+							? <FilesPaperPrimary id={data[column]} />
+							: <React.Fragment />}
 					</React.Fragment>
 					: <Typography component="div">
 						{(data[column] || '')
@@ -198,7 +133,6 @@ let Content = () => {
 		[ 'userId', 'User', '20' ], 
 		[ 'createdAt', 'Create at', '20%' ],
 	]), [
-		loader,
 	]);
 
 	React.useEffect(() => {

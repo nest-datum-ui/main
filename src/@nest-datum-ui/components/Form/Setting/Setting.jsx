@@ -103,7 +103,7 @@ let Setting = ({
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('settingDop', { entityId })();
+		actionDialogOpen('settingDrop', { entityId })();
 	}, [
 		entityId,
 	]);

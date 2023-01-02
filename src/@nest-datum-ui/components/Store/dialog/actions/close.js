@@ -20,6 +20,5 @@ export const reducerClose = (state, action) => {
 	delete state[action.payload];
 	return ({ 
 		...state, 
-		_updater: state._updater + 1,
 	});
 };

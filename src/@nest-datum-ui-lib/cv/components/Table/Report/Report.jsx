@@ -26,6 +26,7 @@ import TablePagination from '@nest-datum-ui/components/Table/Pagination';
 import TableCellSort, {
 	onChange as onTableCellSortChange,
 } from '@nest-datum-ui/components/Table/Cell/Sort';
+import FilesPaperPrimary from '@nest-datum-ui-lib/files/components/Paper/Primary';
 import MenuReportContext from '@nest-datum-ui-lib/cv/components/Menu/Report/Context';
 import validateDate from '@nest-datum-ui/utils/validate/date.js';
 
@@ -150,7 +151,7 @@ let Report = ({
 									component="div"
 									variant="caption"
 									color="textSecondary">
-									File url
+									File
 								</Typography>
 							</TableCell>
 							<TableCell>
@@ -201,19 +202,9 @@ let Report = ({
 										</Typography>
 									</TableCell>
 									<TableCell sx={{ minWidth: '20%' }}>
-										<Typography 
-											component={Link}
-											to={`/cv/report/${item.id}`}
-											color={item.isDeleted
-												? 'textSecondary'
-												: 'secondary'}
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'initial',
-											}}>
-											{item.file}
-										</Typography>
+										{item.fileId
+											? <FilesPaperPrimary id={item.fileId} />
+											: <React.Fragment />}
 									</TableCell>
 									<TableCell sx={{ minWidth: '18%' }}>
 										<Typography component="div">

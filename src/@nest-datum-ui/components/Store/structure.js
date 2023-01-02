@@ -5,6 +5,7 @@ import dialog from './dialog/reducer.js';
 import breadcrumbs from './breadcrumbs/reducer.js';
 import api from './api/reducer.js';
 import auth from './auth/reducer.js';
+import queue from './queue/reducer.js';
 
 const structure = {
 	main,
@@ -14,6 +15,7 @@ const structure = {
 	breadcrumbs,
 	api,
 	auth,
+	queue,
 };
 
 export default structure;

@@ -7,6 +7,7 @@ import { fireSchema as actionDialogSchema } from './dialog/actions/schema.js';
 import { fireSchema as actionBreadcrumbsSchema } from './breadcrumbs/actions/schema.js';
 import { fireSchema as actionApiSchema } from './api/actions/schema.js';
 import { fireSchema as actionAuthSchema } from './auth/actions/schema.js';
+import { fireSchema as actionQueueSchema } from './auth/actions/schema.js';
 
 let Provider = ({ children }) => {
 	React.useEffect(() => {
@@ -16,6 +17,7 @@ let Provider = ({ children }) => {
 		actionBreadcrumbsSchema()();
 		actionApiSchema()();
 		actionAuthSchema()();
+		actionQueueSchema()();
 	}, [
 	]);
 

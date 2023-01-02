@@ -1,288 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 // import { format } from 'date-fns';
 import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
-import { fireListPush as actionBreadcrumbsListPush } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/push.js';
 import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
 // import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
 import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
-import { fireOpen as actionMenuOpen } from '@nest-datum-ui/components/Store/menu/actions/open.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import selectorFindArray from '@nest-datum-ui/components/Store/main/selectors/findArray.js';
 import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import FolderIcon from '@mui/icons-material/Folder';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import Loader from '@nest-datum-ui/components/Loader';
-import MenuFolderContext from '@nest-datum-ui-lib/files/components/Menu/Folder/Context';
-import MenuFileContext from '@nest-datum-ui-lib/files/components/Menu/File/Context';
+import FilesPaperPreviewFolder from '@nest-datum-ui-lib/files/components/Paper/Preview/Folder';
+import FilesPaperPreviewFile from '@nest-datum-ui-lib/files/components/Paper/Preview/File';
 
-let FolderDataMap = ({
-	id,
-	name,
-	path,
-	isDeleted,
-	isNotDelete,
-}) => {
-	const loader = useSelector(selectorMainExtract([ 'api', 'form', id, 'loader' ]));
-	const onFolder = React.useCallback((id, name, path) => (e) => {
-		actionBreadcrumbsListPush('filesManageList', { 
-			key: id,
-			text: name, 
-			path,
-		})();
-	}, [
-	]);
-	const onMenu = React.useCallback((itemId) => (e) => {
-		actionMenuOpen(`files-menu-folder-context-${itemId}`, e.target)();
-	}, [
-	]);
-
-	return <React.Fragment>
-		<Grid
-			item
-			xs={2}>
-			<Grid
-				container
-				spacing={1}>
-				<Grid
-					item
-					xs={true}>
-					<Button
-						component="div"
-						onClick={onFolder(id, name, path)}
-						sx={{
-							alignItems: 'flex-end',
-							flexDirection: 'column',
-							width: '100%',
-							height: '100%',
-							backgroundColor: '#f7f7f7',
-						}}>
-						<Box
-							sx={{
-								display: 'flex',
-								justifyContent: 'center',
-								alignItems: 'center',
-								width: '100%',
-								height: '100%',
-								backgroundColor: '#f7f7f7',
-								'&:after': {
-									content: '""',
-									display: 'block',
-									paddingBottom: '100%',
-								},
-							}}>
-							{loader
-								? <Loader 
-									visible
-									wrapper={{
-										sx: {
-											padding: '0px',
-										},
-									}}
-									sx={{
-										minWidth: '80px',
-										maxWidth: '80px',
-										minHeight: '80px',
-										maxHeight: '80px',
-									}} />
-								: <FolderIcon
-									sx={{
-										fontSize: '80px',
-											color: isDeleted
-												? 'grey !important'
-												: 'inherit',
-										}} />}
-						</Box>
-						<Typography
-							component="div"
-							variant="body2"
-							color={isDeleted
-								? 'textSecondary'
-								: 'initial'}
-							sx={{
-								width: '100%',
-								padding: '4px 2px',
-								textTransform: 'initial',
-								wordWrap: 'anywhere',
-								textAlign: 'center',
-								...isDeleted
-									? { textDecoration: 'line-through' }
-									: {},
-							}}>
-							{(name || '').length > 24
-								? `${(name || '').substring(0, 24)}...`
-								: name}
-						</Typography>
-					</Button>
-				</Grid>
-				<Grid
-					item
-					xs={false}>
-					<IconButton
-						size="small"
-						 onClick={onMenu(id)}>
-						<MoreVertIcon fontSize="small" />
-					</IconButton>
-					<MenuFolderContext 
-						id={`files-menu-folder-context-${id}`}
-						entityId={id}
-						isDeleted={isDeleted}
-						isNotDelete={isNotDelete} />
-				</Grid>
-			</Grid>
-		</Grid>
-	</React.Fragment>;
-};
-
-FolderDataMap = React.memo(FolderDataMap);
-FolderDataMap.defaultProps = {
-};
-FolderDataMap.propTypes = {
-};
-
-let FileDataMap = ({
-	id,
-	name,
-	type,
-	path,
-	isDeleted,
-	isNotDelete,
-}) => {
-	const loader = useSelector(selectorMainExtract([ 'api', 'form', id, 'loader' ]));
-	const onFile = React.useCallback((id, name) => (e) => {
-	}, [
-	]);
-	const onMenu = React.useCallback((itemId) => (e) => {
-		actionMenuOpen(`files-menu-file-context-${itemId}`, e.target)();
-	}, [
-	]);
-
-	return <React.Fragment>
-		<Grid
-			item
-			xs={2}>
-			<Grid
-				container
-				spacing={1}>
-				<Grid
-					item
-					xs={true}>
-					<Button
-						component="div"
-						onClick={onFile(id, name)}
-						sx={{
-							alignItems: 'flex-end',
-							flexDirection: 'column',
-							width: '100%',
-							height: '100%',
-							backgroundColor: '#f7f7f7',
-							padding: '0px',
-						}}>
-						<Box
-							sx={{
-								display: 'flex',
-								justifyContent: 'center',
-								alignItems: 'center',
-								width: '100%',
-								height: '100%',
-								backgroundColor: '#f7f7f7',
-								...(!loader
-									&& (type === 'png'
-										|| type === 'jpeg'
-										|| type === 'jpg'
-										|| type === 'svg'
-										|| type === 'gif'))
-									? {
-										backgroundImage: `url("${process.env.SERVICE_FILES}${path}?accessToken=${localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`)}")`,
-										backgroundSize: 'cover',
-										backgroundPosition: 'center',
-										backgroundRepeat: 'no-repeat',
-									}
-									: {},
-									'&:after': {
-										content: '""',
-										display: 'block',
-										paddingBottom: '100%',
-									},
-								}}>
-								{(type === 'pdf')
-									? <PictureAsPdfIcon
-										sx={{
-											fontSize: '500%',
-										}} />
-									: <React.Fragment />}
-							{loader
-								? <Loader 
-									visible
-									wrapper={{
-										sx: {
-											padding: '0px',
-										},
-									}}
-									sx={{
-										minWidth: '80px',
-										maxWidth: '80px',
-										minHeight: '80px',
-										maxHeight: '80px',
-									}} />
-								: <React.Fragment />}
-						</Box>
-						<Typography
-							component="div"
-							variant="body2"
-							color={isDeleted
-								? 'textSecondary'
-								: 'initial'}
-							sx={{
-								width: '100%',
-								padding: '4px 2px',
-								textTransform: 'initial',
-								wordWrap: 'anywhere',
-								textAlign: 'center',
-								...isDeleted
-									? { textDecoration: 'line-through' }
-									: {},
-							}}>
-							{(name || '').length > 24
-								? `${(name || '').substring(0, 24)}...`
-								: name}
-						</Typography>
-					</Button>
-				</Grid>
-				<Grid
-					item
-					xs={false}>
-					<IconButton
-						size="small"
-						onClick={onMenu(id)}>
-						<MoreVertIcon fontSize="small" />
-					</IconButton>
-					<MenuFileContext 
-						id={`files-menu-file-context-${id}`}
-						entityId={id}
-						isDeleted={isDeleted}
-						isNotDelete={isNotDelete} />
-				</Grid>
-			</Grid>
-		</Grid>
-	</React.Fragment>;
-};
-
-FileDataMap = React.memo(FileDataMap);
-FileDataMap.defaultProps = {
-};
-FileDataMap.propTypes = {
-};
-
-let Manage = () => {
+let Manage = (props) => {
 	const { enqueueSnackbar } = useSnackbar();
 	const location = useLocation();
 	const breadcrumbs = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'filesManageList', 'data' ])) || [];
@@ -419,12 +155,12 @@ let Manage = () => {
 						spacing={4}>
 						{(folderData || []).map((folder, i) => {
 							return <React.Fragment key={folder.id}>
-								<FolderDataMap { ...folder } />
+								<FilesPaperPreviewFolder { ...folder } { ...props } />
 							</React.Fragment>;
 						})}
 						{(fileData || []).map((file, i) => {
 							return <React.Fragment key={file.id}>
-								<FileDataMap { ...file } />
+								<FilesPaperPreviewFile { ...file } { ...props } />
 							</React.Fragment>;
 						})}
 					</Grid>
@@ -445,8 +181,14 @@ let Manage = () => {
 
 Manage = React.memo(Manage);
 Manage.defaultProps = {
+	menu: false,
+	selectSeveral: false,
 };
 Manage.propTypes = {
+	menu: PropTypes.bool,
+	selectSeveral: PropTypes.bool,
+	onSelectFolder: PropTypes.func,
+	onSelectFile: PropTypes.func,
 };
 
 export default Manage;

@@ -109,7 +109,7 @@ let Primary = () => {
 					} } />
 		</Tabs>
 		<Box 
-			py={tab <= 1
+			py={tab <= 2
 				? 2
 				: 0}>
 		{(tab <= 0)
@@ -214,7 +214,44 @@ let Primary = () => {
 						Statuses
 					</Button>
 				</ButtonGroup>
-				: <React.Fragment />)}
+				: ((tab === 2)
+					? <ButtonGroup
+						disableElevation
+						variant="outlined"
+						color="primary"
+						size="small">
+						<Button 
+							{ ...!((urlPathname.indexOf(`mail/report/options`) === 0)
+								|| (urlPathname.indexOf(`mail/report/statuses`) === 0)
+								|| (urlPathname.indexOf(`mail/report/routes`) === 0))
+								? { 
+									variant: 'contained',
+									sx: {
+										pointerEvents: 'none',
+									} 
+								}
+								: {
+									component: Link,
+									to: `/mail/report`,
+								} }>
+							Data
+						</Button>
+						<Button
+							{ ...(urlPathname.indexOf(`mail/report/statuses`) === 0)
+								? { 
+									variant: 'contained',
+									sx: {
+										pointerEvents: 'none',
+									} 
+								}
+								: {
+									component: Link,
+									to: `/mail/report/statuses`,
+								} }>
+							Statuses
+						</Button>
+					</ButtonGroup>
+					: <React.Fragment />))}
 		</Box>
 	</React.Fragment>;
 };

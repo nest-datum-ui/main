@@ -28,7 +28,7 @@ const onSetDefault = async ({
 			}) => {
 				let contentProcessed = content ?? (optionData['defaultValue'] || '');
 
-				if (optionData['dataTypeId'] === 'data-type-type-file') {
+				if (optionData['dataTypeId'] === 'data-type-type-file-upload') {
 					try {
 						const contentFromJson = JSON.parse(contentProcessed);
 

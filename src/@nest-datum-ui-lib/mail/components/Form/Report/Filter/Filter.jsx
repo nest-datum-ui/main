@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormSearch from '@nest-datum-ui/components/Form/Search';
-import FormLetterFilterStatus from '@nest-datum-ui-lib/mail/components/Form/Letter/Filter/Status';
+import FormReportFilterStatus from '@nest-datum-ui-lib/mail/components/Form/Report/Filter/Status';
 
 let Filter = () => {
 	const navigate = useNavigate();
@@ -177,7 +177,7 @@ let Filter = () => {
 					md={4}
 					lg={3}
 					xl={2}>
-					<FormLetterFilterStatus />
+					<FormReportFilterStatus />
 				</Grid>
 			</Grid>
 		</Box>

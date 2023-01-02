@@ -83,7 +83,7 @@ let Role = () => {
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
+		actionDialogOpen('ssoRoleDrop', { entityId })();
 	}, [
 		entityId,
 	]);

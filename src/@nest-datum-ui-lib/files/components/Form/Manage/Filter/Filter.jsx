@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { 
 	useNavigate,
 	useLocation, 
@@ -16,7 +17,10 @@ import FormSearch from '@nest-datum-ui/components/Form/Search';
 import FormFilterIsDeleted from '@nest-datum-ui/components/Form/Filter/IsDeleted';
 import FormFilterIsNotDelete from '@nest-datum-ui/components/Form/Filter/IsNotDelete';
 
-let Filter = () => {
+let Filter = ({
+	filters,
+	search,
+}) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [ filterFlag, setFilterFlag ] = React.useState(() => false);
@@ -85,112 +89,118 @@ let Filter = () => {
 	]);
 	
 	return <React.Fragment>
-		<FormSearch 
-			onSearch={onSearch}
-			defaultValue={query} />
-		<Grid
-			container
-			spacing={3}
-			alignItems="center"
-			justifyContent="flex-end"
-			sx={{
-				paddingTop: '24px',
-			}}>
-			{(filterFlag
-				&& typeof filter === 'object'
-				&& Object.keys(filter).length > 0)
-				? <Grid
-					item
-					xs={false}>
-					<Button
-						disableElevation
-						color="error"
-						startIcon={<CloseIcon />}
-						onClick={onClear}>
-						Clear
-					</Button>
-				</Grid>
-				: <React.Fragment />}
-			<Grid
-				item
-				xs={false}>
-				<Button
-					disableElevation
-					color="primary"
-					onClick={onFilterFlag}
-					startIcon={<React.Fragment>
-						<ExpandLessIcon 
-							sx={{ 
-								display: filterFlag 
-									? 'block'
-									: 'none',
-								}} />
-						<ExpandMoreIcon
-							sx={{ 
-								display: filterFlag 
-									? 'none'
-									: 'block',
-								}} />
-					</React.Fragment>}>
-					<Typography
-						sx={{ 
-							display: filterFlag 
-								? 'block'
-								: 'none',
-						}}>
-						Collapse
-					</Typography>
-					<Typography
-						sx={{ 
-							display: filterFlag 
-								? 'none'
-								: 'block',
-						}}>
-						Filters
-					</Typography>
-				</Button>
-			</Grid>
-		</Grid>
-		<Box 
-			pb={filterFlag
-				? 2
-				: 0}
-			sx={{
-				position: 'relative',
-				overflow: 'hidden',
-				...filterFlag
-					? {
-						height: 'initial',
-						opacity: '1',
-					}
-					: {
-						height: '0px',
-						opacity: '0.01',
-					},
-				}}>
-			<Grid
-				container
-				spacing={3}>
+		{search
+			? <FormSearch 
+				onSearch={onSearch}
+				defaultValue={query} />
+			: <React.Fragment />}
+		{filters
+			? <React.Fragment>
 				<Grid
-					item
-					xs={12}
-					sm={6}
-					md={4}
-					lg={3}
-					xl={2}>
-					<FormFilterIsDeleted storeName="filesManageFolderList" />
+					container
+					spacing={3}
+					alignItems="center"
+					justifyContent="flex-end"
+					sx={{
+						paddingTop: '24px',
+					}}>
+					{(filterFlag
+						&& typeof filter === 'object'
+						&& Object.keys(filter).length > 0)
+						? <Grid
+							item
+							xs={false}>
+							<Button
+								disableElevation
+								color="error"
+								startIcon={<CloseIcon />}
+								onClick={onClear}>
+								Clear
+							</Button>
+						</Grid>
+						: <React.Fragment />}
+					<Grid
+						item
+						xs={false}>
+						<Button
+							disableElevation
+							color="primary"
+							onClick={onFilterFlag}
+							startIcon={<React.Fragment>
+								<ExpandLessIcon 
+									sx={{ 
+										display: filterFlag 
+											? 'block'
+											: 'none',
+										}} />
+								<ExpandMoreIcon
+									sx={{ 
+										display: filterFlag 
+											? 'none'
+											: 'block',
+										}} />
+							</React.Fragment>}>
+							<Typography
+								sx={{ 
+									display: filterFlag 
+										? 'block'
+										: 'none',
+								}}>
+								Collapse
+							</Typography>
+							<Typography
+								sx={{ 
+									display: filterFlag 
+										? 'none'
+										: 'block',
+								}}>
+								Filters
+							</Typography>
+						</Button>
+					</Grid>
 				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					md={4}
-					lg={3}
-					xl={2}>
-					<FormFilterIsNotDelete storeName="filesManageFolderList" />
-				</Grid>
-			</Grid>
-		</Box>
+				<Box 
+					pb={filterFlag
+						? 2
+						: 0}
+					sx={{
+						position: 'relative',
+						overflow: 'hidden',
+						...filterFlag
+							? {
+								height: 'initial',
+								opacity: '1',
+							}
+							: {
+								height: '0px',
+								opacity: '0.01',
+							},
+						}}>
+					<Grid
+						container
+						spacing={3}>
+						<Grid
+							item
+							xs={12}
+							sm={6}
+							md={4}
+							lg={3}
+							xl={2}>
+							<FormFilterIsDeleted storeName="filesManageFolderList" />
+						</Grid>
+						<Grid
+							item
+							xs={12}
+							sm={6}
+							md={4}
+							lg={3}
+							xl={2}>
+							<FormFilterIsNotDelete storeName="filesManageFolderList" />
+						</Grid>
+					</Grid>
+				</Box>
+			</React.Fragment>
+			: <React.Fragment />}
 	</React.Fragment>;
 };
 
@@ -198,6 +208,8 @@ Filter = React.memo(Filter);
 Filter.defaultProps = {
 };
 Filter.propTypes = {
+	filters: PropTypes.bool,
+	search: PropTypes.bool,
 };
 
 export default Filter;

@@ -112,7 +112,7 @@ let User = () => {
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
+		actionDialogOpen('ssoUserDrop', { entityId })();
 	}, [
 		entityId,
 	]);

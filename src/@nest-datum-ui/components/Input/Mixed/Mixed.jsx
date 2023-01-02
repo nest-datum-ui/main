@@ -7,18 +7,25 @@ const DataTypes = {
 	'data-type-type-float': () => React.lazy(() => import('@nest-datum-ui/components/Input/Float')),
 	'data-type-type-boolean': () => React.lazy(() => import('@nest-datum-ui/components/Input/Bool')),
 	'data-type-type-text': () => React.lazy(() => import('@nest-datum-ui/components/Input/Text')),
-	'data-type-type-file': () => React.lazy(() => import('@nest-datum-ui-lib/files/components/Input/File')),
+	'data-type-type-file-upload': () => React.lazy(() => import('@nest-datum-ui-lib/files/components/Input/Upload')),
+	'data-type-type-file-select': () => React.lazy(() => import('@nest-datum-ui-lib/files/components/Input/Select')),
 };
 let Mixed = ({
 	dataTypeId,
 	...props
 }) => {
-	const Component = (DataTypes[dataTypeId] ?? (() => {}))();
+	const Component = React.useMemo(() => (DataTypes[dataTypeId] ?? (() => {}))(), [
+		dataTypeId,
+	]);
 
 	return <React.Fragment>
 		<React.Suspense fallback={<Loader visible />}>
 			{Component
-				? <Component { ...props } />
+				? <Component 
+					{ ...props }
+					{ ...(dataTypeId === 'data-type-type-file-select')
+						? { select: true }
+						: {} } />
 				: <React.Fragment />}
 		</React.Suspense>
 	</React.Fragment>;

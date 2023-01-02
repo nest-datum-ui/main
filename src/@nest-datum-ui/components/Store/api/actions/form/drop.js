@@ -58,7 +58,7 @@ export const fireFormDrop = ({
 							.split('/');
 
 						if (pathnameSplit[pathnameSplit.length - 1] === entityId) {
-							window.location.href = window.location.pathname;
+							window.location.href = window.location.pathname.replace(`/${entityId}`, '');
 						}
 					}
 				}

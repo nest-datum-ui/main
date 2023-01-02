@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import MiuDialog from '@mui/material/Dialog';
 import { fireClose as actionDialogClose } from '@nest-datum-ui/components/Store/dialog/actions/close.js';
+import selectorDialogVisible from '@nest-datum-ui/components/Store/dialog/selectors/visible.js';
+import MiuDialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -10,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import selectorDialogVisible from '@nest-datum-ui/components/Store/dialog/selectors/visible.js';
 
 let Dialog = ({
 	loader,

@@ -15,7 +15,7 @@ const onCreate = async ({
 
 		const {
 			id,
-			file,
+			fileId,
 			reportStatusId,
 		} = Store().getState()['api'].form[entityId];
 		const errors = {};
@@ -23,11 +23,11 @@ const onCreate = async ({
 		if (!validateStr(id, true)) {
 			errors['id'] = 'The value is in the wrong format.';
 		}
-		if (!validateStr(file)) {
-			errors['file'] = 'The value is in the wrong format.';
+		if (!validateStr(fileId)) {
+			errors['fileId'] = 'The value is in the wrong format.';
 		}
-		else if (!validateNotEmpty(file)) {
-			errors['file'] = 'Cannot be empty.';
+		else if (!validateNotEmpty(fileId)) {
+			errors['fileId'] = 'Cannot be empty.';
 		}
 		if (!reportStatusId
 			|| typeof reportStatusId !== 'string') {

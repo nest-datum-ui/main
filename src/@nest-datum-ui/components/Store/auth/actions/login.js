@@ -45,6 +45,7 @@ export const fireLogin = ({
 					refreshToken: request.data.refreshToken,
 					...request.data.userData,
 					password: '',
+					loginFlag: true,
 				},
 			});
 			clearTimeout(timeout);

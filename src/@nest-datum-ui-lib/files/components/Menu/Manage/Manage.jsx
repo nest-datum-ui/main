@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +16,10 @@ import UploadIcon from '@mui/icons-material/Upload';
 import Store from '@nest-datum-ui/components/Store';
 import Link from '@nest-datum-ui/components/Link';
 
-let Manage = () => {
+let Manage = ({
+	createFolder,
+	createFile,
+}) => {
 	const { enqueueSnackbar } = useSnackbar();
 	const navigate = useNavigate();
 	const loader = useSelector(selectorMainExtract([ 'api', 'form', 'filesManageSystem', 'loader' ]));
@@ -68,58 +72,67 @@ let Manage = () => {
 	}, [
 	]);
 
-	return <React.Fragment>
-		<Grid
-			container
-			spacing={2}>
+	return (createFolder
+		|| createFile)
+		? <React.Fragment>
 			<Grid
-				item
-				xs={false}>
-				<Button
-					disableElevation
-					disabled={loader}
-					variant="contained"
-					color="secondary"
-					size="small"
-					startIcon={<AddIcon />}
-					onClick={onAddFolder}
-					component={Link}
-					to="0"
-					disableUnmountFlag>
-					Create folder
-				</Button>
+				container
+				spacing={2}>
+				{createFolder
+					? <Grid
+						item
+						xs={false}>
+						<Button
+							disableElevation
+							disabled={loader}
+							variant="contained"
+							color="secondary"
+							size="small"
+							startIcon={<AddIcon />}
+							onClick={onAddFolder}
+							component={Link}
+							to="0"
+							disableUnmountFlag>
+							Create folder
+						</Button>
+					</Grid>
+					: <React.Fragment />}
+				{createFile
+					? <Grid
+						item
+						xs={false}>
+						<Button
+							disableElevation
+							disabled={loader}
+							component="label"
+							variant="contained"
+							color="secondary"
+							size="small"
+							startIcon={<UploadIcon />}>
+							Upload files
+							{/*accept="image/png, image/jpeg, image/jpg, image/gif"*/}
+							<input 
+								multiple
+								name="files"
+								type="file"
+								onChange={onChange}
+								style={{
+									display: 'none',
+								}} />
+						</Button>
+					</Grid>
+					: <React.Fragment />}
 			</Grid>
-			<Grid
-				item
-				xs={false}>
-				<Button
-					disableElevation
-					disabled={loader}
-					component="label"
-					variant="contained"
-					color="secondary"
-					size="small"
-					startIcon={<UploadIcon />}>
-					Upload files
-					{/*accept="image/png, image/jpeg, image/jpg, image/gif"*/}
-					<input 
-						multiple
-						name="files"
-						type="file"
-						onChange={onChange}
-						style={{
-							display: 'none',
-						}} />
-				</Button>
-			</Grid>
-		</Grid>
-	</React.Fragment>;
+		</React.Fragment>
+		: <React.Fragment />;
 };
 
 Manage = React.memo(Manage);
 Manage.defaultProps = {
 };
 Manage.propTypes = {
+	createFolder: PropTypes.bool,
+	createFile: PropTypes.bool,
 };
 
 export default Manage;

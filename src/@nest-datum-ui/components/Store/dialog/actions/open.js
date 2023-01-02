@@ -23,7 +23,6 @@ export const fireOpen = (id, data = {}) => async (prefix = 'dialog') => {
 export const reducerOpen = (state, action) => {
 	return ({ 
 		...state, 
-		_updater: state._updater + 1,
 		[action.payload.id]: action.payload.data,
 	});
 };

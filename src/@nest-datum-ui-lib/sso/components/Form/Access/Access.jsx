@@ -81,7 +81,7 @@ let Access = () => {
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
+		actionDialogOpen('ssoAccessDrop', { entityId })();
 	}, [
 		entityId,
 	]);

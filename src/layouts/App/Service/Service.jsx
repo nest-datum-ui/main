@@ -2,19 +2,24 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import Loader from '@nest-datum-ui/components/Loader';
 
-let Component,
-	timeout;
-let Service = () => {
-	const location = useLocation();
-	const serviceKey = location.pathname.split('/')[1] || '';
-	const [ mount, setMount ] = React.useState(() => false);
+let timeout;
+let Service = ({ serviceKey }) => {
+	const [ state, setState ] = React.useState(() => ({
+		mount: false,
+		Component: null,
+	}));
 
 	React.useEffect(() => {
-		setMount(false);
+		setState((currentState) => ({
+			...currentState,
+			mount: false,
+		}));
 		clearTimeout(timeout);
 
 		timeout = setTimeout(async () => {
 			if (serviceKey) {
+				let Component;
+
 				switch (serviceKey) {
 					case 'cv':
 						Component = (await import('@nest-datum-ui-lib/cv') || {})['default'];
@@ -47,25 +52,23 @@ let Service = () => {
 						Component = (await import('@nest-datum-ui/routes/NotFound') || {})['default'];
 						break;
 				}
-				setMount(true);
+				setState((currentState) => ({
+					mount: true,
+					Component,
+				}));
 			}
 		}, 0);
 	}, [
 		serviceKey,
-		setMount,
+		setState,
 	]);
 
 	return <React.Fragment>
-		<Loader 
-			visible={(!serviceKey
-				|| !Component
-				|| !mount)} />
-		{(serviceKey
-			&& Component
-			&& mount)
+		<Loader visible={!(!!state.Component && !!state.mount)} />
+		{(!!state.Component && !!state.mount)
 			? <React.Fragment>
 				<React.Suspense fallback={<React.Fragment />}>
-					<Component />
+					<state.Component />
 				</React.Suspense>
 			</React.Fragment>
 			: <React.Fragment />}
@@ -78,4 +81,22 @@ Service.defaultProps = {
 Service.propTypes = {
 };
 
-export default Service;
+let ServiceWrapper = () => {
+	const { pathname: locationPathname } = useLocation();
+	const serviceKey = locationPathname.split('/')[1] || '';
+
+	return <React.Fragment>
+		<Loader visible={!serviceKey} />
+		{serviceKey
+			? <Service serviceKey={serviceKey} />
+			: <React.Fragment />}
+	</React.Fragment>;
+};
+
+ServiceWrapper = React.memo(ServiceWrapper);
+ServiceWrapper.defaultProps = {
+};
+ServiceWrapper.propTypes = {
+};
+
+export default ServiceWrapper;

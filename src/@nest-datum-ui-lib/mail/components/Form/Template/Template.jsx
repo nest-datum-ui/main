@@ -96,7 +96,7 @@ let Template = () => {
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
+		actionDialogOpen('mailTemplateDrop', { entityId })();
 	}, [
 		entityId,
 	]);

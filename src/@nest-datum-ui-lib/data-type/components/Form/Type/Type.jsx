@@ -81,7 +81,7 @@ let Type = () => {
 		entityId,
 	]);
 	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
+		actionDialogOpen('dataTypeTypeDrop', { entityId })();
 	}, [
 		entityId,
 	]);
