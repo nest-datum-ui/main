@@ -8,11 +8,11 @@ import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import SelectSystem from '@nest-datum-ui-lib/files/components/Select/System';
-import FormManageFilter from '@nest-datum-ui-lib/files/components/Form/Manage/Filter';
-import MenuBreadcrumbs  from '@nest-datum-ui-lib/files/components/Menu/Breadcrumbs';
-import MenuManage from '@nest-datum-ui-lib/files/components/Menu/Manage';
-import ListManage from '@nest-datum-ui-lib/files/components/List/Manage';
+import FilesSelectSystem from '@nest-datum-ui-lib/files/components/Select/System';
+import FilesFormManageFilter from '@nest-datum-ui-lib/files/components/Form/Manage/Filter';
+import FilesMenuBreadcrumbs  from '@nest-datum-ui-lib/files/components/Menu/Breadcrumbs';
+import FilesMenuManage from '@nest-datum-ui-lib/files/components/Menu/Manage';
+import FilesListManage from '@nest-datum-ui-lib/files/components/List/Manage';
 
 let Manage = ({
 	label,
@@ -21,10 +21,12 @@ let Manage = ({
 	selectSystemLabel,
 	selectSystemWrapperProps,
 	selectSystemProps,
+	selectSeveral,
 	createFolder,
 	createFile,
 	filters,
 	search,
+	menu,
 	children,
 	onSelectFolder,
 	onSelectFile,
@@ -82,7 +84,7 @@ let Manage = ({
 					md={4}
 					lg={2}
 					{ ...selectSystemWrapperProps }>
-					<SelectSystem
+					<FilesSelectSystem
 						label={selectSystemLabel}
 						name="systemId"
 						value={systemId || ''}
@@ -96,23 +98,25 @@ let Manage = ({
 				{(filters
 					|| search)
 					? <Box pt={2}>
-						<FormManageFilter
+						<FilesFormManageFilter
 							filters={filters}
 							search={search} />
 					</Box>
 					: <React.Fragment />}
 				<Box overflow="hidden">
-					<MenuManage
+					<FilesMenuManage
 						createFolder={createFolder}
 						createFile={createFile} />
 				</Box>
 				<Box pb={1}>
-					<MenuBreadcrumbs />
+					<FilesMenuBreadcrumbs />
 				</Box>
 				<Box overflow="hidden">
-					<ListManage
+					<FilesListManage
 						onSelectFolder={onSelectFolder}
-						onSelectFile={onSelectFile} />
+						onSelectFile={onSelectFile}
+						selectSeveral={selectSeveral}
+						menu={menu} />
 				</Box>
 				{children
 					? children
@@ -130,6 +134,7 @@ Manage.defaultProps = {
 	selectSystemLabel: `Select file system`,
 	selectSystemWrapperProps: {},
 	selectSystemProps: {},
+	selectSeveral: false,
 };
 Manage.propTypes = {
 	label: PropTypes.string,
@@ -138,10 +143,12 @@ Manage.propTypes = {
 	selectSystemLabel: PropTypes.string,
 	selectSystemWrapperProps: PropTypes.object,
 	selectSystemProps: PropTypes.object,
+	selectSeveral: PropTypes.bool,
 	createFolder: PropTypes.bool,
 	createFile: PropTypes.bool,
 	filters: PropTypes.bool,
 	search: PropTypes.bool,
+	menu: PropTypes.bool,
 	onSelectFolder: PropTypes.func,
 	onSelectFile: PropTypes.func,
 };

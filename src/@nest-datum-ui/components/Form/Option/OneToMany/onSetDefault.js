@@ -34,13 +34,13 @@ const onSetDefault = async ({
 	listOptionsData.forEach((optionData) => {
 		let value = {
 			parentId: '',
-			content: '',
+			content: undefined,
 		};
 
 		newListData.push({
 			...optionData,
-			values: Array.isArray(prepereListData[optionData['id']])
-				&& prepereListData[optionData['id']].length > 0
+			values: (Array.isArray(prepereListData[optionData['id']])
+				&& prepereListData[optionData['id']].length > 0)
 				? prepereListData[optionData['id']].map(({
 					parentId,
 					isDeleted,
@@ -48,47 +48,21 @@ const onSetDefault = async ({
 					content,
 					[`${entityName}OptionId`]: entityOptionId,
 				}) => {
-					let contentProcessed = content ?? (optionData['defaultValue'] || '');
-
-					if (optionData['dataTypeId'] === 'data-type-type-file-upload') {
-						try {
-							const contentFromJson = JSON.parse(contentProcessed);
-
-							contentProcessed = contentFromJson;
-						}
-						catch (err) {
-						}
-					}
 					return ({
 						parentId,
 						entityOptionId: optionData['id'],
 						entityId,
-						content: (optionData['dataTypeId'] === 'data-type-type-file-upload')
-							? ({ id: contentProcessed })
-							: contentProcessed,
+						content: content ?? (optionData['defaultValue'] || ''),
 						isDeleted,
 						id,
 					});
 				})
 				: (() => {
-					let contentProcessed = value['content'] ?? (optionData['defaultValue'] || '');
-
-					if (optionData['dataTypeId'] === 'data-type-type-file-upload') {
-						try {
-							const contentFromJson = JSON.parse(contentProcessed);
-
-							contentProcessed = contentFromJson;
-						}
-						catch (err) {
-						}
-					}
 					return [{
 						parentId: value['parentId'],
 						entityOptionId: optionData['id'],
 						entityId,
-						content: (optionData['dataTypeId'] === 'data-type-type-file-upload')
-							? ({ id: contentProcessed })
-							: contentProcessed,
+						content: value['content'] ?? (optionData['defaultValue'] || ''),
 						isDeleted: false,
 						id: Date.now(),
 					}]

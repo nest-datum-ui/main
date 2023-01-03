@@ -6,27 +6,43 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import FilesPaperPrimary from '@nest-datum-ui-lib/files/components/Paper/Primary';
 import FilesDialogManageList from '@nest-datum-ui-lib/files/components/Dialog/Manage/List';
-import utilsCheckFileModel from '@nest-datum-ui/utils/check/file/model.js';
+import utilsCheckStr from '@nest-datum-ui/utils/check/str';
 
 let SelectMemo = ({
+	id,
+	uniqueId,
 	disabled,
 	label,
 	buttonText,
 	InputLabelProps,
 	SystemSelectLabelProps,
 	FileButtonLabelProps,
-	id,
-	systemId,
 	onChange,
 	select,
+	selectSeveral,
 	name,
 	children,
 	...props
 }) => {
+	const [ valueMemo, setValueMemo ] = React.useState(() => id || '');
 	const onOpen = React.useCallback((e) => {
 		actionDialogOpen('filesManageList')();
 	}, [
+	]);
+	const onUpdate = React.useCallback((e) => {
+		setValueMemo((currentState) => {
+			setTimeout(() => onChange(e), 0);
+
+			return selectSeveral
+				? ''
+				: e.target.value;
+		});
+	}, [
+		setValueMemo,
+		onChange,
+		selectSeveral,
 	]);
 
 	return <React.Fragment>
@@ -40,22 +56,40 @@ let SelectMemo = ({
 				? children
 				: <React.Fragment />}
 			<Box pb={2}>
-				<Button
-					variant="contained"
-					color="primary"
-					startIcon={<InsertDriveFileIcon />}
-					disabled={disabled}
-					disableElevation
-					{ ...select
-						? { onClick: onOpen }
-						: {} }
-					{ ...FileButtonLabelProps }>
-					{buttonText}
-				</Button>
+				{FileButtonLabelProps['children']
+					? <Button
+						variant="contained"
+						color="primary"
+						startIcon={<InsertDriveFileIcon />}
+						disabled={disabled}
+						disableElevation
+						{ ...select
+							? { onClick: onOpen }
+							: {} }
+						{ ...FileButtonLabelProps } />
+					: <Button
+						variant="contained"
+						color="primary"
+						startIcon={<InsertDriveFileIcon />}
+						disabled={disabled}
+						disableElevation
+						{ ...select
+							? { onClick: onOpen }
+							: {} }
+						{ ...FileButtonLabelProps }>
+						{buttonText}
+					</Button>}
 			</Box>
 		</div>
 		{select
-			? <FilesDialogManageList />
+			? <React.Fragment>
+				<FilesDialogManageList 
+					onChange={onUpdate}
+					selectSeveral={selectSeveral} />
+				{valueMemo
+					? <FilesPaperPrimary id={valueMemo} />
+					: <React.Fragment />}
+			</React.Fragment>
 			: <React.Fragment />}
 	</React.Fragment>;
 };
@@ -72,19 +106,15 @@ let Select = ({
 	...props
 }) => {
 	const [ uniqueId ] = React.useState(() => uuidv4());
-	const [ loaclValue ] = React.useState(() => utilsCheckFileModel(value)
+	const [ valueMemo ] = React.useState(() => utilsCheckStr(value)
 		? value
-		: (utilsCheckFileModel(defaultValue)
+		: (utilsCheckStr(defaultValue)
 			? defaultValue
-			: ({
-				src: '',
-				systemId: '',
-				id: uniqueId,
-			})));
+			: ''));
 
 	return <SelectMemo
-		id={loaclValue['id']}
-		systemId={loaclValue['systemId']}
+		uniqueId={uniqueId}
+		id={valueMemo}
 		{ ...props } />;
 };
 
@@ -96,6 +126,7 @@ Select.defaultProps = {
 	buttonText: 'Select file',
 	onChange: (() => {}),
 	onOpen: (() => {}),
+	selectSeveral: false,
 };
 Select.propTypes = {
 	InputLabelProps: PropTypes.object,
@@ -112,6 +143,7 @@ Select.propTypes = {
 	label: PropTypes.string,
 	buttonText: PropTypes.string,
 	select: PropTypes.bool,
+	selectSeveral: PropTypes.bool,
 	onChange: PropTypes.func,
 };
 

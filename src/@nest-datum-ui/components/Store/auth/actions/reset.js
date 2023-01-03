@@ -9,13 +9,21 @@ export const fireReset = ({
 	url,
 	path,
 }) => async (navigate = () => {}, snackbar = () => {}, prefix = 'auth') => {
+	let apiPath = '';
+
 	try {
 		fireProp('loader', true)();
+
+		apiPath = `${url}/${path}`;
 
 		const data = { ...Store().getState()[prefix] };
 
 		const verifyKey = ((window.location.search.split('verifyKey='))[1].split('&'))[0];
 
+		if (!data.errors
+			|| typeof data.errors !== 'object') {
+			data.errors = {};
+		}
 		if (!verifyKey
 			|| typeof verifyKey !== 'string') {
 			data.errors['verifyKey'] = 'Activation key not found.';
@@ -30,8 +38,8 @@ export const fireReset = ({
 			data.errors['repeatedPassword'] = 'Passwords do not match.';
 		}
 
-		if (Object.keys(data.errors).length === 0) {
-			await axios.post(`${process.env.API_SSO}/${process.env.API_SSO_RESET}`, {
+		if (Object.keys(data.errors || {}).length === 0) {
+			await axios.post(apiPath, {
 				verifyKey,
 				password: data.password,
 				repeatedPassword: data.repeatedPassword,
@@ -63,7 +71,7 @@ export const fireReset = ({
 		
 		fireProp('loader', false)();
 
-		return snackbar(errorMessage, { variant: 'error' });
+		return snackbar(`${errorMessage} - ${apiPath}`, { variant: 'error' });
 	}
 };
 

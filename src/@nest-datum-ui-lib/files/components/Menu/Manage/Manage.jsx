@@ -91,7 +91,7 @@ let Manage = ({
 							startIcon={<AddIcon />}
 							onClick={onAddFolder}
 							component={Link}
-							to="0"
+							to="/files/manage/0"
 							disableUnmountFlag>
 							Create folder
 						</Button>

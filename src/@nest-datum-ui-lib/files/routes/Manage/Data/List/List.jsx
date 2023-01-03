@@ -8,7 +8,6 @@ import DialogFolderStore from '@nest-datum-ui-lib/files/components/Dialog/Folder
 import DialogFolderDrop from '@nest-datum-ui-lib/files/components/Dialog/Folder/Drop';
 import DialogFileStore from '@nest-datum-ui-lib/files/components/Dialog/File/Store';
 import DialogFileDrop from '@nest-datum-ui-lib/files/components/Dialog/File/Drop';
-
 import FilesPaperManage from '@nest-datum-ui-lib/files/components/Paper/Manage';
 
 let List = () => {
@@ -27,7 +26,12 @@ let List = () => {
 	]);
 
 	return <React.Fragment>
-		<FilesPaperManage>
+		<FilesPaperManage
+			createFolder
+			createFile
+			filters
+			search
+			menu>
 			<Routes>
 				<Route
 					path=":entityId"

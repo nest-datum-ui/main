@@ -1,26 +1,22 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { 
-	Link,
-	useLocation, 
-} from 'react-router-dom';
 import { fireOpen as actionMenuOpen } from '@nest-datum-ui/components/Store/menu/actions/open.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MenuAccountContext from '@nest-datum-ui/components/Menu/Account/Context';
+import FilesPaperPrimary from '@nest-datum-ui-lib/files/components/Paper/Primary';
 
 let Primary = () => {
-	const location = useLocation();
 	const login = useSelector(selectorMainExtract([ 'auth', 'login' ])) ?? '';
 	let firstname = '',
 		lastname = '',
 		avatar = '';
 
-	useSelector(selectorMainExtract([ 'auth', 'userUserOptions' ], (userUserOptions) => userUserOptions.forEach((item) => {
+	useSelector(selectorMainExtract([ 'auth', 'userUserOptions' ], (userUserOptions) => (userUserOptions || []).forEach((item) => {
 		switch (item['userOption']['id']) {
 			case 'sso-user-option-avatar':
 				try {
@@ -55,17 +51,21 @@ let Primary = () => {
 			<Grid
 				item
 				xs={false}>
-				<Avatar
-					alt="AA"
-					src={avatar
-						? (process.env.API_FILES + avatar)
-						: ''}
-					{ ...(location.pathname === '/account')
-						? {}
-						: {
-							component: Link,
-							to: '/account',
-						} } />
+				{avatar
+					? <Box
+						width="48px"
+						height="48px"
+						sx={{
+							borderRadius: '50%',
+							position: 'relative',
+							overflow: 'hidden',
+						}}>
+						<FilesPaperPrimary 
+							id={avatar}
+							disableTitle
+							disableSize />
+					</Box>
+					: <React.Fragment />}
 			</Grid>
 			<Grid
 				item

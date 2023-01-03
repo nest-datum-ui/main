@@ -1,7 +1,7 @@
 
 const onRead = ({
 	event,
-	setLocalValue,
+	setFileState,
 	setRendered,
 	onChange,
 	previewRef,
@@ -12,7 +12,7 @@ const onRead = ({
 
 	reader.readAsDataURL(event.target.files[0]);
 	reader.addEventListener('load', (event) => {
-		setLocalValue((currentState) => {
+		setFileState((currentState) => {
 			const newState = {
 				...currentState,
 				src: event.target.result,
@@ -28,6 +28,7 @@ const onRead = ({
 					files,
 				},
 			});
+
 			((previewRef.current || {}).style || {})['backgroundImage'] = `url(${event.target.result})`;
 
 			return newState;

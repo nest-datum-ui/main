@@ -15,7 +15,8 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SelectTypeStatus from '@nest-datum-ui-lib/data-type/components/Select/Type/Status';
+import DataTypeSelectTypeStatus from '@nest-datum-ui-lib/data-type/components/Select/Type/Status';
+import DataTypeSelectType from  '@nest-datum-ui-lib/data-type/components/Select/Type';
 import Loader from '@nest-datum-ui/components/Loader';
 import InputText from '@nest-datum-ui/components/Input/Text';
 import InputBool from '@nest-datum-ui/components/Input/Bool';
@@ -29,12 +30,14 @@ let Type = () => {
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
 	const loader = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'loader' ]));
 	const id = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'id' ]));
+	const parentId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'parentId' ]));
 	const name = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'name' ]));
 	const description = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'description' ]));
 	const typeStatusId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'typeStatusId' ]));
 	const isNotDelete = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isNotDelete' ]));
 	const isDeleted = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isDeleted' ]));
 	const errorId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'id' ]));
+	const errorParentId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'parentId' ]));
 	const errorName = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'name' ]));
 	const errorDescription = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'description' ]));
 	const errorTypeStatusId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'typeStatusId' ]));
@@ -57,6 +60,11 @@ let Type = () => {
 	]);
 	const onChangeId = React.useCallback((e) => {
 		actionApiFormProp(entityId, 'id', e.target.value)();
+	}, [
+		entityId,
+	]);
+	const onChangeParentId = React.useCallback((e) => {
+		actionApiFormProp(entityId, 'parentId', e.target.value)();
 	}, [
 		entityId,
 	]);
@@ -83,6 +91,9 @@ let Type = () => {
 	const onDelete = React.useCallback((e) => {
 		actionDialogOpen('dataTypeTypeDrop', { entityId })();
 	}, [
+		entityId,
+	]);
+	const selectParentFilter = React.useCallback(() => ({ id: [ '$Not', entityId ] }), [
 		entityId,
 	]);
 
@@ -153,7 +164,17 @@ let Type = () => {
 					error={errorDescription} />
 			</Box>
 			<Box py={2}>
-				<SelectTypeStatus
+				<DataTypeSelectType
+					disabled={loader}
+					label="Parent type"
+					name="parentId"
+					value={parentId || ''}
+					onChange={onChangeParentId}
+					error={errorParentId}
+					filter={selectParentFilter} />
+			</Box>
+			<Box py={2}>
+				<DataTypeSelectTypeStatus
 					disabled={loader}
 					label="Status"
 					name="typeStatusId"

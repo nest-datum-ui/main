@@ -27,11 +27,13 @@ export const reducerAdd = (state, action) => {
 			ready: false,
 		};
 	}
-	state[action.payload.queueName].loop.push(action.payload.id);
-
-	if (!state[action.payload.queueName].now) {
+	if (!state[action.payload.queueName].now
+		|| state[action.payload.queueName].loop.length <= 0) {
 		state[action.payload.queueName].now = action.payload.id;
 	}
+	state[action.payload.queueName].loop.push(action.payload.id);
+	state[action.payload.queueName].ready = false;
+
 	return ({
 		...state,
 	});

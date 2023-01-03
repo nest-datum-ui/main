@@ -35,19 +35,16 @@ let File = ({
 			? checkedArr.indexOf(id)
 			: (checkedArr.length === 1)
 				? 0
-				: -1
+				: -1;
+		const currentSelectedFlag = id === checkedArr[currentIndex];
 
 		if (currentIndex >= 0) {
 			checkedArr.splice(currentIndex, 1);
 		}
-		if (!!(!selectSeveral
-			&& id !== checkedArr[currentIndex])) {
+		if (!selectSeveral
+			&& !currentSelectedFlag) {
 			checkedArr.push(id);
-
-			console.log('333333333', !!(!selectSeveral
-				&& id !== checkedArr[currentIndex]), [ ...checkedArr ]);
 		}
-
 		actionApiListProp('filesSystemSelect', 'checked', [ ...checkedArr ])();
 
 		if (typeof onSelectFile === 'function') {
@@ -89,6 +86,8 @@ let File = ({
 							textTransform: 'initial',
 						}}>
 						<FilesPaperPreview 
+							listing
+							path={path}
 							src={path}
 							name={name}
 							size={size}
@@ -134,6 +133,7 @@ let File = ({
 
 File = React.memo(File);
 File.defaultProps = {
+	selectSeveral: false,
 };
 File.propTypes = {
 	path: PropTypes.string,
@@ -146,6 +146,7 @@ File.propTypes = {
 	isDeleted: PropTypes.bool,
 	isNotDelete: PropTypes.bool,
 	menu: PropTypes.bool,
+	selectSeveral: PropTypes.bool,
 	onSelectFile: PropTypes.func,
 };
 

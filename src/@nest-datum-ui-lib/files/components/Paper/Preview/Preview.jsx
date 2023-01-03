@@ -16,10 +16,15 @@ let Preview = ({
 	rendered, 
 	id,
 	src,
+	path,
 	name,
 	size,
 	loader,
 	content,
+	listing,
+	disableTitle,
+	disableSize,
+	...props
 }) => {
 	const isMedia = React.useMemo(() => utilsCheckStrMedia(src), [
 		src,
@@ -115,19 +120,23 @@ let Preview = ({
 					})
 					: <React.Fragment />}
 			</Box>
-			{name
+			{(name && !disableTitle)
 				? <Typography 
 					component="div"
 					variant="body2"
 					sx={{
 						wordWrap: 'anywhere',
 					}}>
-					<b>{name.length > 40
-						? `${(name || '').substring(0, 40)}...`
-						: name}</b>
+					<b>{(path && !listing)
+						? (path.length > 80
+							? `${(path || '').substring(0, 80)}...`
+							: path)
+						: (name.length > 40
+							? `${(name || '').substring(0, 40)}...`
+							: name)}</b>
 				</Typography>
 				: <React.Fragment />}
-			{(typeof size === 'number')
+			{(typeof size === 'number' && !disableSize)
 				? <Typography
 					component="div"
 					variant="caption">
@@ -140,15 +149,25 @@ let Preview = ({
 
 Preview = React.memo(Preview);
 Preview.defaultProps = {
+	listing: false,
+	disableTitle: false,
+	disableSize: false,
 };
 Preview.propTypes = {
 	loader: PropTypes.bool,
 	rendered: PropTypes.bool,
+	listing: PropTypes.bool,
 	wrapperRef: PropTypes.object,
 	src: PropTypes.string,
+	path: PropTypes.string,
 	id: PropTypes.string,
 	name: PropTypes.string,
-	size: PropTypes.number,
+	disableTitle: PropTypes.bool,
+	disableSize: PropTypes.bool,
+	size: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number,
+	]),
 	content: PropTypes.func,
 };
 

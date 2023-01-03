@@ -19,12 +19,16 @@ export const fireRecovery = ({
 
 		const data = { ...Store().getState()[prefix] };
 
+		if (!data.errors
+			|| typeof data.errors !== 'object') {
+			data.errors = {};
+		}
+
 		if (!data.email
 			|| !utilsValidateEmail(data.email, true)) {
 			data.errors['email'] = 'The email is in the wrong format.';
 		}
-
-		if (Object.keys(data.errors).length === 0) {
+		if (Object.keys(data.errors || {}).length === 0) {
 			await axios.post(apiPath, {
 				email: data.email,
 			});

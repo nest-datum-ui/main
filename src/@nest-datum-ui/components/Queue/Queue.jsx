@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { fireAdd as actionQueueAdd } from '@nest-datum-ui/components/Store/queue/actions/add.js';
+import { fireDrop as actionQueueDrop } from '@nest-datum-ui/components/Store/queue/actions/drop.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import selectorQueueNow from '@nest-datum-ui/components/Store/queue/selectors/now.js';
 
@@ -42,6 +43,10 @@ QueueMemo.propTypes = {
 
 let Queue = (queueName, Component) => React.memo((props) => {
 	const [ uniqueId ] = React.useState(() => uuidv4());
+
+	React.useEffect(() => () => actionQueueDrop(queueName, uniqueId)(), [
+		uniqueId,
+	]);
 
 	return <QueueMemo 
 		uniqueId={uniqueId}

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
@@ -16,6 +17,7 @@ import FormSearch from '@nest-datum-ui/components/Form/Search';
 let Type = ({
 	name,
 	children,
+	filter,
 	...props
 }) => {
 	const { enqueueSnackbar } = useSnackbar();
@@ -55,6 +57,9 @@ let Type = ({
 						typeOption: true,
 					},
 				},
+				...(typeof filter === 'function')
+					? { filter: filter() }
+					: {},
 			})(enqueueSnackbar);
 		}
 	}, [
@@ -63,6 +68,7 @@ let Type = ({
 		page,
 		limit,
 		query,
+		filter,
 	]);
 
 	React.useEffect(() => () => {
@@ -166,6 +172,7 @@ Type.defaultProps = {
 	onChange: () => {},
 };
 Type.propTypes = {
+	filter: PropTypes.func,
 };
 
 export default Type;

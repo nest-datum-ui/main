@@ -27,14 +27,17 @@ export const reducerNext = (state, action) => {
 	}
 
 	if (state[action.payload.queueName].now) {
-		state[action.payload.queueName].now = state[action.payload.queueName].loop[0];
-
 		state[action.payload.queueName].loop.splice(0, 1);
+
+		state[action.payload.queueName].now = state[action.payload.queueName].loop[0];
 	}
 	if (!state[action.payload.queueName].now
 		|| state[action.payload.queueName].loop.length === 0) {
+		state[action.payload.queueName].now = undefined;
+		state[action.payload.queueName].loop = [];
 		state[action.payload.queueName].ready = true;
 	}
+
 	return ({
 		...state,
 	});

@@ -104,6 +104,7 @@ function getClientEnvironment(publicUrl) {
 				PAGE_SIGN_UP: process.env.PAGE_SIGN_UP,
 				PAGE_SIGN_IN: process.env.PAGE_SIGN_IN,
 				PAGE_RECOVERY: process.env.PAGE_RECOVERY,
+				PAGE_RESET: process.env.PAGE_RESET,
 
 				LANG_DEFAULT: process.env.LANG_DEFAULT,
 			}

@@ -16,6 +16,7 @@ const onCreate = async ({
 
 		const {
 			id,
+			parentId,
 			name,
 			description,
 			isNotDelete,
@@ -25,6 +26,9 @@ const onCreate = async ({
 
 		if (!validateStr(id, true)) {
 			errors['id'] = 'The value is in the wrong format.';
+		}
+		if (!validateStr(parentId, true)) {
+			errors['parentId'] = 'The value is in the wrong format.';
 		}
 		if (!validateStr(name)) {
 			errors['name'] = 'The value is in the wrong format.';
