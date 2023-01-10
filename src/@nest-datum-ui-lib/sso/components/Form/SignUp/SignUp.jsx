@@ -24,6 +24,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Input from '@nest-datum-ui/components/Input';
 import InputEmail from '@nest-datum-ui/components/Input/Email';
 import Loader from '@nest-datum-ui/components/Loader';
+import utilsRegexName from '@nest-datum-ui/utils/regex/name';
 import utilsRegexNameUser from '@nest-datum-ui/utils/regex/name/user.js';
 
 let SignUp = () => {
@@ -154,7 +155,7 @@ let SignUp = () => {
 							label="Login"
 							value={login}
 							onChange={onLogin}
-							onInput={utilsRegexNameUser}
+							onInput={utilsRegexName}
 							error={error['login']}
 							InputProps={{
 								startAdornment: <InputAdornment position="start">

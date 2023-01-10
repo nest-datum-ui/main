@@ -1,6 +1,6 @@
 import utilsCheckStr from '@nest-datum-ui/utils/check/str';
 
-const name = (e, pattern = /[^a-zA-Zа-яА-Я 0-9']+/g) => {
+const name = (e, pattern = /[^a-zA-Zа-яА-Я 0-9'-]+/g) => {
 	if (!utilsCheckStr(e.target.value)) {
 		e.target.value = '';
 	}
