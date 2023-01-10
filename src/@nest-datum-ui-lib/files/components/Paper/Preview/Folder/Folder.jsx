@@ -95,7 +95,7 @@ let Folder = ({
 									}} />
 								: <FolderIcon
 									sx={{
-										fontSize: '80px',
+										fontSize: '800%',
 											color: isDeleted
 												? 'grey !important'
 												: 'inherit',

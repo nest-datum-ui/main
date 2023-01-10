@@ -12,11 +12,13 @@ import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/S
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
+import Store from '@nest-datum-ui/components/Store';
 import Loader from '@nest-datum-ui/components/Loader';
 import TablePagination from '@nest-datum-ui/components/Table/Pagination';
 import TableCellSort, {
@@ -39,24 +41,28 @@ let Err = ({
 	const page = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'page' ])) ?? 1;
 	const limit = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'limit' ])) ?? 20;
 	const data = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'data' ]));
+	const dataSelected = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'selected' ]));
 	const query = utilsUrlSearchPathItem('query', location.search);
 	const select = utilsUrlSearchPathItem('select', location.search);
 	const filter = utilsUrlSearchPathItem('filter', location.search);
 	const sort = utilsUrlSearchPathItem('sort', location.search);
 	const onChangePage = React.useCallback((e, newPage) => {
 		actionApiListProp(storeName, 'loader', true)();
+		actionApiListProp(storeName, 'selected', [])();
 		actionApiListProp(storeName, 'page', newPage)();
 	}, [
 		storeName,
 	]);
 	const onLimit = React.useCallback((e) => {
 		actionApiListProp(storeName, 'loader', true)();
+		actionApiListProp(storeName, 'selected', [])();
 		actionApiListProp(storeName, 'limit', e.target.value)();
 	}, [
 		storeName,
 	]);
 	const onSortId = React.useCallback((sortValue) => {
 		actionApiListProp(storeName, 'loader', true)();
+		actionApiListProp(storeName, 'selected', [])();
 		navigate(onTableCellSortChange('id', sortValue));
 	}, [
 		navigate,
@@ -64,9 +70,40 @@ let Err = ({
 	]);
 	const onSortCreatedAt = React.useCallback((sortValue) => {
 		actionApiListProp(storeName, 'loader', true)();
+		actionApiListProp(storeName, 'selected', [])();
 		navigate(onTableCellSortChange('createdAt', sortValue));
 	}, [
 		navigate,
+		storeName,
+	]);
+	const onMassSelect = React.useCallback((e) => {
+		actionApiListProp(storeName, 'selected', (e.target.checked)
+			? ((Store()
+				.getState()
+				.api
+				.list[storeName] || {})
+				.data || [])
+				.map((item) => item.id)
+			: [])();
+	}, [
+		storeName,
+	]);
+	const onMassDelete = React.useCallback(() => {
+	}, [
+	]);
+	const onSelect = React.useCallback((id) => (e) => {
+		const dataSelected = (Store()
+			.getState()
+			.api
+			.list[storeName] || {})
+			.selected || [];
+		const dataSelectedIndex = dataSelected.indexOf(id);
+
+		(e.target.checked && dataSelectedIndex < 0)
+			? dataSelected.push(id)
+			: dataSelected.splice(dataSelectedIndex, 1);
+		actionApiListProp(storeName, 'selected', [ ...dataSelected ])();
+	}, [
 		storeName,
 	]);
 
@@ -118,14 +155,19 @@ let Err = ({
 			? ((data.length > 0)
 				? <TablePagination
 					withChangeLimit
+					withMassDelete
 					total={total}
 					page={page}
 					limit={limit}
 					length={data.length}
 					onChange={onChangePage}
-					onLimit={onLimit}>
+					onLimit={onLimit}
+					onMassSelect={onMassSelect}
+					onMassDelete={onMassDelete}
+					isSelected={(dataSelected || []).length > 0 && (dataSelected || []).length === data.length}>
 					<TableHead>
 						<TableRow>
+							<TableCell padding="checkbox" />
 							<TableCellSort 
 								name="id"
 								onChange={onSortId}>
@@ -184,7 +226,14 @@ let Err = ({
 						? <TableBody>
 							{data.map((item, index) => {
 								return <TableRow key={item.id}>
-									<TableCell sx={{ minWidth: '15%' }}>
+									<TableCell 
+										padding="checkbox"
+										sx={{ minWidth: '1%' }}>
+										<Checkbox 
+											checked={(dataSelected || []).includes(item.id)}
+											onChange={onSelect(item.id)} />
+									</TableCell>
+									<TableCell sx={{ minWidth: '14%' }}>
 										<Typography 
 											component="div"
 											color={item.isDeleted
@@ -209,7 +258,7 @@ let Err = ({
 													? 'line-through'
 													: 'initial',
 											}}>
-											{item.replica}
+											{item.replicaHost}
 										</Typography>
 										<div />
 										<Typography 

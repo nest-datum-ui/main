@@ -80,7 +80,7 @@ let Preview = ({
 									<PictureAsPdfIcon
 										color="primary"
 										style={{
-											fontSize: '500%',
+											fontSize: '900%',
 										}} />
 								</a>;
 							case isEjs:
@@ -91,7 +91,7 @@ let Preview = ({
 									<ViewQuiltIcon
 										color="primary"
 										style={{
-											fontSize: '500%',
+											fontSize: '900%',
 										}} />
 								</a>;
 							default:
@@ -103,7 +103,7 @@ let Preview = ({
 										rel="noreferrer">
 										<InsertDriveFileIcon
 											style={{
-												fontSize: '500%',
+												fontSize: '900%',
 											}} />
 									</a>;
 						}
@@ -126,6 +126,8 @@ let Preview = ({
 					variant="body2"
 					sx={{
 						wordWrap: 'anywhere',
+						paddingLeft: '6px',
+						paddingTop: '2px',
 					}}>
 					<b>{(path && !listing)
 						? (path.length > 80
@@ -139,7 +141,11 @@ let Preview = ({
 			{(typeof size === 'number' && !disableSize)
 				? <Typography
 					component="div"
-					variant="caption">
+					variant="caption"
+					sx={{
+						paddingLeft: '6px',
+						paddingBottom: '2px',
+					}}>
 					Size: {size}
 				</Typography>
 				: <React.Fragment />}

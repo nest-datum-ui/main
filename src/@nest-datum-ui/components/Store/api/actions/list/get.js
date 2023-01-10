@@ -120,6 +120,7 @@ export const reducerListGet = (state, action) => {
 			relations: {},
 			data: null,
 			errors: {},
+			selected: [],
 			...(action.payload || {}),
 			loader: false,
 		};
@@ -136,6 +137,7 @@ export const reducerListGet = (state, action) => {
 			relations: {},
 			data: null,
 			errors: {},
+			selected: [],
 		};
 	}
 	return ({

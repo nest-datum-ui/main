@@ -35,6 +35,7 @@ export const reducerListClear = (state, action) => {
 						relations: {},
 						data: null,
 						errors: {},
+						selected: [],
 					},
 				},
 			}

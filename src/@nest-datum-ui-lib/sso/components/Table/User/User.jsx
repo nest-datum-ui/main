@@ -34,6 +34,7 @@ let User = ({
 	storeName,
 	url,
 	path,
+	children,
 }) => {
 	const { enqueueSnackbar } = useSnackbar();
 	const location = useLocation();
@@ -123,6 +124,7 @@ let User = ({
 
 	return <React.Fragment>
 		<Loader visible={!Array.isArray(data)} />
+		{children}
 		{(Array.isArray(data))
 			? ((data.length > 0)
 				? <TablePagination

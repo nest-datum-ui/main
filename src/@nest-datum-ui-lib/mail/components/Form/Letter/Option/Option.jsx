@@ -10,6 +10,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import Loader from '@nest-datum-ui/components/Loader';
+import Store from '@nest-datum-ui/components/Store';
 import SelectLetter from '@nest-datum-ui-lib/mail/components/Select/Letter';
 import onCreate from './onCreate.js';
 
@@ -23,6 +24,7 @@ let Option = ({
 }) => {
 	const { enqueueSnackbar } = useSnackbar();
 	const loader = useSelector(selectorMainExtract([ 'api', 'form', storeName, 'loader' ]));
+	const existsDataLength = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'data', 'length' ]));
 	const letterId = useSelector(selectorMainExtract([ 'api', 'form', storeName, 'letterId' ]));
 	const errorLetterId = useSelector(selectorMainExtract([ 'api', 'form', storeName, 'errors', 'letterId' ]));
 	const onSubmit = React.useCallback((e) => {
@@ -51,6 +53,19 @@ let Option = ({
 	}, [
 		storeName,
 	]);
+	const filterData = React.useCallback((e) => ({
+		id: [
+			'$Not',
+			'$In',
+			...(Store()
+				.getState()['api']
+				.list[storeName]
+				.data || [])
+				.map((item) => item['roleId']),
+		],
+	}), [
+		storeName,
+	]);
 
 	React.useEffect(() => {
 		actionApiFormGet({ entityId: storeName })();
@@ -73,7 +88,10 @@ let Option = ({
 				label="Select letter"
 				value={letterId || ''}
 				onChange={onChangeLetterId}
-				error={errorLetterId} />
+				error={errorLetterId}
+				{ ...(existsDataLength > 0)
+					? { filter: filterData }
+					: {} } />
 		</Box>
 		<Grid
 			container

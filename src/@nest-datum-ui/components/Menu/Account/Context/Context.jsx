@@ -28,6 +28,11 @@ let Context = (props) => {
 			</MenuItem>
 			<MenuItem>
 				<ListItemText>
+					Clear cache
+				</ListItemText>
+			</MenuItem>
+			<MenuItem>
+				<ListItemText>
 					Exit
 				</ListItemText>
 			</MenuItem>

@@ -209,7 +209,7 @@ let Warning = ({
 													? 'line-through'
 													: 'initial',
 											}}>
-											{item.replica}
+											{item.replicaHost}
 										</Typography>
 										<div />
 										<Typography 

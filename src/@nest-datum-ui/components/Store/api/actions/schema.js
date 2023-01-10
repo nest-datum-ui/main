@@ -30,6 +30,7 @@ export const reducerSchema = (state, action) => {
 				relations: {},
 				data: null,
 				errors: {},
+				selected: [],
 			},
 		},
 	});

@@ -34,7 +34,7 @@ let Pagination = ({
 				xs={2}>
 				{withChangeLimit
 					? <SelectLimit
-						label="Пагинация"
+						label="Pagination"
 						size="small"
 						value={limit}
 						onChange={onLimit} />
