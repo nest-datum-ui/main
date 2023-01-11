@@ -31,8 +31,8 @@ let Reset = () => {
 	const reset = useSelector(selectorMainExtract([ 'auth', 'reset' ]));
 	const password = useSelector(selectorMainExtract([ 'auth', 'password' ]));
 	const repeatedPassword = useSelector(selectorMainExtract([ 'auth', 'repeatedPassword' ]));
-	const passwordError = useSelector(selectorMainExtract([ 'auth', 'error', 'password' ]));
-	const repeatedPasswordError = useSelector(selectorMainExtract([ 'auth', 'error', 'repeatedPassword' ]));
+	const passwordError = useSelector(selectorMainExtract([ 'auth', 'errors', 'password' ]));
+	const repeatedPasswordError = useSelector(selectorMainExtract([ 'auth', 'errors', 'repeatedPassword' ]));
 	const onPassword = React.useCallback((e) => {
 		actionAuthProp('password', e.target.value)();
 	}, [

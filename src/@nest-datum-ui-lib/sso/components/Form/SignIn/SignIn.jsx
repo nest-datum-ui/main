@@ -28,7 +28,7 @@ let SignIn = () => {
 	const { enqueueSnackbar } = useSnackbar();
 	const [ visible, setVisible ] = React.useState(() => false);
 	const loader = useSelector(selectorMainExtract([ 'auth', 'loader' ]));
-	const error = useSelector(selectorMainExtract([ 'auth', 'error' ])) ?? {};
+	const errors = useSelector(selectorMainExtract([ 'auth', 'errors' ])) ?? {};
 	const login = useSelector(selectorMainExtract([ 'auth', 'login' ])) ?? '';
 	const password = useSelector(selectorMainExtract([ 'auth', 'password' ])) ?? '';
 	const onLogin = React.useCallback((e) => {
@@ -84,7 +84,7 @@ let SignIn = () => {
 						label="Login or email"
 						value={login}
 						onChange={onLogin}
-						error={error['login']}
+						error={errors['login']}
 						InputProps={{
 							startAdornment: <InputAdornment position="start">
 								<AlternateEmailIcon />
@@ -105,7 +105,7 @@ let SignIn = () => {
 						label="Password"
 						value={password}
 						onChange={onPassword}
-						error={error['password']}
+						error={errors['password']}
 						InputProps={{
 							startAdornment: <InputAdornment position="start">
 								<LockIcon />

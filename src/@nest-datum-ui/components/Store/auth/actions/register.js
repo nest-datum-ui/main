@@ -20,6 +20,8 @@ export const fireRegister = ({
 	
 		const data = { ...Store().getState()[prefix] };
 
+		data['errors'] = {};
+
 		if (!data.login
 			|| typeof data.login !== 'string') {
 			data.errors['login'] = 'The login was not specified.';
@@ -38,6 +40,15 @@ export const fireRegister = ({
 		}
 		if (!data.password) {
 			data.errors['password'] = 'Password not specified.';
+		}
+		if ((data.password || '').length < 8) {
+			data.errors['password'] = 'Password must be at least 8 characters.';
+		}
+		if (!/\d/.test(data.password)) {
+			data.errors['password'] = 'Password must contain at least one number.';
+		}
+		if (!/\p{L}/u.test(data.password)) {
+			data.errors['password'] = 'Password must contain at least one letter.';
 		}
 		if (!data.repeatedPassword) {
 			data.errors['repeatedPassword'] = 'Repeated password is not specified.';
@@ -62,6 +73,12 @@ export const fireRegister = ({
 					register: true,
 				},
 			});
+
+			clearTimeout(timeout);
+
+			timeout = setTimeout(() => {
+				navigate(`/${process.env.PAGE_SIGN_IN}`);
+			}, 3000);
 		}
 		else {
 			Store().dispatch({
@@ -69,11 +86,6 @@ export const fireRegister = ({
 				payload: data,
 			});
 		}
-		clearTimeout(timeout);
-
-		timeout = setTimeout(() => {
-			navigate(`/${process.env.PAGE_SIGN_IN}`);
-		}, 3000);
 	}
 	catch (err) {
 		const errorMessage = err.response

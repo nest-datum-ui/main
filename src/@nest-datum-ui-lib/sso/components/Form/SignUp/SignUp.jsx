@@ -33,7 +33,7 @@ let SignUp = () => {
 	const [ visible, setVisible ] = React.useState(() => false);
 	const register = useSelector(selectorMainExtract([ 'auth', 'register' ]));
 	const loader = useSelector(selectorMainExtract([ 'auth', 'loader' ]));
-	const error = useSelector(selectorMainExtract([ 'auth', 'error' ])) ?? {};
+	const errors = useSelector(selectorMainExtract([ 'auth', 'errors' ])) ?? {};
 	const email = useSelector(selectorMainExtract([ 'auth', 'email' ])) ?? '';
 	const login = useSelector(selectorMainExtract([ 'auth', 'login' ])) ?? '';
 	const firstname = useSelector(selectorMainExtract([ 'auth', 'firstname' ])) ?? '';
@@ -135,7 +135,7 @@ let SignUp = () => {
 							label="Email"
 							value={email}
 							onChange={onEmail}
-							error={error['email']}
+							error={errors['email']}
 							InputProps={{
 								startAdornment: <InputAdornment position="start">
 									<EmailIcon />
@@ -156,7 +156,7 @@ let SignUp = () => {
 							value={login}
 							onChange={onLogin}
 							onInput={utilsRegexName}
-							error={error['login']}
+							error={errors['login']}
 							InputProps={{
 								startAdornment: <InputAdornment position="start">
 									<AlternateEmailIcon />
@@ -177,7 +177,7 @@ let SignUp = () => {
 							value={firstname}
 							onChange={onFirstname}
 							onInput={utilsRegexNameUser}
-							error={error['firstname']}
+							error={errors['firstname']}
 							InputProps={{
 								startAdornment: <InputAdornment position="start">
 									<PersonIcon />
@@ -198,7 +198,7 @@ let SignUp = () => {
 							value={lastname}
 							onChange={onLastname}
 							onInput={utilsRegexNameUser}
-							error={error['lastname']}
+							error={errors['lastname']}
 							InputProps={{
 								startAdornment: <InputAdornment position="start">
 									<PersonIcon />
@@ -220,7 +220,7 @@ let SignUp = () => {
 							label="Password"
 							value={password}
 							onChange={onPassword}
-							error={error['password']}
+							error={errors['password']}
 							InputProps={{
 								startAdornment: <InputAdornment position="start">
 									<LockIcon />
@@ -249,7 +249,7 @@ let SignUp = () => {
 							label="Repeated password"
 							value={repeatedPassword}
 							onChange={onRepeatedPassword}
-							error={error['repeatedPassword']}
+							error={errors['repeatedPassword']}
 							InputProps={{
 								startAdornment: <InputAdornment position="start">
 									<LockIcon />

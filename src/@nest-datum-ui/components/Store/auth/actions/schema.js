@@ -18,6 +18,6 @@ export const reducerSchema = (state, action) => {
 	return ({
 		loader: false,
 		authFlag: undefined,
-		error: {},
+		errors: {},
 	});
 };

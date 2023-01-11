@@ -22,7 +22,7 @@ let Recovery = () => {
 	const loader = useSelector(selectorMainExtract([ 'auth', 'loader' ]));
 	const recovery = useSelector(selectorMainExtract([ 'auth', 'recovery' ]));
 	const email = useSelector(selectorMainExtract([ 'auth', 'email' ]));
-	const emailError = useSelector(selectorMainExtract([ 'auth', 'error', 'email' ]));
+	const emailError = useSelector(selectorMainExtract([ 'auth', 'errors', 'email' ]));
 	const onEmail = React.useCallback((e) => {
 		actionAuthProp('email', e.target.value)();
 	}, [
