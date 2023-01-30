@@ -1,160 +1,86 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { useSnackbar } from 'notistack';
-import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
-import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
 import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
+import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
+import { fireListPage as actionApiListPage } from '@nest-datum-ui/components/Store/api/actions/list/page.js';
+import { fireListLimit as actionApiListLimit } from '@nest-datum-ui/components/Store/api/actions/list/limit.js';
+import { DATA_TYPE_PATH_TYPE_STATUS } from '@nest-datum-ui-lib/data-type/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
-import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
-import MuiPagination from '@mui/material/Pagination';
-import Loader from '@nest-datum-ui/components/Loader';
 import SelectMultiple from '@nest-datum-ui/components/Select/Multiple';
-import SelectLimit from '@nest-datum-ui/components/Select/Limit';
-import FormSearch from '@nest-datum-ui/components/Form/Search';
+import LoaderSmall from '@nest-datum-ui/components/Loader/Small';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
 
-let Multiple = ({
-	name,
+let Status = ({
+	value,
+	defaultValue,
 	children,
 	...props
 }) => {
-	const { enqueueSnackbar } = useSnackbar();
+	const state = value ?? defaultValue;
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
-	const loader = useSelector(selectorMainExtract([ 'api', 'list', 'dataTypeTypeStatusList', 'loader' ]));
-	const total = useSelector(selectorMainExtract([ 'api', 'list', 'dataTypeTypeStatusList', 'total' ])) ?? 0;
-	const page = useSelector(selectorMainExtract([ 'api', 'list', 'dataTypeTypeStatusList', 'page' ])) ?? 1;
-	const limit = useSelector(selectorMainExtract([ 'api', 'list', 'dataTypeTypeStatusList', 'limit' ])) ?? 20;
-	const query = useSelector(selectorMainExtract([ 'api', 'list', 'dataTypeTypeStatusList', 'query' ]));
-	const data = useSelector(selectorMainExtract([ 'api', 'list', 'dataTypeTypeStatusList', 'data' ]));
-	const onChangePage = React.useCallback((e, newPage) => {
-		actionApiListProp('dataTypeTypeStatusList', 'loader', true)();
-		actionApiListProp('dataTypeTypeStatusList', 'page', newPage)();
-	}, [
+	const loader = useSelector(selectorMainExtract([ 'api', 'list', DATA_TYPE_PATH_TYPE_STATUS, 'loader' ]));
+	const total = useSelector(selectorMainExtract([ 'api', 'list', DATA_TYPE_PATH_TYPE_STATUS, 'total' ])) ?? 0;
+	const page = useSelector(selectorMainExtract([ 'api', 'list', DATA_TYPE_PATH_TYPE_STATUS, 'page' ])) ?? 1;
+	const limit = useSelector(selectorMainExtract([ 'api', 'list', DATA_TYPE_PATH_TYPE_STATUS, 'limit' ])) ?? 20;
+	const query = useSelector(selectorMainExtract([ 'api', 'list', DATA_TYPE_PATH_TYPE_STATUS, 'query' ])) || '';
+	const data = useSelector(selectorMainExtract([ 'api', 'list', DATA_TYPE_PATH_TYPE_STATUS, 'data' ]));
+	const loaderVisible = !utilsCheckArr(data) || loader || unmount;
+	const onChangePage = React.useCallback((e, newPage) => actionApiListPage(DATA_TYPE_PATH_TYPE_STATUS, newPage), [
 	]);
-	const onLimit = React.useCallback((e) => {
-		actionApiListProp('dataTypeTypeStatusList', 'loader', true)();
-		actionApiListProp('dataTypeTypeStatusList', 'limit', e.target.value)();
-	}, [
+	const onLimit = React.useCallback((e) => actionApiListLimit(DATA_TYPE_PATH_TYPE_STATUS, e), [
 	]);
-	const onSearch = React.useCallback((e) => {
-	}, [
+	const onSearch = React.useCallback(() => {}, [
 	]);
 
 	React.useEffect(() => {
 		if (!unmount) {
-			actionApiListGet({
-				id: 'dataTypeTypeStatusList', 
-				url: process.env.SERVICE_DATA_TYPE,
-				path: 'type-status',
-				withAccessToken: true,
-				page, 
-				limit, 
+			actionApiListGet(DATA_TYPE_PATH_TYPE_STATUS, {
+				page,
+				limit,
 				query,
-			})(enqueueSnackbar);
+			})();
 		}
 	}, [
 		unmount,
-		enqueueSnackbar,
 		page,
 		limit,
 		query,
 	]);
 
-	React.useEffect(() => () => {
-		actionApiListClear('dataTypeTypeStatusList')();
-	}, [
+	React.useEffect(() => () => actionApiListClear(DATA_TYPE_PATH_TYPE_STATUS)(), [
 	]);
 
 	return <React.Fragment>
-		<Loader 
-			visible={loader || unmount}
-			wrapper={{
-				p: 0,
-			}}
-			sx={{
-				minWidth: '24px',
-				maxWidth: '24px',
-				minHeight: '24px',
-				maxHeight: '24px',
-			}} />
-		{(!loader && !unmount)
-			? <React.Fragment>
-				<SelectMultiple 
-					name={name}
-					{ ...props }>
-					{children
-						? children
-						: (Array.isArray(data)
-							? ([
-								...(page === 1 && total < limit)
-									? []
-									: [
-										<FormSearch
-											key="formSearch"
-											name={`select-${name.toString()}-search`}
-											onSearch={onSearch} />,
-									],
-								...data,
-								...(page === 1 && total < limit)
-									? []
-									: [
-										<Grid
-											key="MuiPagination"
-											container
-											alignItems="center"
-											justifyContent="space-between"
-											sx={{
-												padding: '14px 8px 0px 0px',
-											}}>
-											<Grid
-												item
-												xs={true}>
-												<MuiPagination 
-													count={Math.ceil(total / limit)}
-													page={page}
-													onChange={onChangePage} />
-											</Grid>
-											<Grid
-												item
-												xs={false}
-												sx={{
-													minWidth: '90px',
-												}}>
-												<SelectLimit
-													label="Limit"
-													size="small"
-													value={limit}
-													onChange={onLimit} />
-											</Grid>
-										</Grid>
-									],
-							])
-							: <MenuItem>
-								<Loader 
-									visible
-									wrapper={{
-										p: 0,
-									}}
-									sx={{
-										minWidth: '24px',
-										maxWidth: '24px',
-										minHeight: '24px',
-										maxHeight: '24px',
-									}} />
-							</MenuItem>)}
-				</SelectMultiple>
-			</React.Fragment>
-			: <React.Fragment />}
+		<LoaderSmall visible={loaderVisible} />
+		{!loaderVisible
+			&& <SelectMultiple 
+				{ ...props }
+				value={value}
+				defaultValue={defaultValue}
+				total={total}
+				page={page}
+				limit={limit}
+				onChangePage={onChangePage}
+				onLimit={onLimit}
+				onSearch={onSearch}>
+				{data.map((item) => ({
+					...item,
+					active: !!state.find((stateItem) => stateItem.value === item.id),
+				}))}
+			</SelectMultiple>}
 	</React.Fragment>;
 };
 
-Multiple = React.memo(Multiple);
-Multiple.defaultProps = {
+Status = React.memo(Status);
+Status.defaultProps = {
 	name: 'typeStatusId',
 	multiple: false,
 	onChange: () => {},
 };
-Multiple.propTypes = {
+Status.propTypes = {
+	value: PropTypes.array,
+	defaultValue: PropTypes.array,
 };
 
-export default Multiple;
+export default Status;

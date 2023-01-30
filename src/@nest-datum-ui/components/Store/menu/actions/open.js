@@ -5,12 +5,13 @@ import Store from '@nest-datum-ui/components/Store';
  * @param {object} acnhorNode - Node element for opening menu
  * @return {Function}
  */
-export const fireOpen = (id, acnhorNode) => async (prefix = 'menu') => {
+export const fireOpen = (id, acnhorNode, data) => async (prefix = 'menu') => {
 	Store().dispatch({
 		type: prefix +'.open',
 		payload: {
 			id,
 			acnhorNode,
+			data,
 		},
 	});
 };
@@ -23,7 +24,9 @@ export const fireOpen = (id, acnhorNode) => async (prefix = 'menu') => {
 export const reducerOpen = (state, action) => {
 	return ({ 
 		...state,
-		[action.payload.id]: action.payload.acnhorNode,
-		_updater: state._updater + 1,
+		[action.payload.id]: {
+			node: action.payload.acnhorNode,
+			data: action.payload.data,
+		},
 	});
 };

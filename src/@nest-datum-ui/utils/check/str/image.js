@@ -1,6 +1,6 @@
 import utilsCheckStr from './index.js';
 
-const image = (value) => {
+const image = (value = '') => {
 	if (!utilsCheckStr(value)) {
 		return false;
 	}

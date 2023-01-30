@@ -5,7 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
-import Link from '@nest-datum-ui/components/Link';
+import ButtonLink from '@nest-datum-ui/components/Button/Link';
 
 let Primary = () => {
 	const location = useLocation();
@@ -53,7 +53,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'user',
 						sx: {
 							textTransform: 'initial',
@@ -69,7 +69,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'role',
 						sx: {
 							textTransform: 'initial',
@@ -85,7 +85,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'access',
 						sx: {
 							textTransform: 'initial',
@@ -101,7 +101,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'settings',
 						sx: {
 							textTransform: 'initial',
@@ -129,7 +129,7 @@ let Primary = () => {
 							} 
 						}
 						: {
-							component: Link,
+							component: ButtonLink,
 							to: `/sso/user`,
 						} }>
 					Data
@@ -143,7 +143,7 @@ let Primary = () => {
 							} 
 						}
 						: {
-							component: Link,
+							component: ButtonLink,
 							to: `/sso/user/options`,
 						} }>
 					Options
@@ -157,7 +157,7 @@ let Primary = () => {
 							} 
 						}
 						: {
-							component: Link,
+							component: ButtonLink,
 							to: `/sso/user/statuses`,
 						} }>
 					Statuses
@@ -180,7 +180,7 @@ let Primary = () => {
 								} 
 							}
 							: {
-								component: Link,
+								component: ButtonLink,
 								to: `/sso/role`,
 							} }>
 						Data
@@ -194,7 +194,7 @@ let Primary = () => {
 								} 
 							}
 							: {
-								component: Link,
+								component: ButtonLink,
 								to: `/sso/role/options`,
 							} }>
 						Options
@@ -208,7 +208,7 @@ let Primary = () => {
 								} 
 							}
 							: {
-								component: Link,
+								component: ButtonLink,
 								to: `/sso/role/statuses`,
 							} }>
 						Statuses
@@ -231,7 +231,7 @@ let Primary = () => {
 									} 
 								}
 								: {
-									component: Link,
+									component: ButtonLink,
 									to: `/sso/access`,
 								} }>
 							Data
@@ -245,7 +245,7 @@ let Primary = () => {
 									} 
 								}
 								: {
-									component: Link,
+									component: ButtonLink,
 									to: `/sso/access/options`,
 								} }>
 							Options
@@ -259,7 +259,7 @@ let Primary = () => {
 									} 
 								}
 								: {
-									component: Link,
+									component: ButtonLink,
 									to: `/sso/access/statuses`,
 								} }>
 							Statuses

@@ -1,6 +1,6 @@
 import utilsCheckStrImage from './image.js';
 
-const media = (value) => {
+const media = (value = '') => {
 	return utilsCheckStrImage(value);
 };
 

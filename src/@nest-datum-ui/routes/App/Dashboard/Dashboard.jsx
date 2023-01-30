@@ -1,10 +1,8 @@
 import React from 'react';
-import FilesInputUpload from '@nest-datum-ui-lib/files/components/Input/Upload';
 
 let Dashboard = () => {
 	return <React.Fragment>
-		<FilesInputUpload
-			label="test" />
+		Dashboard
 	</React.Fragment>;
 };
 

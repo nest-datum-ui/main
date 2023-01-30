@@ -4,13 +4,12 @@ import Store from '@nest-datum-ui/components/Store';
  * @param {string|number} id - Loader id
  * @return {Function}
  */
-export const fireShow = (id) => async (progressPercentage, text, prefix = 'loader') => {
+export const fireShow = (id, data) => async (prefix = 'loader') => {
 	Store().dispatch({
 		type: prefix +'.show',
 		payload: {
 			id,
-			progressPercentage,
-			text,
+			data,
 		},
 	});
 };
@@ -29,11 +28,8 @@ export const reducerShow = (state, action) => {
 	return ({
 		...state,
 		[loaderKey]: {
-			progressPercentage: 0,
-			text: '',
 			...action.payload,
 			visible: true,
 		},
-		_updater: state._updater + 1,
 	});
 };

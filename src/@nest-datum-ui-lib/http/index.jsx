@@ -7,7 +7,7 @@ import Layout from './layouts';
 import RouteSettingList from './routes/Setting/List';
 import RouteSettingForm from './routes/Setting/Form';
 
-let Sso = () => {
+let Http = () => {
 	return <React.Fragment>
 		<Routes>
 			<Route
@@ -30,10 +30,10 @@ let Sso = () => {
 	</React.Fragment>;
 };
 
-Sso = React.memo(Sso);
-Sso.defaultProps = {
+Http = React.memo(Http);
+Http.defaultProps = {
 };
-Sso.propTypes = {
+Http.propTypes = {
 };
 
-export default Sso;
+export default Http;

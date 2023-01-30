@@ -5,7 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
-import Link from '@nest-datum-ui/components/Link';
+import ButtonLink from '@nest-datum-ui/components/Button/Link';
 
 let Primary = () => {
 	const location = useLocation();
@@ -44,8 +44,7 @@ let Primary = () => {
 			onChange={onTab}>
 			<Tab 
 				label="Letters"
-				{ ...(urlPathname.indexOf(`mail/letter`) === 0
-					|| pathname === `/mail`)
+				{ ...(urlPathname.indexOf(`mail/letter`) === 0)
 					? {
 						sx: {
 							textTransform: 'initial',
@@ -53,7 +52,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'letter',
 						sx: {
 							textTransform: 'initial',
@@ -69,7 +68,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'template',
 						sx: {
 							textTransform: 'initial',
@@ -85,7 +84,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'report',
 						sx: {
 							textTransform: 'initial',
@@ -101,7 +100,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'settings',
 						sx: {
 							textTransform: 'initial',
@@ -129,7 +128,7 @@ let Primary = () => {
 							} 
 						}
 						: {
-							component: Link,
+							component: ButtonLink,
 							to: `/mail/letter`,
 						} }>
 					Data
@@ -143,7 +142,7 @@ let Primary = () => {
 							} 
 						}
 						: {
-							component: Link,
+							component: ButtonLink,
 							to: `/mail/letter/options`,
 						} }>
 					Options
@@ -157,7 +156,7 @@ let Primary = () => {
 							} 
 						}
 						: {
-							component: Link,
+							component: ButtonLink,
 							to: `/mail/letter/statuses`,
 						} }>
 					Statuses
@@ -180,7 +179,7 @@ let Primary = () => {
 								} 
 							}
 							: {
-								component: Link,
+								component: ButtonLink,
 								to: `/mail/template`,
 							} }>
 						Data
@@ -194,7 +193,7 @@ let Primary = () => {
 								} 
 							}
 							: {
-								component: Link,
+								component: ButtonLink,
 								to: `/mail/template/options`,
 							} }>
 						Options
@@ -208,7 +207,7 @@ let Primary = () => {
 								} 
 							}
 							: {
-								component: Link,
+								component: ButtonLink,
 								to: `/mail/template/statuses`,
 							} }>
 						Statuses
@@ -231,7 +230,7 @@ let Primary = () => {
 									} 
 								}
 								: {
-									component: Link,
+									component: ButtonLink,
 									to: `/mail/report`,
 								} }>
 							Data
@@ -245,7 +244,7 @@ let Primary = () => {
 									} 
 								}
 								: {
-									component: Link,
+									component: ButtonLink,
 									to: `/mail/report/statuses`,
 								} }>
 							Statuses

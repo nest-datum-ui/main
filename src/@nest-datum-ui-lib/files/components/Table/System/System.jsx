@@ -1,110 +1,86 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { 
-	useLocation,
-	useNavigate, 
-} from 'react-router-dom';
-import { useSnackbar } from 'notistack';
-import { format } from 'date-fns';
-import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
-import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
+import { useLocation } from 'react-router-dom';
 import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
+import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
+import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
+import { fireListPage as actionApiListPage } from '@nest-datum-ui/components/Store/api/actions/list/page.js';
+import { fireListLimit as actionApiListLimit } from '@nest-datum-ui/components/Store/api/actions/list/limit.js';
+import { fireListSort as actionApiListSort } from '@nest-datum-ui/components/Store/api/actions/list/sort.js';
+import { fireListDrop as actionApiListDrop } from '@nest-datum-ui/components/Store/api/actions/list/drop.js';
+import { fireListRestore as actionApiListRestore } from '@nest-datum-ui/components/Store/api/actions/list/restore.js';
+import { fireListBulk as actionApiListBulk } from '@nest-datum-ui/components/Store/api/actions/list/bulk.js';
+import { fireListBulkDrop as actionApiListBulkDrop } from '@nest-datum-ui/components/Store/api/actions/list/bulkDrop.js';
+import { fireListCheck as actionApiListCheck } from '@nest-datum-ui/components/Store/api/actions/list/check.js';
 import { fireOpen as actionMenuOpen } from '@nest-datum-ui/components/Store/menu/actions/open.js';
+import { 
+	FILES_PATH_SYSTEM,
+	FILES_PATH_SYSTEM_CREATE, 
+} from '@nest-datum-ui-lib/files/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
-import Box from '@mui/material/Box';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Link from '@nest-datum-ui/components/Link';
-import Loader from '@nest-datum-ui/components/Loader';
+import TableCell from '@mui/material/TableCell';
 import TablePagination from '@nest-datum-ui/components/Table/Pagination';
-import TableCellSort, {
-	onChange as onTableCellSortChange,
-} from '@nest-datum-ui/components/Table/Cell/Sort';
-import MenuSystemContext from '@nest-datum-ui-lib/files/components/Menu/System/Context';
-import validateDate from '@nest-datum-ui/utils/validate/date.js';
+import TableCellSort from '@nest-datum-ui/components/Table/Cell/Sort';
+import FormFilterIsDeleted from '@nest-datum-ui/components/Form/Filter/IsDeleted';
+import FormFilterIsNotDelete from '@nest-datum-ui/components/Form/Filter/IsNotDelete';
+import FormFilter from '@nest-datum-ui/components/Form/Filter';
+import ButtonCreate from '@nest-datum-ui/components/Button/Create';
+import FilesFormFilterStatusSystem from '@nest-datum-ui-lib/files/components/Form/Filter/Status/System';
+import Item from './Item';
 
-let System = ({
-	withAccessToken,
-	storeName,
-	url,
-	path,
-}) => {
-	const { enqueueSnackbar } = useSnackbar();
-	const location = useLocation();
-	const navigate = useNavigate();
+let System = () => {
+	const { search } = useLocation();
+	const query = utilsUrlSearchPathItem('query', search);
+	const select = utilsUrlSearchPathItem('select', search);
+	const filter = utilsUrlSearchPathItem('filter', search);
+	const sort = utilsUrlSearchPathItem('sort', search);
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
-	const loader = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'loader' ]));
-	const total = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'total' ])) ?? 0;
-	const page = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'page' ])) ?? 1;
-	const limit = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'limit' ])) ?? 20;
-	const data = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'data' ]));
-	const query = utilsUrlSearchPathItem('query', location.search);
-	const select = utilsUrlSearchPathItem('select', location.search);
-	const filter = utilsUrlSearchPathItem('filter', location.search);
-	const sort = utilsUrlSearchPathItem('sort', location.search);
-	const onChangePage = React.useCallback((e, newPage) => {
-		actionApiListProp(storeName, 'loader', true)();
-		actionApiListProp(storeName, 'page', newPage)();
-	}, [
-		storeName,
+	const loader = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_SYSTEM, 'loader' ]));
+	const total = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_SYSTEM, 'total' ])) ?? 0;
+	const page = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_SYSTEM, 'page' ])) ?? 1;
+	const limit = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_SYSTEM, 'limit' ])) ?? 20;
+	const data = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_SYSTEM, 'data' ]));
+	const storePath = React.useMemo(() => [ 'api', 'list', FILES_PATH_SYSTEM ], [
 	]);
-	const onLimit = React.useCallback((e) => {
-		actionApiListProp(storeName, 'loader', true)();
-		actionApiListProp(storeName, 'limit', e.target.value)();
-	}, [
-		storeName,
+	const displayLoader = !utilsCheckArr(data) || unmount || loader;
+	const onChangePage = React.useCallback((e, newPage) => actionApiListPage(FILES_PATH_SYSTEM, newPage), [
 	]);
-	const onMenu = React.useCallback((itemId) => (e) => {
-		actionMenuOpen(`files-menu-system-context-${itemId}`, e.target)();
-	}, [
+	const onLimit = React.useCallback((e) => actionApiListLimit(FILES_PATH_SYSTEM, e), [
 	]);
-	const onSortId = React.useCallback((sortValue) => {
-		actionApiListProp(storeName, 'loader', true)();
-		navigate(onTableCellSortChange('id', sortValue));
-	}, [
-		navigate,
-		storeName,
+	const onSortId = React.useCallback((value) => actionApiListSort(FILES_PATH_SYSTEM, 'id', value), [
 	]);
-	const onSortCreatedAt = React.useCallback((sortValue) => {
-		actionApiListProp(storeName, 'loader', true)();
-		navigate(onTableCellSortChange('createdAt', sortValue));
-	}, [
-		navigate,
-		storeName,
+	const onSortCreatedAt = React.useCallback((value) => actionApiListSort(FILES_PATH_SYSTEM, 'createdAt', value), [
+	]);
+	const onDrop = React.useCallback((id) => (e) => actionApiListDrop(FILES_PATH_SYSTEM, id), [
+	]);
+	const onRestore = React.useCallback((id) => (e) => actionApiListRestore(FILES_PATH_SYSTEM, id), [
+	]);
+	const onCheck = React.useCallback((id) => actionApiListCheck(FILES_PATH_SYSTEM, id), [
+	]);
+	const onBulk = React.useCallback((e) => actionApiListBulk(FILES_PATH_SYSTEM, e), [
+	]);
+	const onBulkDrop = React.useCallback(() => actionApiListBulkDrop(FILES_PATH_SYSTEM), [
+	]);
+	const onLoader = React.useCallback(() => actionApiListProp(FILES_PATH_SYSTEM, 'loader', true)(), [
+	]);
+	const onMenu = React.useCallback((id) => (e) => actionMenuOpen(id, e.target)(), [
 	]);
 
 	React.useEffect(() => {
 		if (!unmount) {
-			actionApiListGet({
-				id: storeName, 
-				url,
-				path,
-				withAccessToken,
-				page, 
-				limit, 
+			actionApiListGet(FILES_PATH_SYSTEM, {
+				page,
+				limit,
 				query,
-				...select
-					? { select: JSON.parse(decodeURI(select)) }
-					: {},
-				...filter
-					? { filter: JSON.parse(decodeURI(filter)) }
-					: {},
-				...sort
-					? { sort: JSON.parse(decodeURI(sort)) }
-					: {},
-			})(enqueueSnackbar);
+				select,
+				filter,
+				sort,
+			})();
 		}
 	}, [
-		storeName,
-		withAccessToken,
-		url,
-		path,
 		unmount,
 		page,
 		limit,
@@ -112,227 +88,118 @@ let System = ({
 		select,
 		filter,
 		sort,
-		enqueueSnackbar,
 	]);
 
-	React.useEffect(() => () => {
-		actionApiListClear(storeName)();
-	}, [
-		storeName,
+	React.useEffect(() => () => actionApiListClear(FILES_PATH_SYSTEM)(), [
 	]);
 
 	return <React.Fragment>
-		<Loader visible={!Array.isArray(data)} />
-		{(Array.isArray(data))
-			? ((data.length > 0)
-				? <TablePagination
+		<FormFilter 
+			bulkDeletion
+			toolbarComponent={<ButtonCreate to={FILES_PATH_SYSTEM_CREATE} />}
+			storePath={storePath}
+			loader={displayLoader}
+			length={(data || []).length ?? 0}
+			onBulk={onBulk}
+			onDrop={onBulkDrop}
+			onLoader={onLoader}>
+			<FormFilterIsDeleted onInput={onLoader} />
+			<FormFilterIsNotDelete onInput={onLoader} />
+			<FilesFormFilterStatusSystem onInput={onLoader} />
+		</FormFilter>
+		{(!displayLoader)
+			&& <React.Fragment>
+				<TablePagination
+					bulkDeletion
 					withChangeLimit
+					loader={loader}
 					total={total}
 					page={page}
 					limit={limit}
 					length={data.length}
 					onChange={onChangePage}
-					onLimit={onLimit}>
-					<TableHead>
-						<TableRow>
-							<TableCellSort 
-								name="id"
-								onChange={onSortId}>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									ID
-								</Typography>
-							</TableCellSort>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Main
-								</Typography>
-							</TableCell>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Provider
-								</Typography>
-							</TableCell>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Status
-								</Typography>
-							</TableCell>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									User
-								</Typography>
-							</TableCell>
-							<TableCellSort
-								name="createdAt"
-								onChange={onSortCreatedAt}>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Story
-								</Typography>
-							</TableCellSort>
-						</TableRow>
-					</TableHead>
-					{(!loader && !unmount)
-						? <TableBody>
-							{data.map((item, index) => {
-								return <TableRow key={item.id}>
-									<TableCell sx={{ minWidth: '15%' }}>
-										<Typography 
-											component={Link}
-											to={item.id}
-											color={item.isDeleted
-												? 'textSecondary'
-												: 'inherit'}
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'inherit',
-											}}>
-											{item.id}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '24%' }}>
-										<Typography 
-											component={Link}
-											to={item.id}
-											variant="h6"
-											color={item.isDeleted
-												? 'textSecondary'
-												: 'secondary'}
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'initial',
-											}}>
-											{item.name}
-										</Typography>
-										<Typography
-											component="div"
-											variant="subtitle1"
-											color="textSecondary"
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'initial',
-											}}>
-											{item.description}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '15%' }}>
-										<Typography component="div">
-											{item.providerId}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '15%' }}>
-										<Typography component="div">
-											{item.systemStatusId}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '15%' }}>
-										<Typography component="div">
-											{item.userId}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ width: '16%' }}>
-										{validateDate(item.createdAt)
-											? <Box pb={1}>
-												<Typography	
-													component="div"
-													variant="caption"
-													color="textSecondary">
-													Created at:
-												</Typography>
-												<Typography component="div">
-													<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
-												</Typography>
-											</Box>
-											: <React.Fragment />}
-										{validateDate(item.updatedAt)
-											? <Box>
-												<Typography	
-													component="div"
-													variant="caption"
-													color="textSecondary">
-													Updated at:
-												</Typography>
-												<Typography component="div">
-													<b>{format(new Date(item.updatedAt), 'dd MMMM, hh:mm')}</b>
-												</Typography>
-											</Box>
-											: <React.Fragment />}
-									</TableCell>
-									<TableCell sx={{ width: '1%' }}>
-										<IconButton onClick={onMenu(item.id)}>
-											<MoreVertIcon />
-										</IconButton>
-										<MenuSystemContext 
-											id={`files-menu-system-context-${item.id}`}
-											entityId={item.id}
-											isDeleted={item.isDeleted}
-											isNotDelete={item.isNotDelete} />
-									</TableCell>
-								</TableRow>;
-							})}
-						</TableBody>
-						: <tbody>
-							<tr>
-								<td 
-									style={{
-										position: 'absolute',
-										width: '100%',
-									}}>
-									<Loader visible />
-								</td>
-							</tr>
-							<tr>
-								<td
-									style={{
-										height: '160px',
-										minHeight: '160px',
-										maxHeight: '160px',
-										paddingTop: '48px',
-										paddingBottom: '48px',
-									}} />
-							</tr>
-						</tbody>}
+					onLimit={onLimit}
+					headRowCells={[
+						<TableCellSort 
+							key="id"
+							name="id"
+							onChange={onSortId}>
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								ID
+							</Typography>
+						</TableCellSort>,
+						<TableCell key="main">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Main
+							</Typography>
+						</TableCell>,
+						<TableCell key="provider">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Provider
+							</Typography>
+						</TableCell>,
+						<TableCell key="systemStatusId">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Status
+							</Typography>
+						</TableCell>,
+						<TableCell key="userId">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								User
+							</Typography>
+						</TableCell>,
+						<TableCellSort
+							key="createdAt"
+							name="createdAt"
+							onChange={onSortCreatedAt}>
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Story
+							</Typography>
+						</TableCellSort>,
+					]}>
+					{data.map((item) => <Item
+						bulkDeletion
+						key={item.id}
+						id={item.id}
+						name={item.name}
+						description={item.description}
+						providerId={item.providerId}
+						systemStatusId={item.systemStatusId}
+						userId={item.userId}
+						createdAt={item.createdAt}
+						updatedAt={item.updatedAt}
+						isDeleted={item.isDeleted}
+						isNotDelete={item.isNotDelete}
+						onDrop={onDrop(item.id)}
+						onRestore={onRestore(item.id)}
+						onMenu={onMenu(item.id)}
+						onCheck={onCheck(item.id)}
+						storePath={storePath} />)}
 				</TablePagination>
-				: <Box
-					py={6}
-					display="flex"
-					justifyContent="center">
-					<Typography
-						variant="subtitle2"
-						color="secondary">
-						No entries created.
-					</Typography>
-				</Box>)
-			: <React.Fragment />}
-	</React.Fragment>;
+			</React.Fragment>}
+		</React.Fragment>;
 };
 
 System = React.memo(System);
 System.defaultProps = {
-	withAccessToken: true,
-	storeName: 'filesSystemList',
-	url: process.env.SERVICE_FILES,
-	path: 'system',
 };
 System.propTypes = {
 };

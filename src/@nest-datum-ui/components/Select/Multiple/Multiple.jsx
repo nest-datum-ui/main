@@ -1,60 +1,48 @@
 import React from 'react';
-import MenuItem from '@mui/material/MenuItem';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
+import utilsCheckArrFilled from '@nest-datum-ui/utils/check/arr/filled.js';
 import Select from '@nest-datum-ui/components/Select';
+import handlersRenderValue from './handlers/renderValue.jsx';
+import handlersChangeState from './handlers/changeState.js';
+import hooksSetDefaultState from './hooks/setDefaultState.js';
 
 let Multiple = ({
-	name,
+	multiple,
 	children,
 	value,
 	defaultValue,
 	onChange,
 	...props
 }) => {
-	const [ valueState, setValueState ] = React.useState(() => (Array.isArray(value)
+	const [ open, setOpen ] = React.useState(() => false);
+	const [ valueState, setValueState ] = React.useState(() => (utilsCheckArr(value)
 		? value
-		: (Array.isArray(defaultValue)
+		: (utilsCheckArr(defaultValue)
 			? defaultValue
 			: [])));
 	const valueLength = (value || []).length;
 	const valueStateLength = (valueState || []).length;
-	const onChangeState = React.useCallback((e, newValue) => {
-		setValueState((currentState) => {
-			currentState = Array.isArray(currentState)
-				? currentState
-				: [];
-
-			const existsIndex = currentState.findIndex((item) => item.value === newValue.props.value);
-
-			if (existsIndex >= 0) {
-				currentState.splice(existsIndex, 1);
-			}
-			else {
-				currentState.push({
-					value: newValue.props.value,
-					text: newValue.props.children,
-				});
-			}
-			onChange(e, [ ...currentState ]);
-
-			return currentState;
-		});
-	}, [
+	const isAllowSet = utilsCheckArr(value)
+		&& valueLength !== valueStateLength
+		&& utilsCheckArrFilled(children);
+	const renderValue = React.useCallback((selected) => handlersRenderValue(selected), [
+	]);
+	const onChangeState = React.useCallback((e, newValue) => handlersChangeState(e, newValue, setValueState, setOpen, onChange), [
 		setValueState,
+		setOpen,
 		onChange,
 	]);
+	const onOpen = React.useCallback((e) => setOpen(true), [
+		setOpen,
+	]);
+	const onClose = React.useCallback((e) => setOpen(false), [
+		setOpen,
+	]);
 
-	React.useEffect(() => {
-		if (Array.isArray(value)
-			&& valueLength !== valueStateLength
-			&& Array.isArray(children)
-			&& children.length > 0) {
-			setValueState(value);
-		}
-	}, [
+	React.useEffect(() => hooksSetDefaultState(isAllowSet, setValueState, value), [
+		isAllowSet,
+		setValueState,
 		value,
-		valueLength,
-		valueStateLength,
-		children,
 	]);
 
 	return <React.Fragment>
@@ -62,38 +50,18 @@ let Multiple = ({
 			multiple
 			size="small"
 			onChange={onChangeState}
-			name={name}
-			renderValue={() => valueState.map((item, index) => {
-				return <React.Fragment key={item.value}>
-					{item.text}
-					{(valueState.length - 1 > index)
-						? ','
-						: ''}
-				</React.Fragment>;
-			})}
-			shrink={(valueState.length > 0)}
+			renderValue={renderValue}
+			shrink={utilsCheckArrFilled(valueState)}
+			open={open}
+			onOpen={onOpen}
+			onClose={onClose}
 			{ ...value
 				? { value: valueState }
 				: (defaultValue
 					? { defaultValue: valueState }
 					: { defaultValue: [] }) }
 			{ ...props }>
-			{(children && Array.isArray(children))
-				? children.map((item, i) => {
-					const selectedIndex = valueState.findIndex((itemValue) => itemValue.value === item.id)
-
-					return <MenuItem 
-						key={item.id}
-						value={item.id}
-						sx={{
-							backgroundColor: (selectedIndex >= 0)
-								? '#EFEFEF'
-								: 'inherit',
-						}}>
-						{item.name}
-					</MenuItem>;
-				})
-				: ([])}
+			{utilsCheckArr(children) && children}
 		</Select>
 	</React.Fragment>;
 };

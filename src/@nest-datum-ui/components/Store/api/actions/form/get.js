@@ -1,94 +1,124 @@
-import { fireFormProp as actionApiFormProp } from './prop.js';
+import { v4 as uuidv4 } from 'uuid';
+import {
+	hookNavigate,
+	hookSnackbar,
+} from '@nest-datum-ui/utils/hooks';
 import axios from 'axios';
 import Store from '@nest-datum-ui/components/Store';
+import utilsCheckEntityExists from '@nest-datum-ui/utils/check/entity/exists.js';
+import utilsCheckObj from '@nest-datum-ui/utils/check/obj';
+import utilsCheckFunc from '@nest-datum-ui/utils/check/func';
+import utilsCheckStrUrl from '@nest-datum-ui/utils/check/str/url.js';
+import utilsCheckObjAxiosErrNotFound from '@nest-datum-ui/utils/check/obj/axios/err/notFound.js';
+import utilsUrlWithToken from '@nest-datum-ui/utils/url/withToken.js';
+import utilsUrlLevelUp from '@nest-datum-ui/utils/url/levelUp.js';
+import utilsConvertStrErr from '@nest-datum-ui/utils/convert/str/err.js';
+import utilsConvertObjErr from '@nest-datum-ui/utils/convert/obj/err.js';
+import { fireFormProp as actionApiFormProp } from './prop.js';
+import { fireFormCreateLoop as actionApiFormCreateLoop } from './loop.js';
 
-/**
- * @return {Function}
- */
-export const fireFormGet = ({
-	entityId, 
+const request = async ({
+	prefix,
 	url,
-	path,
-	withAccessToken = false,
-}) => async (snackbar = () => {}, navigate = () => {}, prefix = 'api') => {
-	if (url
-		&& path) {
-		let apiPath = '';
+	processedUrl,
+	entityId,
+}) => {
+	const snackbar = hookSnackbar();
+	const navigate = hookNavigate();
 
-		try {
-			await actionApiFormProp(entityId, 'loader', true)();
+	try {
+		Store().dispatch({
+			type: prefix +'.formGet',
+			payload: {
+				url: processedUrl,
+				entityId,
+				data: (await axios(utilsUrlWithToken(utilsCheckFunc(url)
+					? url()
+					: `${url}/${entityId}`))).data,
+			},
+		});
+		return processedUrl;
+	}
+	catch (err) {
+		if (utilsCheckObjAxiosErrNotFound(err)) {
+			navigate(utilsUrlLevelUp());
+		}
+		else {
+			snackbar(utilsConvertStrErr(utilsConvertObjErr(err), utilsCheckFunc(url)
+				? url()
+				: `${url}/${entityId}`), { variant: 'error' });
+			actionApiFormProp(processedUrl, 'loader', false)();
+		}
+	}
+};
 
-			apiPath = `${url}/${path}/${entityId}?${new URLSearchParams({
-				...withAccessToken
-					? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
-					: {},
-			}).toString()}`;
+export const fireFormGet = (url, options) => async (prefix = 'api') => {
+	const processedUrl = utilsCheckFunc(url)
+		? url()
+		: url;
+	let entityId,
+		withLoop;
 
-			const request = await axios(apiPath);
+	if (utilsCheckObj(options)) {
+		entityId = options.entityId;
+		withLoop = !!options.withLoop;
+	}
+	else {
+		entityId = options;
+		withLoop = false;
+	}
+	if (utilsCheckEntityExists(entityId)) {
+		if (utilsCheckStrUrl(processedUrl)) {
+			await actionApiFormProp(processedUrl, 'loader', true)();
+
+			if (withLoop) {
+				actionApiFormCreateLoop(processedUrl)(() => request({
+					prefix,
+					url,
+					processedUrl,
+					entityId,
+				}));
+			}
+			else {
+				request({
+					prefix,
+					url,
+					processedUrl,
+					entityId,
+				})
+			}
+		}
+		else {
+			const storeName = uuidv4();
 
 			Store().dispatch({
 				type: prefix +'.formGet',
 				payload: {
-					id: entityId,
-					data: request.data,
+					id: storeName,
+					entityId,
 				},
 			});
+
+			return storeName;
 		}
-		catch (err) {
-			if (err.response
-				&& err.response.status === 404) {
-				const pathnameSplit = window.location.pathname.split('/');
-
-				pathnameSplit.splice(pathnameSplit.length - 1, 1);
-
-				navigate(pathnameSplit.join('/'));
-			}
-			else {
-				const errorMessage = err.response
-					? (err.response.data
-						? err.response.data.message || (err.response.data.error
-							? err.response.data.error.text
-							: err.message)
-						: err.message)
-					: err.message;
-
-				snackbar(`${errorMessage} - ${apiPath}`, { variant: 'error' });
-				actionApiFormProp(entityId, 'loader', false)();
-			}
-		}
-	}
-	else {
-		Store().dispatch({
-			type: prefix +'.formGet',
-			payload: {
-				id: entityId,
-				data: {},
-			},
-		});
 	}
 };
 
-/**
- * @param {object} state - Current redux state
- * @param {object} action - Action data
- * @return {object} New state
- */
 export const reducerFormGet = (state, action) => {
-	if (action.payload.id
-		&& typeof action.payload.id === 'string') {
-		state.form[action.payload.id] = {
-			options: [],
-			settins: [],
-			...(state.form[action.payload.id] || state.form['0'] || {}),
-			...(action.payload.data || {}),
+	if (utilsCheckStrUrl(action.payload.url)) {
+		state.form[action.payload.url] = {
+			...(state.form[action.payload.url] || state.form['0'] || {}),
 			loader: false,
 			errors: {},
+			...(action.payload.data || {}),
+		};
+
+		return {
+			...state,
+			form: {
+				...state.form,
+			},
 		};
 	}
-	return ({
-		...state,
-		form: {
-			...state.form,
-		},
-	});
+	return state;
 };

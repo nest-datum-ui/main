@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
 import { fireListClear as actionBreadcrumbsListClear } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/clear.js';
+import { FILES_PATH_SYSTEM } from '@nest-datum-ui-lib/files/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
@@ -9,7 +10,7 @@ import Button from '@mui/material/Button';
 import Store from '@nest-datum-ui/components/Store';
 
 let Breadcrumbs = () => {
-	const loader = useSelector(selectorMainExtract([ 'api', 'form', 'filesManageSystem', 'loader' ]));
+	const loader = useSelector(selectorMainExtract([ 'api', 'form', FILES_PATH_SYSTEM, 'loader' ]));
 	const breadcrumbs = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'filesManageList', 'data' ])) ?? [];
 	const onFolder = React.useCallback((id, index) => (e) => {
 		const breadcrumbs = (Store()

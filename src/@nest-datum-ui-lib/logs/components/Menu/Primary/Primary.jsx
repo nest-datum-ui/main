@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Link from '@nest-datum-ui/components/Link';
+import ButtonLink from '@nest-datum-ui/components/Button/Link';
 
 let Primary = () => {
 	const location = useLocation();
@@ -51,7 +51,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'err',
 						sx: {
 							textTransform: 'initial',
@@ -67,7 +67,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'warning',
 						sx: {
 							textTransform: 'initial',
@@ -83,7 +83,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'notification',
 						sx: {
 							textTransform: 'initial',
@@ -99,7 +99,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'traffic',
 						sx: {
 							textTransform: 'initial',
@@ -115,7 +115,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'settings',
 						sx: {
 							textTransform: 'initial',

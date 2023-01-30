@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmain=self.webpackChunkmain||[]).push([[804],{2804:function(n,e,r){r.r(e),r.d(e,{default:function(){return c}});var u=r(2791),a=r(184),t=function(){return(0,a.jsx)(u.Fragment,{children:"Upload"})};(t=u.memo(t)).defaultProps={};var c=t}}]);
+//# sourceMappingURL=804.f27f802c.chunk.js.map

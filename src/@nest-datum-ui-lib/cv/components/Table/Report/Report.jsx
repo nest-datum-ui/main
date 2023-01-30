@@ -1,111 +1,86 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { 
-	useLocation,
-	useNavigate, 
-} from 'react-router-dom';
-import { useSnackbar } from 'notistack';
-import { format } from 'date-fns';
-import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
-import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
+import { useLocation } from 'react-router-dom';
 import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
+import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
+import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
+import { fireListPage as actionApiListPage } from '@nest-datum-ui/components/Store/api/actions/list/page.js';
+import { fireListLimit as actionApiListLimit } from '@nest-datum-ui/components/Store/api/actions/list/limit.js';
+import { fireListSort as actionApiListSort } from '@nest-datum-ui/components/Store/api/actions/list/sort.js';
+import { fireListDrop as actionApiListDrop } from '@nest-datum-ui/components/Store/api/actions/list/drop.js';
+import { fireListRestore as actionApiListRestore } from '@nest-datum-ui/components/Store/api/actions/list/restore.js';
+import { fireListBulk as actionApiListBulk } from '@nest-datum-ui/components/Store/api/actions/list/bulk.js';
+import { fireListBulkDrop as actionApiListBulkDrop } from '@nest-datum-ui/components/Store/api/actions/list/bulkDrop.js';
+import { fireListCheck as actionApiListCheck } from '@nest-datum-ui/components/Store/api/actions/list/check.js';
 import { fireOpen as actionMenuOpen } from '@nest-datum-ui/components/Store/menu/actions/open.js';
+import { 
+	CV_PATH_REPORT,
+	CV_PATH_REPORT_CREATE, 
+} from '@nest-datum-ui-lib/cv/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
-import Box from '@mui/material/Box';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Link from '@nest-datum-ui/components/Link';
-import Loader from '@nest-datum-ui/components/Loader';
+import TableCell from '@mui/material/TableCell';
 import TablePagination from '@nest-datum-ui/components/Table/Pagination';
-import TableCellSort, {
-	onChange as onTableCellSortChange,
-} from '@nest-datum-ui/components/Table/Cell/Sort';
-import FilesPaperPrimary from '@nest-datum-ui-lib/files/components/Paper/Primary';
-import MenuReportContext from '@nest-datum-ui-lib/cv/components/Menu/Report/Context';
-import validateDate from '@nest-datum-ui/utils/validate/date.js';
+import TableCellSort from '@nest-datum-ui/components/Table/Cell/Sort';
+import FormFilterIsDeleted from '@nest-datum-ui/components/Form/Filter/IsDeleted';
+import FormFilterIsNotDelete from '@nest-datum-ui/components/Form/Filter/IsNotDelete';
+import FormFilter from '@nest-datum-ui/components/Form/Filter';
+import ButtonCreate from '@nest-datum-ui/components/Button/Create';
+import CvFormFilterStatusReport from '@nest-datum-ui-lib/cv/components/Form/Filter/Status/Report';
+import Item from './Item';
 
-let Report = ({
-	withAccessToken,
-	storeName,
-	url,
-	path,
-}) => {
-	const { enqueueSnackbar } = useSnackbar();
-	const location = useLocation();
-	const navigate = useNavigate();
+let Report = () => {
+	const { search } = useLocation();
+	const query = utilsUrlSearchPathItem('query', search);
+	const select = utilsUrlSearchPathItem('select', search);
+	const filter = utilsUrlSearchPathItem('filter', search);
+	const sort = utilsUrlSearchPathItem('sort', search);
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
-	const loader = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'loader' ]));
-	const total = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'total' ])) ?? 0;
-	const page = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'page' ])) ?? 1;
-	const limit = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'limit' ])) ?? 20;
-	const data = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'data' ]));
-	const query = utilsUrlSearchPathItem('query', location.search);
-	const select = utilsUrlSearchPathItem('select', location.search);
-	const filter = utilsUrlSearchPathItem('filter', location.search);
-	const sort = utilsUrlSearchPathItem('sort', location.search);
-	const onChangePage = React.useCallback((e, newPage) => {
-		actionApiListProp(storeName, 'loader', true)();
-		actionApiListProp(storeName, 'page', newPage)();
-	}, [
-		storeName,
+	const loader = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'loader' ]));
+	const total = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'total' ])) ?? 0;
+	const page = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'page' ])) ?? 1;
+	const limit = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'limit' ])) ?? 20;
+	const data = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'data' ]));
+	const storePath = React.useMemo(() => [ 'api', 'list', CV_PATH_REPORT ], [
 	]);
-	const onLimit = React.useCallback((e) => {
-		actionApiListProp(storeName, 'loader', true)();
-		actionApiListProp(storeName, 'limit', e.target.value)();
-	}, [
-		storeName,
+	const displayLoader = !utilsCheckArr(data) || unmount || loader;
+	const onChangePage = React.useCallback((e, newPage) => actionApiListPage(CV_PATH_REPORT, newPage), [
 	]);
-	const onMenu = React.useCallback((itemId) => (e) => {
-		actionMenuOpen(`cv-menu-report-context-${itemId}`, e.target)();
-	}, [
+	const onLimit = React.useCallback((e) => actionApiListLimit(CV_PATH_REPORT, e), [
 	]);
-	const onSortId = React.useCallback((sortValue) => {
-		actionApiListProp(storeName, 'loader', true)();
-		navigate(onTableCellSortChange('id', sortValue));
-	}, [
-		navigate,
-		storeName,
+	const onSortId = React.useCallback((value) => actionApiListSort(CV_PATH_REPORT, 'id', value), [
 	]);
-	const onSortCreatedAt = React.useCallback((sortValue) => {
-		actionApiListProp(storeName, 'loader', true)();
-		navigate(onTableCellSortChange('createdAt', sortValue));
-	}, [
-		navigate,
-		storeName,
+	const onSortCreatedAt = React.useCallback((value) => actionApiListSort(CV_PATH_REPORT, 'createdAt', value), [
+	]);
+	const onDrop = React.useCallback((id) => (e) => actionApiListDrop(CV_PATH_REPORT, id), [
+	]);
+	const onRestore = React.useCallback((id) => (e) => actionApiListRestore(CV_PATH_REPORT, id), [
+	]);
+	const onCheck = React.useCallback((id) => actionApiListCheck(CV_PATH_REPORT, id), [
+	]);
+	const onBulk = React.useCallback((e) => actionApiListBulk(CV_PATH_REPORT, e), [
+	]);
+	const onBulkDrop = React.useCallback(() => actionApiListBulkDrop(CV_PATH_REPORT), [
+	]);
+	const onLoader = React.useCallback(() => actionApiListProp(CV_PATH_REPORT, 'loader', true)(), [
+	]);
+	const onMenu = React.useCallback((id) => (e) => actionMenuOpen(id, e.target)(), [
 	]);
 
 	React.useEffect(() => {
 		if (!unmount) {
-			actionApiListGet({
-				id: storeName, 
-				url,
-				path,
-				withAccessToken,
-				page, 
-				limit, 
+			actionApiListGet(CV_PATH_REPORT, {
+				page,
+				limit,
 				query,
-				...select
-					? { select: JSON.parse(decodeURI(select)) }
-					: {},
-				...filter
-					? { filter: JSON.parse(decodeURI(filter)) }
-					: {},
-				...sort
-					? { sort: JSON.parse(decodeURI(sort)) }
-					: {},
-			})(enqueueSnackbar);
+				select,
+				filter,
+				sort,
+			})();
 		}
 	}, [
-		storeName,
-		withAccessToken,
-		url,
-		path,
 		unmount,
 		page,
 		limit,
@@ -113,179 +88,109 @@ let Report = ({
 		select,
 		filter,
 		sort,
-		enqueueSnackbar,
 	]);
 
-	React.useEffect(() => () => {
-		actionApiListClear(storeName)();
-	}, [
-		storeName,
+	React.useEffect(() => () => actionApiListClear(CV_PATH_REPORT)(), [
 	]);
 
 	return <React.Fragment>
-		<Loader visible={!Array.isArray(data)} />
-		{(Array.isArray(data))
-			? ((data.length > 0)
-				? <TablePagination
+		<FormFilter 
+			bulkDeletion
+			toolbarComponent={<ButtonCreate to={CV_PATH_REPORT_CREATE} />}
+			storePath={storePath}
+			loader={displayLoader}
+			length={(data || []).length ?? 0}
+			onBulk={onBulk}
+			onDrop={onBulkDrop}
+			onLoader={onLoader}>
+			<FormFilterIsDeleted onInput={onLoader} />
+			<FormFilterIsNotDelete onInput={onLoader} />
+			<CvFormFilterStatusReport onInput={onLoader} />
+		</FormFilter>
+		{(!displayLoader)
+			&& <React.Fragment>
+				<TablePagination
+					bulkDeletion
 					withChangeLimit
+					loader={loader}
 					total={total}
 					page={page}
 					limit={limit}
-					length={data.length}
+					length={(data || []).length ?? 0}
 					onChange={onChangePage}
-					onLimit={onLimit}>
-					<TableHead>
-						<TableRow>
-							<TableCellSort 
-								name="id"
-								onChange={onSortId}>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									ID
-								</Typography>
-							</TableCellSort>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									File
-								</Typography>
-							</TableCell>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Status
-								</Typography>
-							</TableCell>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									User
-								</Typography>
-							</TableCell>
-							<TableCellSort
-								name="createdAt"
-								onChange={onSortCreatedAt}>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Story
-								</Typography>
-							</TableCellSort>
-						</TableRow>
-					</TableHead>
-					{(!loader && !unmount)
-						? <TableBody>
-							{data.map((item, index) => {
-								return <TableRow key={item.id}>
-									<TableCell sx={{ minWidth: '19%' }}>
-										<Typography 
-											component={Link}
-											to={`/cv/report/${item.id}`}
-											color={item.isDeleted
-												? 'textSecondary'
-												: 'inherit'}
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'inherit',
-											}}>
-											{item.id}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '20%' }}>
-										{item.fileId
-											? <FilesPaperPrimary id={item.fileId} />
-											: <React.Fragment />}
-									</TableCell>
-									<TableCell sx={{ minWidth: '18%' }}>
-										<Typography component="div">
-											{item.reportStatusId}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '18%' }}>
-										<Typography component="div">
-											{item.userId}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ width: '24%' }}>
-										{validateDate(item.createdAt)
-											? <Box pb={1}>
-												<Typography	
-													component="div"
-													variant="caption"
-													color="textSecondary">
-													Created at:
-												</Typography>
-												<Typography component="div">
-													<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
-												</Typography>
-											</Box>
-											: <React.Fragment />}
-									</TableCell>
-									<TableCell sx={{ width: '1%' }}>
-										<IconButton onClick={onMenu(item.id)}>
-											<MoreVertIcon />
-										</IconButton>
-										<MenuReportContext 
-											id={`cv-menu-report-context-${item.id}`}
-											entityId={item.id}
-											isDeleted={item.isDeleted}
-											isNotDelete={item.isNotDelete} />
-									</TableCell>
-								</TableRow>;
-							})}
-						</TableBody>
-						: <tbody>
-							<tr>
-								<td 
-									style={{
-										position: 'absolute',
-										width: '100%',
-									}}>
-									<Loader visible />
-								</td>
-							</tr>
-							<tr>
-								<td
-									style={{
-										height: '160px',
-										minHeight: '160px',
-										maxHeight: '160px',
-										paddingTop: '48px',
-										paddingBottom: '48px',
-									}} />
-							</tr>
-						</tbody>}
+					onLimit={onLimit}
+					headRowCells={[
+						<TableCellSort 
+							key="id"
+							name="id"
+							onChange={onSortId}>
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								ID
+							</Typography>
+						</TableCellSort>,
+						<TableCell key="fileId">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								File
+							</Typography>
+						</TableCell>,
+						<TableCell key="reportStatusId">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Status
+							</Typography>
+						</TableCell>,
+						<TableCell key="userId">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								User
+							</Typography>
+						</TableCell>,
+						<TableCellSort
+							key="createdAt"
+							name="createdAt"
+							onChange={onSortCreatedAt}>
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Story
+							</Typography>
+						</TableCellSort>,
+					]}>
+					{utilsCheckArr(data)
+						&& data.map((item) => <Item
+							bulkDeletion
+							key={item.id}
+							id={item.id}
+							fileId={item.fileId}
+							reportStatusId={item.reportStatusId}
+							userId={item.userId}
+							createdAt={item.createdAt}
+							updatedAt={item.updatedAt}
+							isDeleted={item.isDeleted}
+							isNotDelete={item.isNotDelete}
+							onDrop={onDrop(item.id)}
+							onRestore={onRestore(item.id)}
+							onMenu={onMenu(item.id)}
+							onCheck={onCheck(item.id)}
+							storePath={storePath} />)}
 				</TablePagination>
-				: <Box
-					py={6}
-					display="flex"
-					justifyContent="center">
-					<Typography
-						variant="subtitle2"
-						color="secondary">
-						No entries created.
-					</Typography>
-				</Box>)
-			: <React.Fragment />}
-	</React.Fragment>;
+			</React.Fragment>}
+		</React.Fragment>;
 };
 
 Report = React.memo(Report);
 Report.defaultProps = {
-	withAccessToken: true,
-	storeName: 'cvReportList',
-	url: process.env.SERVICE_CV,
-	path: 'report',
 };
 Report.propTypes = {
 };

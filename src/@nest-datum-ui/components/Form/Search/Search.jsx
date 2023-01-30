@@ -1,23 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 import { Portal } from 'react-portal';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import Input from '@nest-datum-ui/components/Input';
+import handlersSubmit from './handlers/submit.js';
 
 let Search = ({
 	name,
 	onSearch,
 	...props
 }) => {
-	const [ id ] = React.useState(() => (Math.random() + 1).toString(36).substring(7));
-	const onSubmit = React.useCallback((e) => {
-		e.preventDefault();
-
-		onSearch(e.target.elements[name].value);
-	}, [
-		onSearch,
+	const [ id ] = React.useState(() => uuidv4());
+	const onSubmit = React.useCallback((e) => handlersSubmit(e, name, onSearch), [
 		name,
+		onSearch,
 	]);
 
 	return <React.Fragment>
@@ -29,7 +28,7 @@ let Search = ({
 		<Input 
 			size="small"
 			{...props}
-			name={name.toString()} 
+			name={name} 
 			InputProps={{
 				inputProps: {
 					form: id,
@@ -52,6 +51,9 @@ Search.defaultProps = {
 	onSearch: () => {},
 };
 Search.propTypes = {
+	name: PropTypes.string,
+	placeholder: PropTypes.string,
+	onSearch: PropTypes.func,
 };
 
 export default Search;

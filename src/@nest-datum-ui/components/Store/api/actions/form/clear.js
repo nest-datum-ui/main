@@ -1,42 +1,30 @@
 import Store from '@nest-datum-ui/components/Store';
 
-/**
- * @return {Function}
- */
-export const fireFormClear = (id) => async (prefix = 'api') => {
+export const fireFormClear = (storeFormName) => async (prefix = 'api') => {
 	Store().dispatch({
 		type: prefix +'.formClear',
 		payload: {
-			id,
+			storeFormName,
 		},
 	});
 };
 
-/**
- * @param {object} state - Current redux state
- * @param {object} action - Action data
- * @return {object} New state
- */
-export const reducerFormClear = (state, action) => {
-	return ({
-		...state,
-		form: state.form[action.payload.id]
-			? {
-				...state.form,
-				[action.payload.id]: {
-					loader: false,
-					options: [],
-					settins: [],
-					errors: {},
-				},
-			}
-			: {
+export const reducerFormClear = (state, action) => ({
+	...state,
+	form: state.form[action.payload.storeFormName]
+		? {
+			...state.form,
+			[action.payload.storeFormName]: {
+				loader: false,
+				errors: {},
+			},
+		}
+		: (action.payload.storeFormName === undefined)
+			? ({
 				0: {
 					loader: false,
-					options: [],
-					settins: [],
 					errors: {},
 				},
-			},
-	});
-};
+			})
+			: state.form,
+});

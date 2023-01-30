@@ -1,77 +1,13 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
-import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import FormStatus from '@nest-datum-ui/components/Form/Status';
-import DialogStatusDrop from '@nest-datum-ui/components/Dialog/Status/Drop';
+import SsoDialogUserStatusDrop from '@nest-datum-ui-lib/sso/components/Dialog/User/Status/Drop';
+import SsoFormUserStatus from '@nest-datum-ui-lib/sso/components/Form/User/Status';
+import Title from './Title';
 
 let Form = () => {
-	const { entityId } = useParams();
-	const isDeleted = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isDeleted' ]));
-	
-	React.useEffect(() => {
-		actionBreadcrumbsListSet('app', [{
-			key: '/',
-			text: '...',
-		}, {
-			key: 'sso',
-			text: 'SSO',
-		}, {
-			key: `/sso/user`,
-			text: 'Users',
-		}, {
-			key: `/sso/user/statuses`,
-			text: 'Statuses',
-		}, {
-			key: `/sso/user/statuses/${entityId}`,
-			text: (entityId === '0')
-				? 'Create new status'
-				: <span
-					style={{
-						textDecoration: isDeleted
-							? 'line-through'
-							: 'initial',
-					}}>
-					{entityId}
-				</span>,
-		}])();
-	}, [
-		entityId,
-		isDeleted,
-	]);
-
 	return <React.Fragment>
-		<Box pb={2}>
-			<Typography
-				component="div"
-				variant="h5">
-				{(entityId === '0')
-					? 'Add status'
-					: <React.Fragment>
-						Edit status <b
-							style={{
-								textDecoration: isDeleted
-									? 'line-through'
-									: 'initial',
-							}}>
-							{entityId}
-						</b>
-					</React.Fragment>}
-			</Typography>
-		</Box>
-		<FormStatus
-			withAccessToken
-			storeName="ssoUserStatusesList"
-			url={process.env.SERVICE_SSO}
-			path="user-status" />
-		<DialogStatusDrop
-			withAccessToken
-			storeName="ssoUserStatusesList"
-			url={process.env.SERVICE_SSO}
-			path="user-status" />
+		<Title />
+		<SsoDialogUserStatusDrop />
+		<SsoFormUserStatus />
 	</React.Fragment>;
 };
 

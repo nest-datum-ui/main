@@ -15,7 +15,5 @@ export const fireSchema = () => async (prefix = 'menu') => {
  * @return {object} New state
  */
 export const reducerSchema = (state, action) => {
-	return ({
-        _updater: 0,
-    });
+	return ({});
 };

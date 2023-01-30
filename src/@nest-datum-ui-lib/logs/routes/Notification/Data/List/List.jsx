@@ -1,37 +1,13 @@
 import React from 'react';
-import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import FormFilterNotification from '@nest-datum-ui-lib/logs/components/Form/Notification/Filter';
-import TableNotification from '@nest-datum-ui-lib/logs/components/Table/Notification';
-import DialogNotificationDrop from '@nest-datum-ui-lib/logs/components/Dialog/Notification/Drop';
+import LogsTableNotification from '@nest-datum-ui-lib/logs/components/Table/Notification';
+import LogsDialogNotificationDrop from '@nest-datum-ui-lib/logs/components/Dialog/Notification/Drop';
+import Title from './Title';
 
 let List = () => {
-	React.useEffect(() => {
-		actionBreadcrumbsListSet('app', [{
-			key: '/',
-			text: '...',
-		}, {
-			key: 'logs',
-			text: 'Logs',
-		}, {
-			key: '/logs/notification',
-			text: 'Notifications',
-		}])();
-	}, [
-	]);
-
 	return <React.Fragment>
-		<Box py={2}>
-			<Typography
-				component="div"
-				variant="h5">
-				Notifications list
-			</Typography>
-		</Box>
-		<FormFilterNotification />
-		<TableNotification storeName="logsNotificationList" />
-		<DialogNotificationDrop storeName="logsNotificationList" />
+		<Title />
+		<LogsTableNotification />
+		<LogsDialogNotificationDrop />
 	</React.Fragment>;
 };
 

@@ -1,77 +1,13 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
-import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import FormStatus from '@nest-datum-ui/components/Form/Status';
-import DialogStatusDrop from '@nest-datum-ui/components/Dialog/Status/Drop';
+import MailDialogReportStatusDrop from '@nest-datum-ui-lib/mail/components/Dialog/Report/Status/Drop';
+import MailFormReportStatus from '@nest-datum-ui-lib/mail/components/Form/Report/Status';
+import Title from './Title';
 
 let Form = () => {
-	const { entityId } = useParams();
-	const isDeleted = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isDeleted' ]));
-	
-	React.useEffect(() => {
-		actionBreadcrumbsListSet('app', [{
-			key: '/',
-			text: '...',
-		}, {
-			key: 'mail',
-			text: 'Mail',
-		}, {
-			key: `/mail/report`,
-			text: 'Reports',
-		}, {
-			key: `/mail/report/statuses`,
-			text: 'Statuses',
-		}, {
-			key: `/mail/report/statuses/${entityId}`,
-			text: (entityId === '0')
-				? 'Create new status'
-				: <span
-					style={{
-						textDecoration: isDeleted
-							? 'line-through'
-							: 'initial',
-					}}>
-					{entityId}
-				</span>,
-		}])();
-	}, [
-		entityId,
-		isDeleted,
-	]);
-
 	return <React.Fragment>
-		<Box pb={2}>
-			<Typography
-				component="div"
-				variant="h5">
-				{(entityId === '0')
-					? 'Add status'
-					: <React.Fragment>
-						Edit status <b
-							style={{
-								textDecoration: isDeleted
-									? 'line-through'
-									: 'initial',
-							}}>
-							{entityId}
-						</b>
-					</React.Fragment>}
-			</Typography>
-		</Box>
-		<FormStatus
-			withAccessToken
-			storeName="mailReportStatusesList"
-			url={process.env.SERVICE_MAIL}
-			path="report-status" />
-		<DialogStatusDrop
-			withAccessToken
-			storeName="mailReportStatusesList"
-			url={process.env.SERVICE_MAIL}
-			path="report-status" />
+		<Title />
+		<MailDialogReportStatusDrop />
+		<MailFormReportStatus />
 	</React.Fragment>;
 };
 

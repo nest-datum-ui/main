@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
+import utilsCheckBool from '@nest-datum-ui/utils/check/bool';
+import utilsCheckStrBool from '@nest-datum-ui/utils/check/str/bool.js';
 
 let Bool = ({
 	error,
@@ -23,16 +25,12 @@ let Bool = ({
 			<FormControlLabel
 				control={<Switch 
 					{ ...props }
-					{ ...(typeof value === 'boolean')
-						? { checked: !!Number((typeof value === 'string' && value.toLowerCase() === 'true')
-							? true
-							: value) }
-						: {} }
-					{ ...(typeof defaultValue === 'boolean')
-						? { defaultChecked: !!Number((typeof defaultValue === 'string' && defaultValue.toLowerCase() === 'true')
-							? true
-							: defaultValue) }
-						: {} } />} 
+					{ ...utilsCheckStrBool(value)
+						? { checked: (value === '0') ? false : true }
+						: (utilsCheckBool(value) && ({ checked: value })) }
+					{ ...utilsCheckStrBool(defaultValue)
+						? { defaultChecked: (defaultValue === '0') ? false : true }
+						: (utilsCheckBool(defaultValue) && ({ defaultChecked: defaultValue })) } />} 
 				label={label ?? (dataTypeLabel || '')} />
 			{(error || helperText)
 				? <Box

@@ -11,7 +11,7 @@ import RouteReportStatusForm from './routes/Report/Status/Form';
 import RouteSettingList from './routes/Setting/List';
 import RouteSettingForm from './routes/Setting/Form';
 
-let Sso = () => {
+let Cv = () => {
 	return <React.Fragment>
 		<Routes>
 			<Route
@@ -46,10 +46,10 @@ let Sso = () => {
 	</React.Fragment>;
 };
 
-Sso = React.memo(Sso);
-Sso.defaultProps = {
+Cv = React.memo(Cv);
+Cv.defaultProps = {
 };
-Sso.propTypes = {
+Cv.propTypes = {
 };
 
-export default Sso;
+export default Cv;

@@ -1,35 +1,11 @@
 import React from 'react';
-import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import TableServ from '@nest-datum-ui-lib/registry/components/Table/Serv';
+import RegistryTableServ from '@nest-datum-ui-lib/registry/components/Table/Serv';
+import Title from './Title';
 
 let List = () => {
-	React.useEffect(() => {
-		actionBreadcrumbsListSet('app', [{
-			key: '/',
-			text: '...',
-		}, {
-			key: 'registry',
-			text: 'Registry',
-		}, {
-			key: '/registry/serv',
-			text: 'Services',
-		}])();
-	}, [
-	]);
-
 	return <React.Fragment>
-		<Box
-			pt={1} 
-			pb={2}>
-			<Typography
-				component="div"
-				variant="h5">
-				Services list
-			</Typography>
-		</Box>
-		<TableServ />
+		<Title />
+		<RegistryTableServ />
 	</React.Fragment>;
 };
 

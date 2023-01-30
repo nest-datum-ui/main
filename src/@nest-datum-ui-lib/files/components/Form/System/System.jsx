@@ -1,252 +1,117 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { 
-	useParams,
-	useNavigate, 
-} from 'react-router-dom';
-import { useSnackbar } from 'notistack';
-import { fireFormProp as actionApiFormProp } from '@nest-datum-ui/components/Store/api/actions/form/prop.js';
-import { fireFormGet as actionApiFormGet } from '@nest-datum-ui/components/Store/api/actions/form/get.js';
+import { useParams } from 'react-router-dom';
 import { fireFormClear as actionApiFormClear } from '@nest-datum-ui/components/Store/api/actions/form/clear.js';
+import { fireFormGet as actionApiFormGet } from '@nest-datum-ui/components/Store/api/actions/form/get.js';
+import { fireFormCreateOption as actionApiFormCreateOption } from '@nest-datum-ui/components/Store/api/actions/form/createOption.js';
+import { fireFormUpdateOption as actionApiFormUpdateOption } from '@nest-datum-ui/components/Store/api/actions/form/updateOption.js';
+import { fireFormDropOption as actionApiFormDropOption } from '@nest-datum-ui/components/Store/api/actions/form/dropOption.js';
+import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
+import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
 import { fireOpen as actionDialogOpen } from '@nest-datum-ui/components/Store/dialog/actions/open.js';
+import { 
+	FILES_PATH_SYSTEM,
+	FILES_PATH_SYSTEM_OPTION, 
+} from '@nest-datum-ui-lib/files/consts/path.js';
+import {
+	FILES_KEY_SYSTEM_RELATION,
+	FILES_KEY_SYSTEM_VALUE,
+} from '@nest-datum-ui-lib/files/consts/keys.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import SaveIcon from '@mui/icons-material/Save';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SelectSystemStatus from '@nest-datum-ui-lib/files/components/Select/System/Status';
-import SelectProvider from '@nest-datum-ui-lib/files/components/Select/Provider';
-import Loader from '@nest-datum-ui/components/Loader';
-import InputText from '@nest-datum-ui/components/Input/Text';
-import InputBool from '@nest-datum-ui/components/Input/Bool';
-import FormOptionManyToMany from '@nest-datum-ui/components/Form/Option/ManyToMany';
-import onCreate from './onCreate.js';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
+import utilsCheckEntityExists from '@nest-datum-ui/utils/check/entity/exists.js';
+import FormDefault from '@nest-datum-ui/components/Form';
+import ListOption from '@nest-datum-ui/components/List/Option';
+import InputId from '@nest-datum-ui/components/Input/Id';
+import InputName from '@nest-datum-ui/components/Input/Name';
+import InputDescription from '@nest-datum-ui/components/Input/Description';
+import FilesInputProvider from '@nest-datum-ui-lib/files/components/Input/Provider';
+import FilesInputSystemStatus from '@nest-datum-ui-lib/files/components/Input/System/Status';
+import InputIsRequired from '@nest-datum-ui/components/Input/IsRequired';
+import InputIsNotDelete from '@nest-datum-ui/components/Input/IsNotDelete';
+import handlerSubmit from './handler/submit.js';
 
 let System = () => {
-	const { enqueueSnackbar } = useSnackbar();
 	const { entityId } = useParams();
-	const navigate = useNavigate();
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
-	const loader = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'loader' ]));
-	const id = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'id' ]));
-	const name = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'name' ]));
-	const description = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'description' ]));
-	const providerId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'providerId' ]));
-	const systemStatusId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'systemStatusId' ]));
-	const isNotDelete = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isNotDelete' ]));
-	const isDeleted = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isDeleted' ]));
-	const errorId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'id' ]));
-	const errorName = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'name' ]));
-	const errorDescription = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'description' ]));
-	const errorProviderId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'providerId' ]));
-	const errorSystemStatusId = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'systemStatusId' ]));
-	const errorIsNotDelete = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'errors', 'isNotDelete' ]));
-	const onSubmit = React.useCallback((e) => {
-		e.preventDefault();
-
-		onCreate({
-			gateway: process.env.SERVICE_FILES,
-			entityId,
-			path: 'system',
-			withAccessToken: true,
-			enqueueSnackbar,
-			navigate,
-		});
-	}, [
-		entityId,
-		enqueueSnackbar,
-		navigate,
-	]);
-	const onChangeId = React.useCallback((e) => {
-		actionApiFormProp(entityId, 'id', e.target.value)();
-	}, [
+	const loaderForm = useSelector(selectorMainExtract([ 'api', 'form', FILES_PATH_SYSTEM, 'loader' ]));
+	const loaderOption = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_SYSTEM_OPTION, 'loader' ]));
+	const formLength = useSelector(selectorMainExtract([ 'api', 'form', FILES_PATH_SYSTEM ], (formObj) => Object.keys(formObj || {}).length));
+	const isNotDelete = useSelector(selectorMainExtract([ 'api', 'form', FILES_PATH_SYSTEM, 'isNotDelete' ]));
+	const isDeleted = useSelector(selectorMainExtract([ 'api', 'form', FILES_PATH_SYSTEM, 'isDeleted' ]));
+	const dataOption = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_SYSTEM_OPTION, 'data' ]));
+	const onSubmit = React.useCallback((e) => handlerSubmit(e, entityId), [
 		entityId,
 	]);
-	const onChangeName = React.useCallback((e) => {
-		actionApiFormProp(entityId, 'name', e.target.value)();
-	}, [
+	const onDrop = React.useCallback((e) => actionDialogOpen(FILES_PATH_SYSTEM, { entityId })(), [
 		entityId,
 	]);
-	const onChangeDescription = React.useCallback((e) => {
-		actionApiFormProp(entityId, 'description', e.target.value)();
-	}, [
+	const onOptionChange = React.useCallback((data) => actionApiFormUpdateOption(FILES_PATH_SYSTEM_OPTION, { ...data, entityId }), [
 		entityId,
 	]);
-	const onChangeProviderId = React.useCallback((e, newValue) => {
-		actionApiFormProp(entityId, 'providerId', e.target.value)();
-	}, [
+	const onOptionAdd = React.useCallback((data) => actionApiFormCreateOption(FILES_PATH_SYSTEM_OPTION, { ...data, entityId }), [
 		entityId,
 	]);
-	const onChangeSystemStatusId = React.useCallback((e, newValue) => {
-		actionApiFormProp(entityId, 'systemStatusId', e.target.value)();
-	}, [
-		entityId,
-	]);
-	const onChangeIsNotDelete = React.useCallback((e, newValue) => {
-		actionApiFormProp(entityId, 'isNotDelete', newValue)();
-	}, [
-		entityId,
-	]);
-	const onDelete = React.useCallback((e) => {
-		actionDialogOpen('optionDrop', { entityId })();
-	}, [
+	const onOptionDrop = React.useCallback((data) => actionApiFormDropOption(FILES_PATH_SYSTEM_OPTION, { ...data, entityId }), [
 		entityId,
 	]);
 
 	React.useEffect(() => {
-		if (!unmount
-			&& entityId
-			&& entityId !== '0') {
-			actionApiFormGet({
-				entityId,
-				url: process.env.SERVICE_FILES,
-				path: 'system',
-				withAccessToken: true,
-			})(enqueueSnackbar, navigate);
+		if (!unmount && utilsCheckEntityExists(entityId)) {
+			actionApiFormGet(FILES_PATH_SYSTEM, entityId)();
+			actionApiListGet(FILES_PATH_SYSTEM_OPTION, {
+				relations: {
+					systemSystemOptions: {
+						systemSystemSystemOptions: true,
+					},
+				},
+				filter: {
+					isDeleted: false,
+					systemSystemOptions: {
+						systemId: entityId,
+					},
+				},
+			})();
+
 		}
 	}, [
 		unmount,
 		entityId,
-		enqueueSnackbar,
-		navigate,
 	]);
 
 	React.useEffect(() => () => {
-		actionApiFormClear(entityId)();
+		actionApiFormClear(FILES_PATH_SYSTEM)();
+		actionApiListClear(FILES_PATH_SYSTEM_OPTION)()
 	}, [
-		entityId,
 	]);
 
 	return <React.Fragment>
-		<Loader	visible={typeof loader === 'undefined' || unmount} />
-		<form 
+		<FormDefault 
 			onSubmit={onSubmit}
-			style={{
-				display: (typeof loader === 'undefined' || unmount)
-					? 'none'
-					: 'initial',
-			}}>
-			<Box py={2}>
-				<InputText
-					disabled={loader}
-					name="id"
-					label="id"
-					helperText="Unique identificator"
-					placeholder="For example: test-entity-id"
-					value={id || ''}
-					onChange={onChangeId}
-					error={errorId} />
-			</Box>
-			<Box py={2}>
-				<InputText
-					disabled={loader}
-					required
-					name="name"
-					label="Name"
-					placeholder="For example: Test option"
-					value={name || ''}
-					onChange={onChangeName}
-					error={errorName} />
-			</Box>
-			<Box py={2}>
-				<InputText
-					disabled={loader}
-					multiline
-					rows={3}
-					name="description"
-					label="Description"
-					value={description || ''}
-					onChange={onChangeDescription}
-					error={errorDescription} />
-			</Box>
-			<Box py={2}>
-				<SelectProvider
-					disabled={loader}
-					label="System provider"
-					name="providerId"
-					value={providerId || ''}
-					onChange={onChangeProviderId}
-					error={errorProviderId} />
-			</Box>
-			<Box py={2}>
-				<SelectSystemStatus
-					disabled={loader}
-					label="Status"
-					name="systemStatusId"
-					value={systemStatusId || ''}
-					onChange={onChangeSystemStatusId}
-					error={errorSystemStatusId} />
-			</Box>
-			<Box py={2}>
-				<InputBool
-					disabled={loader}
-					name="isNotDelete"
-					label="Make entry undeletable"
-					value={!!isNotDelete}
-					onChange={onChangeIsNotDelete}
-					error={errorIsNotDelete} />
-			</Box>
-			<FormOptionManyToMany
-				withAccessToken
-				entityId={entityId}
-				url={process.env.SERVICE_FILES}
-				path="system-option"
-				pathEntity="system" />
-			<Grid
-				container
-				spacing={3}
-				alignItems="center"
-				justifyContent="flex-end">
-				<Grid
-					item
-					xs={false}>
-					<Button
-						disableElevation
-						disabled={loader}
-						type="submit"
-						variant="contained"
-						color="secondary"
-						startIcon={loader
-							? <Loader
-								visible
-								wrapper={{
-									sx: {
-										padding: '0px',
-									},
-								}}
-								sx={{
-									minWidth: '24px',
-									maxWidth: '24px',
-									minHeight: '24px',
-									maxHeight: '24px',
-								}} />
-							: <SaveIcon />}>
-						Save
-					</Button>
-				</Grid>
-				{(!isNotDelete
-					&& entityId
-					&& typeof entityId === 'string'
-					&& entityId !== '0')
-					? <Grid
-						item
-						xs={false}>
-						<Button
-							disableElevation
-							disabled={loader}
-							variant="contained"
-							color="error"
-							startIcon={<DeleteIcon />}
-							onClick={onDelete}>
-							{isDeleted
-								? 'Delete permanently'
-								: 'Delete'}
-						</Button>
-					</Grid>
-					: <React.Fragment />}
-			</Grid>
-		</form>
+			onDrop={onDrop}
+			loader={loaderForm || (utilsCheckEntityExists(entityId) && formLength < 6)}
+			isDeleted={isDeleted}
+			isNotDelete={isNotDelete}
+			showDropButton={!isNotDelete && utilsCheckEntityExists(entityId)}>
+			<InputId storeFormName={FILES_PATH_SYSTEM} />
+			<InputName storeFormName={FILES_PATH_SYSTEM} />
+			<InputDescription storeFormName={FILES_PATH_SYSTEM} />
+			<FilesInputProvider storeFormName={FILES_PATH_SYSTEM} />
+			<FilesInputSystemStatus storeFormName={FILES_PATH_SYSTEM} />
+			<InputIsNotDelete storeFormName={FILES_PATH_SYSTEM} />
+			{utilsCheckEntityExists(entityId)
+				&& <ListOption 
+					title="Options:"
+					entityId={entityId}
+					loader={!utilsCheckArr(dataOption) || unmount || loaderOption}
+					onChange={onOptionChange}
+					onAdd={onOptionAdd}
+					onDrop={onOptionDrop}
+					relationTableName={FILES_KEY_SYSTEM_RELATION}
+					valueTableName={FILES_KEY_SYSTEM_VALUE}>
+					{dataOption}
+				</ListOption>}
+		</FormDefault>
 	</React.Fragment>;
 };
 

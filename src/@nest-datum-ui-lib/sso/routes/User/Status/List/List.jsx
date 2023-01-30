@@ -1,69 +1,13 @@
 import React from 'react';
-import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import FormStatusFilter from '@nest-datum-ui/components/Form/Status/Filter';
-import TableDataStatus from '@nest-datum-ui/components/Table/Status';
-import DialogStatusDrop from '@nest-datum-ui/components/Dialog/Status/Drop';
-import Link from '@nest-datum-ui/components/Link';
+import SsoDialogUserStatusDrop from '@nest-datum-ui-lib/sso/components/Dialog/User/Status/Drop';
+import SsoTableUserStatus from '@nest-datum-ui-lib/sso/components/Table/User/Status';
+import Title from './Title';
 
 let List = () => {
-	React.useEffect(() => {
-		actionBreadcrumbsListSet('app', [{
-			key: '/',
-			text: '...',
-		}, {
-			key: 'sso',
-			text: 'SSO',
-		}, {
-			key: `/sso/user`,
-			text: 'Users',
-		}, {
-			key: `/sso/user/statuses`,
-			text: 'Statuses',
-		}])();
-	}, [
-	]);
-
 	return <React.Fragment>
-		<Box pb={2}>
-			<Typography
-				component="div"
-				variant="h5">
-				Statuses
-			</Typography>
-			<Typography
-				component="div"
-				variant="caption"
-				color="textSecondary">
-				Entity state.
-			</Typography>
-		</Box>
-		<Box pb={2}>
-			<Button
-				disableElevation
-				variant="contained"
-				color="secondary"
-				size="small"
-				startIcon={<AddIcon />}
-				component={Link}
-				to={`/sso/user/statuses/0`}>
-				Create
-			</Button>
-		</Box>
-		<FormStatusFilter storeName="ssoUserStatusesList" />
-		<TableDataStatus
-			withAccessToken
-			storeName="ssoUserStatusesList"
-			url={process.env.SERVICE_SSO}
-			path="user-status" />
-		<DialogStatusDrop
-			withAccessToken
-			storeName="ssoUserStatusesList"
-			url={process.env.SERVICE_SSO}
-			path="user-status" />
+		<Title />
+		<SsoTableUserStatus />
+		<SsoDialogUserStatusDrop />
 	</React.Fragment>;
 };
 

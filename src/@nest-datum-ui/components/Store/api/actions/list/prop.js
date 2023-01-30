@@ -1,13 +1,14 @@
 import Store from '@nest-datum-ui/components/Store';
+import utilsCheckStr from '@nest-datum-ui/utils/check/str';
+import utilsCheckObj from '@nest-datum-ui/utils/check/obj';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
+import propRecursiveSet from '../propRecursiveSet.js';
 
-/**
- * @return {Function}
- */
-export const fireListProp = (id, propName, propValue, path) => (prefix = 'api') => {
+export const fireListProp = (storeListName, propName, propValue, path) => (prefix = 'api') => {
 	Store().dispatch({
 		type: prefix +'.listProp',
 		payload: {
-			id,
+			storeListName,
 			propName, 
 			propValue,
 			path,
@@ -15,52 +16,23 @@ export const fireListProp = (id, propName, propValue, path) => (prefix = 'api') 
 	});
 };
 
-/**
- * @param {object} state - Current redux state
- * @param {object} action - Action data
- * @return {object} New state
- */
 export const reducerListProp = (state, action) => {
-	if (!state.list[action.payload.id]
-		|| typeof state.list[action.payload.id] !== 'object'
-		|| Array.isArray(state.list[action.payload.id])) {
-		state.list[action.payload.id] = {};
+	if (!utilsCheckObj(state.list[action.payload.storeListName])) {
+		state.list[action.payload.storeListName] = {};
 	}
-	if (((typeof action.payload.id === 'number'
-			&& !Number.isNaN(action.payload.id))
-		|| (action.payload.id
-			&& typeof action.payload.id === 'string'))) {
-		
-		if (Array.isArray(action.payload.path)) {
-			let target = state.list[action.payload.id][action.payload.propName],
-				i = 0;
-
-			if (target
-				&& typeof target === 'object') {
-				if (action.payload.path.length >= 2) {
-					while (i < action.payload.path.length - 2) {
-						target = target[action.payload.path[i]];
-						i++;
-					}
-					target[action.payload.path[action.payload.path.length - 2]][action.payload.path[action.payload.path.length - 1]] = action.payload.propValue;
-				}
-				else if (action.payload.path.length === 1) {
-					target[action.payload.path[action.payload.path.length - 1]] = action.payload.propValue;
-				}
-				state.list[action.payload.id][action.payload.propName] = Array.isArray(state.list[action.payload.id][action.payload.propName])
-					? ([ ...state.list[action.payload.id][action.payload.propName] ])
-					: ({ ...state.list[action.payload.id][action.payload.propName] });
-			}
+	if (utilsCheckStr(action.payload.storeListName)) {
+		if (utilsCheckArr(action.payload.path)) {
+			state.list = propRecursiveSet(state.list, action.payload);
 		}
 		else {
-			state.list[action.payload.id][action.payload.propName] = action.payload.propValue;
+			state.list[action.payload.storeListName][action.payload.propName] = action.payload.propValue;
 		}
-		state.list[action.payload.id] = { ...state.list[action.payload.id] };
+		state.list[action.payload.storeListName] = { ...state.list[action.payload.storeListName] };
 	}
-	return ({ 
+	return { 
 		...state,
 		list: {
 			...state.list,
 		}, 
-	});
+	};
 };

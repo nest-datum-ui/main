@@ -1,44 +1,34 @@
 import Store from '@nest-datum-ui/components/Store';
 
-/**
- * @return {Function}
- */
-export const fireListClear = (id) => async (prefix = 'api') => {
+export const fireListClear = (storeListName) => async (prefix = 'api') => {
 	Store().dispatch({
 		type: prefix +'.listClear',
 		payload: {
-			id,
+			storeListName,
 		},
 	});
 };
 
-/**
- * @param {object} state - Current redux state
- * @param {object} action - Action data
- * @return {object} New state
- */
-export const reducerListClear = (state, action) => {
-	return ({
-		...state,
-		...state.list[action.payload.id]
-			? {
-				list: {
-					...state.list,
-					[action.payload.id]: {
-						loader: false,
-						page: 1,
-						limit: 20,
-						total: 0,
-						query: '',
-						filter: {},
-						sort: {},
-						relations: {},
-						data: null,
-						errors: {},
-						selected: [],
-					},
+export const reducerListClear = (state, action) => ({
+	...state,
+	...state.list[action.payload.storeListName]
+		? {
+			list: {
+				...state.list,
+				[action.payload.storeListName]: {
+					loader: false,
+					page: 1,
+					limit: 20,
+					total: 0,
+					query: '',
+					filter: {},
+					sort: {},
+					relations: {},
+					data: null,
+					errors: {},
+					selected: [],
 				},
-			}
-			: {},
-	});
-};
+			},
+		}
+		: {},
+});

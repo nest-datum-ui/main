@@ -1,53 +1,36 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { 
-	useLocation,
-	useNavigate,
-} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { fireSchema as actionBreadcrumbsSchema } from '@nest-datum-ui/components/Store/breadcrumbs/actions/schema.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Loader from '@nest-datum-ui/components/Loader';
-import Link from '@nest-datum-ui/components/Link';
+import ButtonLink from '@nest-datum-ui/components/Button/Link';
+import handlersSwitchLink from './handlers/switchLink.js';
 
 let Breadcrumbs = () => {
-	const location = useLocation();
-	const navigate = useNavigate();
+	const { pathname } = useLocation();
 	const data = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'app', 'data' ]));
-	const onClick = React.useCallback((e) => {
-		e.preventDefault();
+	const loader = !Array.isArray(data);
+	const onClick = React.useCallback(handlersSwitchLink, []);
 
-		const pathname = e.currentTarget.pathname;
-
-		window.dispatchEvent(new CustomEvent('onBreadcrumbsChange', { 
-			detail: {
-				pathname,
-			}, 
-		}));
-		navigate(pathname);
-	}, [
-		navigate,
-	]);
-
-	React.useEffect(() => () => {
-		actionBreadcrumbsSchema()();
-	}, [
+	React.useEffect(() => () => actionBreadcrumbsSchema()(), [
 	]);
 
 	return <React.Fragment>
-		<Loader visible={!Array.isArray(data)} />
-		{Array.isArray(data)
+		<Loader visible={loader} />
+		{!loader
 			? <MuiBreadcrumbs separator='/'>
 				{data.map((item, index) => {
-					return (item.key === location.pathname)
+					return (item.key === pathname)
 						? <Typography key={item.key}>
 							{item.text}
 						</Typography>
 						: <Button
 							key={item.key}
-							component={Link}
+							component={ButtonLink}
 							to={item.key}
 							onClick={onClick}
 							color="primary"

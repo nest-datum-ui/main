@@ -1,313 +1,174 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { 
-	useLocation,
-	useNavigate, 
-} from 'react-router-dom';
-import { useSnackbar } from 'notistack';
-import { format } from 'date-fns';
-import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
+import { useLocation } from 'react-router-dom';
 import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
 import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
+import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
+import { fireListPage as actionApiListPage } from '@nest-datum-ui/components/Store/api/actions/list/page.js';
+import { fireListLimit as actionApiListLimit } from '@nest-datum-ui/components/Store/api/actions/list/limit.js';
+import { fireListSort as actionApiListSort } from '@nest-datum-ui/components/Store/api/actions/list/sort.js';
+import { fireListDrop as actionApiListDrop } from '@nest-datum-ui/components/Store/api/actions/list/drop.js';
+import { fireListBulk as actionApiListBulk } from '@nest-datum-ui/components/Store/api/actions/list/bulk.js';
+import { fireListBulkDrop as actionApiListBulkDrop } from '@nest-datum-ui/components/Store/api/actions/list/bulkDrop.js';
+import { fireListCheck as actionApiListCheck } from '@nest-datum-ui/components/Store/api/actions/list/check.js';
+import { fireOpen as actionMenuOpen } from '@nest-datum-ui/components/Store/menu/actions/open.js';
+import { LOGS_PATH_TRAFFIC } from '@nest-datum-ui-lib/logs/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
-import Box from '@mui/material/Box';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
 import Typography from '@mui/material/Typography';
-import Loader from '@nest-datum-ui/components/Loader';
+import TableCell from '@mui/material/TableCell';
+import TableCellSort from '@nest-datum-ui/components/Table/Cell/Sort';
 import TablePagination from '@nest-datum-ui/components/Table/Pagination';
-import TableCellSort, {
-	onChange as onTableCellSortChange,
-} from '@nest-datum-ui/components/Table/Cell/Sort';
-import validateDate from '@nest-datum-ui/utils/validate/date.js';
+import FormFilter from '@nest-datum-ui/components/Form/Filter';
+import Item from './Item';
 
-let Traffic = ({
-	withAccessToken,
-	storeName,
-	url,
-	path,
-}) => {
-	const { enqueueSnackbar } = useSnackbar();
-	const location = useLocation();
-	const navigate = useNavigate();
+let Notification = () => {
+	const { search } = useLocation();
+	const query = utilsUrlSearchPathItem('query', search);
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
-	const loader = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'loader' ]));
-	const total = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'total' ])) ?? 0;
-	const page = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'page' ])) ?? 1;
-	const limit = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'limit' ])) ?? 20;
-	const data = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'data' ]));
-	const query = utilsUrlSearchPathItem('query', location.search);
-	const select = utilsUrlSearchPathItem('select', location.search);
-	const filter = utilsUrlSearchPathItem('filter', location.search);
-	const sort = utilsUrlSearchPathItem('sort', location.search);
-	const onChangePage = React.useCallback((e, newPage) => {
-		actionApiListProp(storeName, 'loader', true)();
-		actionApiListProp(storeName, 'page', newPage)();
-	}, [
-		storeName,
+	const loader = useSelector(selectorMainExtract([ 'api', 'list', LOGS_PATH_TRAFFIC, 'loader' ]));
+	const total = useSelector(selectorMainExtract([ 'api', 'list', LOGS_PATH_TRAFFIC, 'total' ])) ?? 0;
+	const page = useSelector(selectorMainExtract([ 'api', 'list', LOGS_PATH_TRAFFIC, 'page' ])) ?? 1;
+	const limit = useSelector(selectorMainExtract([ 'api', 'list', LOGS_PATH_TRAFFIC, 'limit' ])) ?? 20;
+	const data = useSelector(selectorMainExtract([ 'api', 'list', LOGS_PATH_TRAFFIC, 'data' ]));
+	const storePath = React.useMemo(() => [ 'api', 'list', LOGS_PATH_TRAFFIC ], [
 	]);
-	const onLimit = React.useCallback((e) => {
-		actionApiListProp(storeName, 'loader', true)();
-		actionApiListProp(storeName, 'limit', e.target.value)();
-	}, [
-		storeName,
+	const displayLoader = !utilsCheckArr(data) || unmount || loader;
+	const onChangePage = React.useCallback((e, newPage) => actionApiListPage(LOGS_PATH_TRAFFIC, newPage), [
 	]);
-	const onSortId = React.useCallback((sortValue) => {
-		actionApiListProp(storeName, 'loader', true)();
-		navigate(onTableCellSortChange('id', sortValue));
-	}, [
-		navigate,
-		storeName,
+	const onLimit = React.useCallback((e) => actionApiListLimit(LOGS_PATH_TRAFFIC, e), [
 	]);
-	const onSortCreatedAt = React.useCallback((sortValue) => {
-		actionApiListProp(storeName, 'loader', true)();
-		navigate(onTableCellSortChange('createdAt', sortValue));
-	}, [
-		navigate,
-		storeName,
+	const onSortId = React.useCallback((value) => actionApiListSort(LOGS_PATH_TRAFFIC, 'id', value), [
+	]);
+	const onSortCreatedAt = React.useCallback((value) => actionApiListSort(LOGS_PATH_TRAFFIC, 'createdAt', value), [
+	]);
+	const onDrop = React.useCallback((id) => (e) => actionApiListDrop(LOGS_PATH_TRAFFIC, id), [
+	]);
+	const onCheck = React.useCallback((id) => actionApiListCheck(LOGS_PATH_TRAFFIC, id), [
+	]);
+	const onBulk = React.useCallback((e) => actionApiListBulk(LOGS_PATH_TRAFFIC, e), [
+	]);
+	const onBulkDrop = React.useCallback(() => actionApiListBulkDrop(LOGS_PATH_TRAFFIC), [
+	]);
+	const onMenu = React.useCallback((id) => (e) => actionMenuOpen(id, e.target)(), [
+	]);
+	const onLoader = React.useCallback(() => actionApiListProp(LOGS_PATH_TRAFFIC, 'loader', true)(), [
 	]);
 
 	React.useEffect(() => {
 		if (!unmount) {
-			actionApiListGet({
-				id: storeName, 
-				url,
-				path,
-				withAccessToken,
-				page, 
-				limit, 
+			actionApiListGet(LOGS_PATH_TRAFFIC, {
+				page,
+				limit,
 				query,
-				...select
-					? { select: JSON.parse(decodeURI(select)) }
-					: {},
-				...filter
-					? { filter: JSON.parse(decodeURI(filter)) }
-					: {},
-				...sort
-					? { sort: JSON.parse(decodeURI(sort)) }
-					: {},
-			})(enqueueSnackbar);
+			})();
 		}
 	}, [
-		storeName,
-		withAccessToken,
-		url,
-		path,
 		unmount,
 		page,
 		limit,
 		query,
-		select,
-		filter,
-		sort,
-		enqueueSnackbar,
 	]);
 
-	React.useEffect(() => () => {
-		actionApiListClear(storeName)();
-	}, [
-		storeName,
+	React.useEffect(() => () => actionApiListClear(LOGS_PATH_TRAFFIC)(), [
 	]);
 
 	return <React.Fragment>
-		<Loader visible={!Array.isArray(data)} />
-		{(Array.isArray(data))
-			? ((data.length > 0)
-				? <TablePagination
+		<FormFilter 
+			bulkDeletion
+			storePath={storePath}
+			loader={displayLoader}
+			length={(data || []).length ?? 0}
+			onBulk={onBulk}
+			onDrop={onBulkDrop}
+			onLoader={onLoader} />
+		{(!displayLoader)
+			&& <React.Fragment>
+				<TablePagination
+					bulkDeletion
 					withChangeLimit
+					loader={loader}
 					total={total}
 					page={page}
 					limit={limit}
-					length={data.length}
+					length={(data || []).length ?? 0}
 					onChange={onChangePage}
-					onLimit={onLimit}>
-					<TableHead>
-						<TableRow>
-							<TableCellSort 
-								name="id"
-								onChange={onSortId}>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									ID
-								</Typography>
-							</TableCellSort>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Replica
-								</Typography>
-							</TableCell>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Source
-								</Typography>
-							</TableCell>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									User
-								</Typography>
-							</TableCell>
-							<TableCellSort
-								name="createdAt"
-								onChange={onSortCreatedAt}>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Story
-								</Typography>
-							</TableCellSort>
-						</TableRow>
-					</TableHead>
-					{(!loader && !unmount)
-						? <TableBody>
-							{data.map((item, index) => {
-								return <TableRow key={item.id}>
-									<TableCell sx={{ minWidth: '20%' }}>
-										<Typography 
-											component="div"
-											color={item.isDeleted
-												? 'textSecondary'
-												: 'inherit'}
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'inherit',
-											}}>
-											{item.id}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '20%' }}>
-										<Typography 
-											component="div"
-											color={item.isDeleted
-												? 'textSecondary'
-												: 'secondary'}
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'initial',
-											}}>
-											{item.replicaId}
-										</Typography>
-										<div />
-										<Typography 
-											component="div"
-											color={item.isDeleted
-												? 'textSecondary'
-												: 'inherit'}
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'inherit',
-											}}>
-											{item.servId}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '21%' }}>
-										<Box pb={1}>
-											<Typography component="div">
-												method: <b>{item.method}</b>
-											</Typography>
-										</Box>
-										<Box pb={1}>
-											<Typography component="div">
-												route: <b>{item.route}</b>
-											</Typography>
-										</Box>
-										<Box pb={1}>
-											<Typography component="div">
-												referrer: <b>{item.referrer}</b>
-											</Typography>
-										</Box>
-									</TableCell>
-									<TableCell sx={{ minWidth: '19%' }}>
-										<Box pb={1}>
-											<Typography component="div">
-												id: <b>{item.userId}</b>
-											</Typography>
-										</Box>
-										<Box pb={1}>
-											<Typography component="div">
-												ip: <b>{item.ipAddr}</b>
-											</Typography>
-										</Box>
-									</TableCell>
-									<TableCell sx={{ width: '20%' }}>
-										{validateDate(item.createdAt)
-											? <Box pb={1}>
-												<Typography	
-													component="div"
-													variant="caption"
-													color="textSecondary">
-													Created at:
-												</Typography>
-												<Typography component="div">
-													<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
-												</Typography>
-											</Box>
-											: <React.Fragment />}
-									</TableCell>
-								</TableRow>;
-							})}
-						</TableBody>
-						: <tbody>
-							<tr>
-								<td 
-									style={{
-										position: 'absolute',
-										width: '100%',
-									}}>
-									<Loader visible />
-								</td>
-							</tr>
-							<tr>
-								<td
-									style={{
-										height: '160px',
-										minHeight: '160px',
-										maxHeight: '160px',
-										paddingTop: '48px',
-										paddingBottom: '48px',
-									}} />
-							</tr>
-						</tbody>}
+					onLimit={onLimit}
+					headRowCells={[
+						<TableCellSort 
+							key="id"
+							name="id"
+							onChange={onSortId}>
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								ID
+							</Typography>
+						</TableCellSort>,
+						<TableCell key="replica">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Replica
+							</Typography>
+						</TableCell>,
+						<TableCell key="source">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Source
+							</Typography>
+						</TableCell>,
+						<TableCell key="user">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								User
+							</Typography>
+						</TableCell>,
+						<TableCellSort 
+							key="createdAt"
+							name="createdAt"
+							onChange={onSortCreatedAt}>
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Story
+							</Typography>
+						</TableCellSort>,
+					]}>
+					{utilsCheckArr(data)
+						&& data.map((item) => <Item
+							bulkDeletion
+							key={item.id}
+							id={item.id}
+							servId={item.servId}
+							replicaId={item.replicaId}
+							method={item.method}
+							route={item.route}
+							referrer={item.referrer}
+							ipAddr={item.ipAddr}
+							userId={item.userId}
+							createdAt={item.createdAt}
+							onDrop={onDrop(item.id)}
+							onMenu={onMenu(item.id)}
+							onCheck={onCheck(item.id)}
+							storePath={storePath} />)}
 				</TablePagination>
-				: <Box
-					py={6}
-					display="flex"
-					justifyContent="center">
-					<Typography
-						variant="subtitle2"
-						color="secondary">
-						No entries created.
-					</Typography>
-				</Box>)
-			: <React.Fragment />}
-	</React.Fragment>;
+			</React.Fragment>}
+		</React.Fragment>;
 };
 
-Traffic = React.memo(Traffic);
-Traffic.defaultProps = {
-	withAccessToken: true,
-	storeName: 'logsTrafficList',
-	url: process.env.SERVICE_LOGS,
-	path: 'traffic',
+Notification = React.memo(Notification);
+Notification.defaultProps = {
 };
-Traffic.propTypes = {
+Notification.propTypes = {
 };
 
-export default Traffic;
+export default Notification;

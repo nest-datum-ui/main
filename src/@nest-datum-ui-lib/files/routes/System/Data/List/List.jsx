@@ -1,52 +1,13 @@
 import React from 'react';
-import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import FormFilterSystem from '@nest-datum-ui-lib/files/components/Form/System/Filter';
-import TableSystem from '@nest-datum-ui-lib/files/components/Table/System';
-import DialogSystemDrop from '@nest-datum-ui-lib/files/components/Dialog/System/Drop';
-import Link from '@nest-datum-ui/components/Link';
+import FilesDialogSystemDrop from '@nest-datum-ui-lib/files/components/Dialog/System/Drop';
+import FilesTableSystem from '@nest-datum-ui-lib/files/components/Table/System';
+import Title from './Title';
 
 let List = () => {
-	React.useEffect(() => {
-		actionBreadcrumbsListSet('app', [{
-			key: '/',
-			text: '...',
-		}, {
-			key: 'files',
-			text: 'Files',
-		}, {
-			key: '/files/system',
-			text: 'File systems',
-		}])();
-	}, [
-	]);
-
 	return <React.Fragment>
-		<Box pb={2}>
-			<Typography
-				component="div"
-				variant="h5">
-				File systems list
-			</Typography>
-		</Box>
-		<Box pb={2}>
-			<Button
-				disableElevation
-				variant="contained"
-				color="secondary"
-				size="small"
-				startIcon={<AddIcon />}
-				component={Link}
-				to={`/files/system/0`}>
-				Create
-			</Button>
-		</Box>
-		<FormFilterSystem />
-		<TableSystem storeName="filesSystemList" />
-		<DialogSystemDrop storeName="filesSystemList" />
+		<Title />
+		<FilesTableSystem />
+		<FilesDialogSystemDrop />
 	</React.Fragment>;
 };
 

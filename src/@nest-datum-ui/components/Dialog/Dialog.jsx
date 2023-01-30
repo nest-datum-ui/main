@@ -7,10 +7,11 @@ import MiuDialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import TypographySubtitle from '@nest-datum-ui/components/Typography/Subtitle';
+import TypographyTitle from '@nest-datum-ui/components/Typography/Title';
+import ButtonCancel from '@nest-datum-ui/components/Button/Cancel';
+import ButtonCancelIcon from '@nest-datum-ui/components/Button/Cancel/Icon';
+import handlerClose from './handler/close.js';
 
 let Dialog = ({
 	loader,
@@ -18,28 +19,18 @@ let Dialog = ({
 	title,
 	subtitle,
 	actions,
-	disableActions,
 	onClose,
 	children,
 	...props
 }) => {
 	const openFlag = useSelector(selectorDialogVisible(id));
-	const onCloseLocal = React.useCallback((e) => {
-		if (loader !== true) {
-			return (typeof onClose === 'function')
-				? onClose(e)
-				: actionDialogClose(id)();
-		}
-	}, [
-		onClose,
+	const onCancel = React.useCallback((e) => handlerClose(e, id, loader, onClose), [
 		id,
 		loader,
+		onClose,
 	]);
 
-	// onUnmount
-	React.useEffect(() => () => {
-		actionDialogClose(id)();
-	}, [
+	React.useEffect(() => () => actionDialogClose(id)(), [
 		id,
 	]);
 
@@ -48,10 +39,10 @@ let Dialog = ({
 			fullWidth
 			maxWidth="md"
 			open={openFlag}
-			onClose={onCloseLocal}
+			onClose={onCancel}
 			{ ...props }>
 			{(title || subtitle)
-				? <Box
+				&& <Box
 					pt={1}
 					px={3}>
 					<Grid
@@ -62,43 +53,28 @@ let Dialog = ({
 							item
 							xs={true}>
 							{title
-								? <Typography
-									component="div"
-									variant="h6">
+								&& <TypographyTitle>
 									{title}
-								</Typography>
-								: <React.Fragment />}
+								</TypographyTitle>}
 							{subtitle
-								? <Typography
-									component="div"
-									variant="subtitle2"
-									color="textSecondary">
+								&& <TypographySubtitle>
 									{subtitle}
-								</Typography>
-								: <React.Fragment />}
+								</TypographySubtitle>}
 						</Grid>
 						<Grid
 							item
 							xs={false}>
-							<IconButton
-								{ ...(typeof loader === 'boolean')
-									? { disabled: loader }
-									: {} }
-								onClick={typeof props['onClose'] === 'function'
-									? props['onClose']
-									: onCloseLocal}>
-								<CloseIcon color="error" />
-							</IconButton>
+							<ButtonCancelIcon
+								disabled={loader}
+								onClick={onCancel} />
 						</Grid>
 					</Grid>
-				</Box>
-				: <React.Fragment />}
+				</Box>}
 			<DialogContent>
 				{children}
 			</DialogContent>
-			{disableActions
-				? <React.Fragment />
-				: <Box
+			{actions
+				&& <Box
 					py={1}
 					px={3}>
 					<Grid
@@ -108,25 +84,15 @@ let Dialog = ({
 						<Grid
 							item
 							xs={false}>
-							<Button
-								{ ...(typeof loader === 'boolean')
-									? { disabled: loader }
-									: {} }
-								disableElevation
-								variant="text"
-								color="error"
-								startIcon={<CloseIcon />} 
-								onClick={onCloseLocal}>
-								Cancel
-							</Button>
+							<ButtonCancel
+								disabled={loader}
+								onClick={onCancel} />
 						</Grid>
-						{actions
-							? <Grid
-								item
-								xs="auto">
-								{actions}
-							</Grid>
-							: <React.Fragment />}
+						<Grid
+							item
+							xs="auto">
+							{actions}
+						</Grid>
 					</Grid>
 				</Box>}
 		</MiuDialog>
@@ -140,7 +106,10 @@ Dialog.propTypes = {
 	id: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.number,
-	]),
+	]).isRequired,
+	loader: PropTypes.bool,
+	title: PropTypes.string,
+	subtitle: PropTypes.string,
 	onClose: PropTypes.func,
 };
 

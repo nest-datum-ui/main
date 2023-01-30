@@ -1,110 +1,86 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { 
-	useLocation,
-	useNavigate, 
-} from 'react-router-dom';
-import { useSnackbar } from 'notistack';
-import { format } from 'date-fns';
-import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
-import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
+import { useLocation } from 'react-router-dom';
 import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
+import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
+import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
+import { fireListPage as actionApiListPage } from '@nest-datum-ui/components/Store/api/actions/list/page.js';
+import { fireListLimit as actionApiListLimit } from '@nest-datum-ui/components/Store/api/actions/list/limit.js';
+import { fireListSort as actionApiListSort } from '@nest-datum-ui/components/Store/api/actions/list/sort.js';
+import { fireListDrop as actionApiListDrop } from '@nest-datum-ui/components/Store/api/actions/list/drop.js';
+import { fireListRestore as actionApiListRestore } from '@nest-datum-ui/components/Store/api/actions/list/restore.js';
+import { fireListBulk as actionApiListBulk } from '@nest-datum-ui/components/Store/api/actions/list/bulk.js';
+import { fireListBulkDrop as actionApiListBulkDrop } from '@nest-datum-ui/components/Store/api/actions/list/bulkDrop.js';
+import { fireListCheck as actionApiListCheck } from '@nest-datum-ui/components/Store/api/actions/list/check.js';
 import { fireOpen as actionMenuOpen } from '@nest-datum-ui/components/Store/menu/actions/open.js';
+import { 
+	FORMS_PATH_FORM,
+	FORMS_PATH_FORM_CREATE, 
+} from '@nest-datum-ui-lib/forms/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
-import Box from '@mui/material/Box';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Link from '@nest-datum-ui/components/Link';
-import Loader from '@nest-datum-ui/components/Loader';
+import TableCell from '@mui/material/TableCell';
 import TablePagination from '@nest-datum-ui/components/Table/Pagination';
-import TableCellSort, {
-	onChange as onTableCellSortChange,
-} from '@nest-datum-ui/components/Table/Cell/Sort';
-import MenuFormContext from '@nest-datum-ui-lib/forms/components/Menu/Form/Context';
-import validateDate from '@nest-datum-ui/utils/validate/date.js';
+import TableCellSort from '@nest-datum-ui/components/Table/Cell/Sort';
+import FormFilterIsDeleted from '@nest-datum-ui/components/Form/Filter/IsDeleted';
+import FormFilterIsNotDelete from '@nest-datum-ui/components/Form/Filter/IsNotDelete';
+import FormFilter from '@nest-datum-ui/components/Form/Filter';
+import ButtonCreate from '@nest-datum-ui/components/Button/Create';
+import FormsFormFilterStatusForm from '@nest-datum-ui-lib/forms/components/Form/Filter/Status/Form';
+import Item from './Item';
 
-let Form = ({
-	withAccessToken,
-	storeName,
-	url,
-	path,
-}) => {
-	const { enqueueSnackbar } = useSnackbar();
-	const location = useLocation();
-	const navigate = useNavigate();
+let Form = () => {
+	const { search } = useLocation();
+	const query = utilsUrlSearchPathItem('query', search);
+	const select = utilsUrlSearchPathItem('select', search);
+	const filter = utilsUrlSearchPathItem('filter', search);
+	const sort = utilsUrlSearchPathItem('sort', search);
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
-	const loader = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'loader' ]));
-	const total = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'total' ])) ?? 0;
-	const page = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'page' ])) ?? 1;
-	const limit = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'limit' ])) ?? 20;
-	const data = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'data' ]));
-	const query = utilsUrlSearchPathItem('query', location.search);
-	const select = utilsUrlSearchPathItem('select', location.search);
-	const filter = utilsUrlSearchPathItem('filter', location.search);
-	const sort = utilsUrlSearchPathItem('sort', location.search);
-	const onChangePage = React.useCallback((e, newPage) => {
-		actionApiListProp(storeName, 'loader', true)();
-		actionApiListProp(storeName, 'page', newPage)();
-	}, [
-		storeName,
+	const loader = useSelector(selectorMainExtract([ 'api', 'list', FORMS_PATH_FORM, 'loader' ]));
+	const total = useSelector(selectorMainExtract([ 'api', 'list', FORMS_PATH_FORM, 'total' ])) ?? 0;
+	const page = useSelector(selectorMainExtract([ 'api', 'list', FORMS_PATH_FORM, 'page' ])) ?? 1;
+	const limit = useSelector(selectorMainExtract([ 'api', 'list', FORMS_PATH_FORM, 'limit' ])) ?? 20;
+	const data = useSelector(selectorMainExtract([ 'api', 'list', FORMS_PATH_FORM, 'data' ]));
+	const storePath = React.useMemo(() => [ 'api', 'list', FORMS_PATH_FORM ], [
 	]);
-	const onLimit = React.useCallback((e) => {
-		actionApiListProp(storeName, 'loader', true)();
-		actionApiListProp(storeName, 'limit', e.target.value)();
-	}, [
-		storeName,
+	const displayLoader = !utilsCheckArr(data) || unmount || loader;
+	const onChangePage = React.useCallback((e, newPage) => actionApiListPage(FORMS_PATH_FORM, newPage), [
 	]);
-	const onMenu = React.useCallback((itemId) => (e) => {
-		actionMenuOpen(`forms-menu-form-context-${itemId}`, e.target)();
-	}, [
+	const onLimit = React.useCallback((e) => actionApiListLimit(FORMS_PATH_FORM, e), [
 	]);
-	const onSortId = React.useCallback((sortValue) => {
-		actionApiListProp(storeName, 'loader', true)();
-		navigate(onTableCellSortChange('id', sortValue));
-	}, [
-		navigate,
-		storeName,
+	const onSortId = React.useCallback((value) => actionApiListSort(FORMS_PATH_FORM, 'id', value), [
 	]);
-	const onSortCreatedAt = React.useCallback((sortValue) => {
-		actionApiListProp(storeName, 'loader', true)();
-		navigate(onTableCellSortChange('createdAt', sortValue));
-	}, [
-		navigate,
-		storeName,
+	const onSortCreatedAt = React.useCallback((value) => actionApiListSort(FORMS_PATH_FORM, 'createdAt', value), [
+	]);
+	const onDrop = React.useCallback((id) => (e) => actionApiListDrop(FORMS_PATH_FORM, id), [
+	]);
+	const onRestore = React.useCallback((id) => (e) => actionApiListRestore(FORMS_PATH_FORM, id), [
+	]);
+	const onCheck = React.useCallback((id) => actionApiListCheck(FORMS_PATH_FORM, id), [
+	]);
+	const onBulk = React.useCallback((e) => actionApiListBulk(FORMS_PATH_FORM, e), [
+	]);
+	const onBulkDrop = React.useCallback(() => actionApiListBulkDrop(FORMS_PATH_FORM), [
+	]);
+	const onLoader = React.useCallback(() => actionApiListProp(FORMS_PATH_FORM, 'loader', true)(), [
+	]);
+	const onMenu = React.useCallback((id) => (e) => actionMenuOpen(id, e.target)(), [
 	]);
 
 	React.useEffect(() => {
 		if (!unmount) {
-			actionApiListGet({
-				id: storeName, 
-				url,
-				path,
-				withAccessToken,
-				page, 
-				limit, 
+			actionApiListGet(FORMS_PATH_FORM, {
+				page,
+				limit,
 				query,
-				...select
-					? { select: JSON.parse(decodeURI(select)) }
-					: {},
-				...filter
-					? { filter: JSON.parse(decodeURI(filter)) }
-					: {},
-				...sort
-					? { sort: JSON.parse(decodeURI(sort)) }
-					: {},
-			})(enqueueSnackbar);
+				select,
+				filter,
+				sort,
+			})();
 		}
 	}, [
-		storeName,
-		withAccessToken,
-		url,
-		path,
 		unmount,
 		page,
 		limit,
@@ -112,214 +88,109 @@ let Form = ({
 		select,
 		filter,
 		sort,
-		enqueueSnackbar,
 	]);
 
-	React.useEffect(() => () => {
-		actionApiListClear(storeName)();
-	}, [
-		storeName,
+	React.useEffect(() => () => actionApiListClear(FORMS_PATH_FORM)(), [
 	]);
 
 	return <React.Fragment>
-		<Loader visible={!Array.isArray(data)} />
-		{(Array.isArray(data))
-			? ((data.length > 0)
-				? <TablePagination
+		<FormFilter 
+			bulkDeletion
+			toolbarComponent={<ButtonCreate to={FORMS_PATH_FORM_CREATE} />}
+			storePath={storePath}
+			loader={displayLoader}
+			length={(data || []).length ?? 0}
+			onBulk={onBulk}
+			onDrop={onBulkDrop}
+			onLoader={onLoader}>
+			<FormFilterIsDeleted onInput={onLoader} />
+			<FormFilterIsNotDelete onInput={onLoader} />
+			<FormsFormFilterStatusForm onInput={onLoader} />
+		</FormFilter>
+		{(!displayLoader)
+			&& <React.Fragment>
+				<TablePagination
+					bulkDeletion
 					withChangeLimit
+					loader={loader}
 					total={total}
 					page={page}
 					limit={limit}
 					length={data.length}
 					onChange={onChangePage}
-					onLimit={onLimit}>
-					<TableHead>
-						<TableRow>
-							<TableCellSort 
-								name="id"
-								onChange={onSortId}>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									ID
-								</Typography>
-							</TableCellSort>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Main
-								</Typography>
-							</TableCell>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Status
-								</Typography>
-							</TableCell>
-							<TableCell>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									User
-								</Typography>
-							</TableCell>
-							<TableCellSort
-								name="createdAt"
-								onChange={onSortCreatedAt}>
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Story
-								</Typography>
-							</TableCellSort>
-						</TableRow>
-					</TableHead>
-					{(!loader && !unmount)
-						? <TableBody>
-							{data.map((item, index) => {
-								return <TableRow key={item.id}>
-									<TableCell sx={{ minWidth: '18%' }}>
-										<Typography 
-											component={Link}
-											to={`/forms/form/${item.id}`}
-											color={item.isDeleted
-												? 'textSecondary'
-												: 'inherit'}
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'inherit',
-											}}>
-											{item.id}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '28%' }}>
-										<Typography 
-											component={Link}
-											to={`/forms/form/${item.id}`}
-											variant="h6"
-											color={item.isDeleted
-												? 'textSecondary'
-												: 'secondary'}
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'initial',
-											}}>
-											{item.name}
-										</Typography>
-										<Typography
-											component="div"
-											variant="subtitle1"
-											color="textSecondary"
-											sx={{
-												textDecoration: item.isDeleted
-													? 'line-through'
-													: 'initial',
-											}}>
-											{item.description}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '18%' }}>
-										<Typography component="div">
-											{item.formStatusId}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ minWidth: '18%' }}>
-										<Typography component="div">
-											{item.userId}
-										</Typography>
-									</TableCell>
-									<TableCell sx={{ width: '18%' }}>
-										{validateDate(item.createdAt)
-											? <Box pb={1}>
-												<Typography	
-													component="div"
-													variant="caption"
-													color="textSecondary">
-													Created at:
-												</Typography>
-												<Typography component="div">
-													<b>{format(new Date(item.createdAt), 'dd MMMM, hh:mm')}</b>
-												</Typography>
-											</Box>
-											: <React.Fragment />}
-										{validateDate(item.updatedAt)
-											? <Box>
-												<Typography	
-													component="div"
-													variant="caption"
-													color="textSecondary">
-													Updated at:
-												</Typography>
-												<Typography component="div">
-													<b>{format(new Date(item.updatedAt), 'dd MMMM, hh:mm')}</b>
-												</Typography>
-											</Box>
-											: <React.Fragment />}
-									</TableCell>
-									<TableCell sx={{ width: '1%' }}>
-										<IconButton onClick={onMenu(item.id)}>
-											<MoreVertIcon />
-										</IconButton>
-										<MenuFormContext 
-											id={`forms-menu-form-context-${item.id}`}
-											entityId={item.id}
-											isDeleted={item.isDeleted}
-											isNotDelete={item.isNotDelete} />
-									</TableCell>
-								</TableRow>;
-							})}
-						</TableBody>
-						: <tbody>
-							<tr>
-								<td 
-									style={{
-										position: 'absolute',
-										width: '100%',
-									}}>
-									<Loader visible />
-								</td>
-							</tr>
-							<tr>
-								<td
-									style={{
-										height: '160px',
-										minHeight: '160px',
-										maxHeight: '160px',
-										paddingTop: '48px',
-										paddingBottom: '48px',
-									}} />
-							</tr>
-						</tbody>}
+					onLimit={onLimit}
+					headRowCells={[
+						<TableCellSort 
+							key="id"
+							name="id"
+							onChange={onSortId}>
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								ID
+							</Typography>
+						</TableCellSort>,
+						<TableCell key="main">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Main
+							</Typography>
+						</TableCell>,
+						<TableCell key="formStatusId">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Status
+							</Typography>
+						</TableCell>,
+						<TableCell key="userId">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								User
+							</Typography>
+						</TableCell>,
+						<TableCellSort
+							key="createdAt"
+							name="createdAt"
+							onChange={onSortCreatedAt}>
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Story
+							</Typography>
+						</TableCellSort>,
+					]}>
+					{data.map((item) => <Item
+						bulkDeletion
+						key={item.id}
+						id={item.id}
+						name={item.name}
+						description={item.description}
+						formStatusId={item.formStatusId}
+						userId={item.userId}
+						createdAt={item.createdAt}
+						updatedAt={item.updatedAt}
+						isDeleted={item.isDeleted}
+						isNotDelete={item.isNotDelete}
+						onDrop={onDrop(item.id)}
+						onRestore={onRestore(item.id)}
+						onMenu={onMenu(item.id)}
+						onCheck={onCheck(item.id)}
+						storePath={storePath} />)}
 				</TablePagination>
-				: <Box
-					py={6}
-					display="flex"
-					justifyContent="center">
-					<Typography
-						variant="subtitle2"
-						color="secondary">
-						No entries created.
-					</Typography>
-				</Box>)
-			: <React.Fragment />}
-	</React.Fragment>;
+			</React.Fragment>}
+		</React.Fragment>;
 };
 
 Form = React.memo(Form);
 Form.defaultProps = {
-	withAccessToken: true,
-	storeName: 'formsFormList',
-	url: process.env.SERVICE_FORMS,
-	path: 'form',
 };
 Form.propTypes = {
 };

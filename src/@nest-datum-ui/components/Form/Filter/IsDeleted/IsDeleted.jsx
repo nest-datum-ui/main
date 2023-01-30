@@ -1,72 +1,42 @@
 import React from 'react';
-import { 
-	useNavigate,
-	useLocation, 
-} from 'react-router-dom';
-import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
-import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
+import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import { fireListCreateFilterUrl as actionApiListCreateFilterUrl } from '@nest-datum-ui/components/Store/api/actions/list/createFilterUrl.js';
+import utilsUrlItemFilterBool from '@nest-datum-ui/utils/url/item/filter/bool.js';
+import utilsUrlItemFilterGetBool from '@nest-datum-ui/utils/url/item/filter/get/bool.js';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
-let IsDeleted = ({ storeName }) => {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const filter = React.useMemo(() => utilsUrlSearchPathItem('filter', location.search, true) || {}, [
-		location,
-	]);
-	const value = (filter['isDeleted'] === true
-		|| filter['isDeleted'] === false)
-		? Number(filter['isDeleted'])
-		: '';
-	const onChange = React.useCallback((e) => {
-		actionApiListProp(storeName, 'loader', true)();
-
-		const newValue = e.target.value;
-		let url = ``,
-			query = utilsUrlSearchPathItem('query', window.location.search),
-			sort = utilsUrlSearchPathItem('sort', window.location.search, true);
-
-		if (!newValue) {
-			delete filter['isDeleted'];
-		}
-		else {
-			filter['isDeleted'] = Boolean(Number(newValue));
-		}
-		if (Object.keys(filter).length > 0) {
-			url += `?filter=${JSON.stringify(filter)}`;
-		}
-		if (sort
-			&& typeof sort === 'object'
-			&& Object.keys(sort).length > 0) {
-			url += url
-				? `&sort=${JSON.stringify(sort)}`
-				: `?sort=${JSON.stringify(sort)}`;
-		}
-		if (query) {
-			url += url
-				? `&query=${query}`
-				: `?query=${query}`;
-		}
-		navigate(url);
+let IsDeleted = ({
+	onChange,
+	onInput,
+}) => {
+	const { search } = useLocation();
+	const [ id ] = React.useState(() => uuidv4());
+	const value = utilsUrlItemFilterGetBool(search, 'isDeleted');
+	const onChangeMemo = React.useCallback((e) => {
+		actionApiListCreateFilterUrl(e, utilsUrlItemFilterBool('isDeleted'));
+		onChange(e);
+		onInput(e);
 	}, [
-		navigate,
-		filter,
-		storeName,
+		onChange,
+		onInput,
 	]);
 
 	return <React.Fragment>
 		<FormControl>
-			<FormLabel id={`form-filter-option-deleted-${storeName}`}>
+			<FormLabel id={id}>
 				Visibility
 			</FormLabel>
 			<RadioGroup
-				aria-labelledby={`form-filter-option-deleted-${storeName}`}
-				name={`form-filter-option-deleted-${storeName}`}
+				aria-labelledby={id}
+				name={id}
 				value={value}
-				onChange={onChange}>
+				onChange={onChangeMemo}>
 				<FormControlLabel
 					control={<Radio />}  
 					value="" 
@@ -86,8 +56,12 @@ let IsDeleted = ({ storeName }) => {
 
 IsDeleted = React.memo(IsDeleted);
 IsDeleted.defaultProps = {
+	onChange: () => {},
+	onInput: () => {},
 };
 IsDeleted.propTypes = {
+	onChange: PropTypes.func,
+	onInput: PropTypes.func,
 };
 
 export default IsDeleted;

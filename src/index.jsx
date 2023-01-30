@@ -11,13 +11,13 @@ import { Provider as ProviderLanguage } from '@nest-datum-ui/components/Language
 import RouteNotFound from '@nest-datum-ui/routes/NotFound';
 import RouteAppDashboard from '@nest-datum-ui/routes/App/Dashboard';
 import Layout from 'layouts';
-import LayoutApp from 'layouts/App';
-import LayoutAppService from 'layouts/App/Service';
-import SSORouteSignIn from '@nest-datum-ui-lib/sso/routes/SignIn';
-import SSORouteSignUp from '@nest-datum-ui-lib/sso/routes/SignUp';
-import SSORouteRecovery from '@nest-datum-ui-lib/sso/routes/Recovery';
-import SSORouteReset from '@nest-datum-ui-lib/sso/routes/Reset';
-import SSORouteVerify from '@nest-datum-ui-lib/sso/routes/Verify';
+import LayoutManager from 'layouts/Manager';
+import LayoutManagerService from 'layouts/Manager/Service';
+// import SsoRouteSignIn from '@nest-datum-ui-lib/sso/routes/SignIn';
+// import SsoRouteSignUp from '@nest-datum-ui-lib/sso/routes/SignUp';
+// import SsoRouteRecovery from '@nest-datum-ui-lib/sso/routes/Recovery';
+// import SsoRouteReset from '@nest-datum-ui-lib/sso/routes/Reset';
+// import SsoRouteVerify from '@nest-datum-ui-lib/sso/routes/Verify';
 import GlobalStyles from './globalStyles.js';
 
 const container = document.getElementById('root');
@@ -30,33 +30,33 @@ root.render(
 				<ProviderLanguage>
 					<BrowserRouter>
 						<Routes>
-							<Route
+							<Route 
 								path=""
 								element={<Layout />}>
-								<Route
+								{/*<Route
 									path="sign-in"
-									element={<SSORouteSignIn />} />
+									element={<SsoRouteSignIn />} />
 								<Route
 									path="sign-up"
-									element={<SSORouteSignUp />} />
+									element={<SsoRouteSignUp />} />
 								<Route
 									path="recovery"
-									element={<SSORouteRecovery />} />
+									element={<SsoRouteRecovery />} />
 								<Route
 									path="reset"
-									element={<SSORouteReset />} />
+									element={<SsoRouteReset />} />
 								<Route
 									path="verify"
-									element={<SSORouteVerify />} />
+									element={<SsoRouteVerify />} />*/}
 								<Route
 									path=""
-									element={<LayoutApp />}>
+									element={<LayoutManager />}>
 									<Route
 										index
 										element={<RouteAppDashboard />} />
 									<Route
 										path=":serviceKey/*"
-										element={<LayoutAppService />} />
+										element={<LayoutManagerService />} />
 								</Route>
 								<Route
 									path="*"

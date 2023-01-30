@@ -1,115 +1,99 @@
 import axios from 'axios';
 import Store from '@nest-datum-ui/components/Store';
+import utilsCheckStr from '@nest-datum-ui/utils/check/str';
+import utilsCheckStrUrl from '@nest-datum-ui/utils/check/str/url.js';
+import utilsCheckNumericInt from '@nest-datum-ui/utils/check/numeric/int.js';
+import utilsCheckObj from '@nest-datum-ui/utils/check/obj';
+import utilsUrlWithToken from '@nest-datum-ui/utils/url/withToken.js';
+import utilsConvertStrErr from '@nest-datum-ui/utils/convert/str/err.js';
+import utilsConvertObjErr from '@nest-datum-ui/utils/convert/obj/err.js';
+import { hookSnackbar } from '@nest-datum-ui/utils/hooks';
 import { fireListProp as actionApiListProp } from './prop.js';
 
-/**
- * @return {Function}
- */
-export const fireListGet = ({ 
-	id, 
-	url, 
-	path,
-	withAccessToken = false,
-	page = 1, 
-	limit = 20, 
+export const fireListGet = (url, {
+	page, 
+	limit, 
 	query, 
+	relations,
 	select,
 	filter, 
 	sort, 
-	relations,
-} = {}) => async (snackbar = () => {}, prefix = 'api') => {
-	let apiPath = '';
+}) => async (prefix = 'api') => {
+	const snackbar = hookSnackbar();
 
-	try {
-		await actionApiListProp(id, 'loader', true)();
+	if (utilsCheckStrUrl(url)) {
+		try {
+			await actionApiListProp(url, 'loader', true)();
 
-		const realQuery = query;
-		const realSelect = select ?? {};
-		const realFilter = filter ?? {};
-		const realSort = sort ?? {};
-		const realRelations = relations ?? {};
-		
-		apiPath = `${url}/${path}?${new URLSearchParams({
-			page,
-			limit,
-			...realQuery
-				? { query: realQuery }
-				: {},
-			...Object.keys(realSelect).length > 0
-				? { select: JSON.stringify(realSelect) }
-				: {},
-			...Object.keys(realFilter).length > 0
-				? { filter: JSON.stringify(realFilter) }
-				: {},
-			...Object.keys(realSort).length > 0
-				? { sort: JSON.stringify(realSort) }
-				: {},
-			...Object.keys(realRelations).length > 0
-				? { relations: JSON.stringify(realRelations) }
-				: {},
-			...withAccessToken
-				? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
-				: {},
-		}).toString()}`;
+			const listData = ((Store()
+				.getState()[prefix] || {})
+				.list || {})[url] || {};
+			const payload = {
+				...utilsCheckNumericInt(page)
+					? { page }
+					: (listData.page && 1),
+				...utilsCheckNumericInt(limit)
+					? { limit }
+					: (listData.limit && 10),
+				...utilsCheckStr(query)
+					? { query }
+					: {},
+				...utilsCheckObj(relations)
+					? { relations }
+					: (utilsCheckStr(relations)
+						? { relations: JSON.parse(decodeURI(relations)) }
+						: {}), 
+				...utilsCheckObj(select)
+					? { select }
+					: (utilsCheckStr(select)
+						? { select: JSON.parse(decodeURI(select)) }
+						: {}), 
+				...utilsCheckObj(filter)
+					? { filter }
+					: (utilsCheckStr(filter)
+						? { filter: JSON.parse(decodeURI(filter)) }
+						: {}), 
+				...utilsCheckObj(sort)
+					? { sort }
+					: (utilsCheckStr(sort)
+						? { sort: JSON.parse(decodeURI(sort)) }
+						: {}), 
+			};
+			const request = await axios(utilsUrlWithToken(url, payload));
 
-		const request = await axios(apiPath);
-
-		Store().dispatch({
-			type: prefix +'.listGet',
-			payload: {
-				id,
-				page,
-				limit,
-				total: request.data.total,
-				data: request.data.rows,
-				query: realQuery,
-				select: realSelect,
-				filter: realFilter,
-				sort: realSort,
-				relations: realRelations,
-			},
-		});
-	}
-	catch (err) {
-		const errorMessage = err.response
-			? (err.response.data
-				? err.response.data.message || (err.response.data.error
-					? err.response.data.error.text
-					: err.message)
-				: err.message)
-			: err.message;
-
-		snackbar(`${errorMessage} - ${apiPath}`, { variant: 'error' });
-		
-		Store().dispatch({
-			type: prefix +'.listGet',
-			payload: {
-				id,
-				data: [],
-			},
-		});
+			Store().dispatch({
+				type: prefix +'.listGet',
+				payload: {
+					...payload,
+					url,
+					total: request.data.total,
+					data: request.data.rows,
+				},
+			});
+		}
+		catch (err) {
+			snackbar(utilsConvertStrErr(utilsConvertObjErr(err), url), { variant: 'error' });
+			Store().dispatch({
+				type: prefix +'.listGet',
+				payload: {
+					url,
+					total: 0,
+					data: [],
+				},
+			});
+		}
 	}
 };
 
-/**
- * @param {object} state - Current redux state
- * @param {object} action - Action data
- * @return {object} New state
- */
 export const reducerListGet = (state, action) => {
-	if (state.list[action.payload.id]
-		&& !Array.isArray(state.list[action.payload.id])
-		&& typeof state.list[action.payload.id] === 'object') {
-		state.list[action.payload.id] = {
-			...state.list[action.payload.id],
-			...(action.payload || {}),
+	if (utilsCheckObj(state.list[action.payload.url])) {
+		state.list[action.payload.url] = {
+			...state.list[action.payload.url],
 			loader: false,
+			...(action.payload || {}),
 		};
 	}
-	else if ((typeof action.payload.id === 'number' 
-			&& !Number.isNaN(action.payload.id))
-		|| (typeof action.payload.id === 'string'
-			&& action.payload.id)){
+	else if (utilsCheckStr(action.payload.url)) {
 		state.list[action.payload.id] = {
 			page: 1,
 			limit: 20,
@@ -140,10 +124,10 @@ export const reducerListGet = (state, action) => {
 			selected: [],
 		};
 	}
-	return ({
+	return {
 		...state,
 		list: {
 			...state.list,
 		},
-	});
+	};
 };

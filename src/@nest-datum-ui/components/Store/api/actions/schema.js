@@ -13,8 +13,6 @@ export const reducerSchema = (state, action) => {
 		form: {
 			[DEFAULT_KEY]: {
 				loader: false,
-				options: [],
-				settins: [],
 				errors: {},
 			},
 		},

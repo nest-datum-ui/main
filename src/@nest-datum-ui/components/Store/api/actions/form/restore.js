@@ -1,63 +1,47 @@
-import { fireListProp as actionApiListProp } from '../list/prop.js';
-import { fireFormProp as actionApiFormProp } from './prop.js';
 import axios from 'axios';
 import Store from '@nest-datum-ui/components/Store';
+import utilsCheckStrUrl from '@nest-datum-ui/utils/check/str/url.js';
+import utilsCheckObj from '@nest-datum-ui/utils/check/obj';
+import utilsUrlWithToken from '@nest-datum-ui/utils/url/withToken.js';
+import utilsConvertStrErr from '@nest-datum-ui/utils/convert/str/err.js';
+import utilsConvertObjErr from '@nest-datum-ui/utils/convert/obj/err.js';
+import { hookSnackbar } from '@nest-datum-ui/utils/hooks';
+import { fireListProp as actionApiListProp } from '../list/prop.js';
+import { fireFormProp as actionApiFormProp } from './prop.js';
 
-/**
- * @return {Function}
- */
-export const fireFormRestore = ({
-	entityId, 
-	storeName,
-	url,
-	path,
-	withAccessToken = false,
-}) => async (snackbar = () => {}, callback = () => {}, prefix = 'api') => {
-	let apiPath = '';
+export const fireFormRestore = (url, entityId) => async (callback = () => {}, prefix = 'api') => {
+	const snackbar = hookSnackbar();
 
-	try {
-		await actionApiListProp(storeName, 'loader', true)();
+	if (utilsCheckStrUrl(url)) {
+		try {
+			await actionApiFormProp(url, 'loader', true)();
+			await actionApiListProp(url, 'loader', true)();
+			await axios.patch(utilsUrlWithToken(`${url}/${entityId}`), { isDeleted: false });
 
-		apiPath = `${url}/${path}/${entityId}?${new URLSearchParams({
-			...withAccessToken
-				? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
-				: {},
-		}).toString()}`;
+			const formData = ((Store()
+				.getState()
+				.api || {})
+				.form || {})[url];
+			const listData = (((Store()
+				.getState()
+				.api || {})
+				.list || {})[url] || {})
+				.data || [];
+			const entityIndex = listData.findIndex((item) => item.id === entityId);
 
-		await axios.patch(apiPath, {
-			isDeleted: false,
-		});
-
-		const formData = Store()
-			.getState()['api']
-			.form[entityId];
-		const listData = (Store()
-			.getState()['api']
-			.list[storeName] || {})
-			.data || [];
-		const entityIndex = listData.findIndex((item) => item.id === entityId);
-
-		if (formData
-			&& typeof formData === 'object') {
-			actionApiFormProp(entityId, 'isDeleted', false)();
+			if (utilsCheckObj(formData)) {
+				actionApiFormProp(url, 'isDeleted', false)();
+				actionApiFormProp(url, 'loader', false)();
+			}
+			if (entityIndex >= 0) {
+				actionApiListProp(url, 'data', false, [ entityIndex, 'isDeleted' ])();
+				actionApiListProp(url, 'loader', false)();
+			}
 		}
-		if (entityIndex >= 0) {
-			actionApiListProp(storeName, 'data', false, [ entityIndex, 'isDeleted' ])();
+		catch (err) {
+			snackbar(utilsConvertStrErr(utilsConvertObjErr(err), `${url}/${entityId}`), { variant: 'error' });
+			actionApiFormProp(url, 'loader', false)();
+			actionApiListProp(url, 'loader', false)();
 		}
-		await actionApiListProp(storeName, 'loader', false)();
-
-		callback(formData, listData, entityIndex);
-	}
-	catch (err) {
-		const errorMessage = err.response
-			? (err.response.data
-				? err.response.data.message || (err.response.data.error
-					? err.response.data.error.text
-					: err.message)
-				: err.message)
-			: err.message;
-
-		snackbar(`${errorMessage} - ${apiPath}`, { variant: 'error' });
-		actionApiListProp(storeName, 'loader', false)();
 	}
 };

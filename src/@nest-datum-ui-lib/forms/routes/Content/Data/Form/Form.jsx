@@ -1,66 +1,13 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
-import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import FormContent from '@nest-datum-ui-lib/forms/components/Form/Content';
-import DialogContentDrop from '@nest-datum-ui-lib/forms/components/Dialog/Content/Drop';
+import FormsDialogContentDrop from '@nest-datum-ui-lib/forms/components/Dialog/Content/Drop';
+import FormsFormContent from '@nest-datum-ui-lib/forms/components/Form/Content';
+import Title from './Title';
 
 let Form = () => {
-	const { entityId } = useParams();
-	const isDeleted = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isDeleted' ]));
-	
-	React.useEffect(() => {
-		actionBreadcrumbsListSet('app', [{
-			key: '/',
-			text: '...',
-		}, {
-			key: 'forms',
-			text: 'Forms',
-		}, {
-			key: `/forms/content`,
-			text: 'Form content',
-		}, {
-			key: `/forms/content/${entityId}`,
-			text: (entityId === '0')
-				? 'Create new content data'
-				: <span
-					style={{
-						textDecoration: isDeleted
-							? 'line-through'
-							: 'initial',
-					}}>
-					{entityId}
-				</span>,
-		}])();
-	}, [
-		entityId,
-		isDeleted,
-	]);
-
 	return <React.Fragment>
-		<Box pb={2}>
-			<Typography
-				component="div"
-				variant="h5">
-				{(entityId === '0')
-					? 'Create new content data'
-					: <React.Fragment>
-						Edit content data <b
-							style={{
-								textDecoration: isDeleted
-									? 'line-through'
-									: 'initial',
-							}}>
-							{entityId}
-						</b>
-					</React.Fragment>}
-			</Typography>
-		</Box>
-		<FormContent storeName={entityId} />
-		<DialogContentDrop storeName={entityId} />
+		<Title />
+		<FormsDialogContentDrop />
+		<FormsFormContent />
 	</React.Fragment>;
 };
 

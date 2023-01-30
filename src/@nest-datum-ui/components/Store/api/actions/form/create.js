@@ -1,140 +1,108 @@
-import { fireFormProp as actionApiFormProp } from './prop.js';
 import axios from 'axios';
 import Store from '@nest-datum-ui/components/Store';
+import utilsCheckObj from '@nest-datum-ui/utils/check/obj';
+import utilsCheckStr from '@nest-datum-ui/utils/check/str';
+import utilsCheckStrUrl from '@nest-datum-ui/utils/check/str/url.js';
+import utilsCheckStrId from '@nest-datum-ui/utils/check/str/id.js';
+import utilsUrlLevelUp from '@nest-datum-ui/utils/url/levelUp.js';
+import utilsUrlWithToken from '@nest-datum-ui/utils/url/withToken.js';
+import utilsConvertStrErr from '@nest-datum-ui/utils/convert/str/err.js';
+import utilsConvertObjErr from '@nest-datum-ui/utils/convert/obj/err.js';
+import {
+	hookSnackbar,
+	hookNavigate,
+} from '@nest-datum-ui/utils/hooks';
+import { FILES_PATH_MANAGER_FILE_ONE } from '@nest-datum-ui-lib/files/consts/path.js';
+import { fireFormProp as actionApiFormProp } from './prop.js';
+import { fireFormCreateFile as actionApiFormCreateFile } from './createFile.js';
 
-/**
- * @return {Function}
- */
-export const fireFormCreate = ({
-	entityId, 
-	url,
-	path,
-	withAccessToken = false,
-	notRedirect = false,
-}) => async (snackbar = () => {}, navigate = () => {}, callback = () => {}, prefix = 'api') => {
-	let apiPath = '';
+export const fireFormCreate = (storeFormNameOrUrl, options) => async (callback = () => {}, prefix = 'api') => {
+	const snackbar = hookSnackbar();
+	const navigate = hookNavigate();
 
-	try {
-		await actionApiFormProp(entityId, 'loader', true)();
+	if (utilsCheckStrUrl(storeFormNameOrUrl)) {
+		try {
+			let notRedirect,
+				url = storeFormNameOrUrl;
 
-		let data = { ...Store().getState()[prefix].form[entityId] };
-
-		delete data['loader'];
-		delete data['options'];
-		delete data['settins'];
-		delete data['errors'];
-
-		apiPath = `${url}/${path}?${new URLSearchParams({
-			...withAccessToken
-				? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
-				: {},
-		}).toString()}`;
-
-		let key,
-			filesResponses = [];
-
-		for (key in data) {
-			if (data[key]
-				&& typeof data[key] === 'object'
-				&& data[key].constructor.name === 'FileList') {
-				const formData = new FormData();
-				let i = 0;
-
-				while (i < data[key].length) {
-					formData.append('files', data[key][i]);
-					i++;
-				}
-				formData.append('systemId', data[key]['systemId']);
-				formData.append('path', data[key]['path']);
-				
-				const request = await axios.post(`${process.env.SERVICE_FILES}/file?${new URLSearchParams({
-					...withAccessToken
-						? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
-						: {},
-				}).toString()}`, formData);
-				
-				filesResponses.push(request.data);
-				data[key] = request.data[0]['id'];
+			if (utilsCheckObj(options)) {
+				notRedirect = Boolean(options.notRedirect ?? false);
+				url = utilsCheckStr(options.path)
+					? options.path
+					: storeFormNameOrUrl;
 			}
-		}
+			else {
+				notRedirect = Boolean(options);
+			}
 
-		//TODO: filesManageSystem - зарезирвированный id
-		if (entityId !== 'filesManageSystem') {
-				const request = await axios.post(apiPath, data);
-				const newId = request.data.id;
+			await actionApiFormProp(storeFormNameOrUrl, 'loader', true)();
 
+			let data = { ...(((Store()
+				.getState()[prefix] || {})
+				.form || {})[storeFormNameOrUrl] || {}) },
+				payload,
+				newId;
+
+			delete data['loader'];
+			delete data['errors'];
+
+			const {
+				formData,
+				filesResponses,
+			} = await actionApiFormCreateFile(data)(snackbar);
+
+			if (storeFormNameOrUrl !== FILES_PATH_MANAGER_FILE_ONE) {
+				const request = await axios.post(utilsUrlWithToken(url), formData);
+				
+				newId = request.data.id;
+				payload = {
+					url: storeFormNameOrUrl,
+					newId,
+					data: request.data,
+				};
 				Store().dispatch({
 					type: prefix +'.formCreate',
-					payload: {
-						data: request.data,
-						callback,
-						filesResponses,
-					},
+					payload,
 				});
-				if (!notRedirect) {
-					const pathnameSplit = window.location.pathname.split('/');
-					
-					pathnameSplit.splice(pathnameSplit.length - 1, 1);
+			}
+			else {
+				payload = {
+					url: storeFormNameOrUrl,
+				};
+				Store().dispatch({
+					type: prefix +'.formCreate',
+					payload,
+				});
+			}
+			callback(payload, filesResponses, Store().getState()[prefix]);
 
-					const newPath = `${pathnameSplit.join('/')}/${newId}`;
-
-					navigate(newPath);
-				}
+			if (!notRedirect && utilsCheckStrId(newId)) {
+				navigate(`${utilsUrlLevelUp()}/${newId}`);
+			}
+			return {
+				payload,
+				filesResponses,
+			};
 		}
-		else {
-			Store().dispatch({
-				type: prefix +'.formCreate',
-				payload: {
-					data: {
-						id: entityId,
-					},
-					callback,
-					filesResponses,
-				},
-			});
+		catch (err) {
+			snackbar(utilsConvertStrErr(utilsConvertObjErr(err), storeFormNameOrUrl), { variant: 'error' });
+			actionApiFormProp(storeFormNameOrUrl, 'loader', false)();
 		}
-	}
-	catch (err) {
-		const errorMessage = err.response
-			? (err.response.data
-				? err.response.data.message || (err.response.data.error
-					? err.response.data.error.text
-					: err.message)
-				: err.message)
-			: err.message;
-
-		snackbar(`${errorMessage} - ${apiPath}`, { variant: 'error' });
-		actionApiFormProp(entityId, 'loader', false)();
 	}
 };
 
-/**
- * @param {object} state - Current redux state
- * @param {object} action - Action data
- * @return {object} New state
- */
 export const reducerFormCreate = (state, action) => {
-	if (!state.form[action.payload['data'].id]
-		|| typeof state.form[action.payload['data'].id] !== 'object'
-		|| Array.isArray(state.form[action.payload['data'].id])) {
-		state.form[action.payload['data'].id] = {
+	if (!utilsCheckObj(action.payload.url)) {
+		state.form[FILES_PATH_MANAGER_FILE_ONE] = {
 			loader: false,
-			options: [],
-			settins: [],
 			errors: {},
 		};
 	}
-	if (((typeof action.payload['data'].id === 'number'
-			&& !Number.isNaN(action.payload['data'].id))
-		|| (action.payload['data'].id
-			&& typeof action.payload['data'].id === 'string'))) {
-		state.form[action.payload['data'].id] = {
-			...state.form[action.payload['data'].id],
+	if (utilsCheckStr(action.payload.url)) {
+		state.form[action.payload.url] = {
+			...state.form[action.payload.url],
 			...(action.payload['data'] || {}),
 		};
 	}
-	if (typeof action.payload['callback'] === 'function') {
-		setTimeout(() => action.payload['callback'](action.payload['data'], action.payload['filesResponses'], state), 0);
-	}
-	return ({ ...state });
+	return { ...state };
 };

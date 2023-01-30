@@ -1,65 +1,35 @@
 import Store from '@nest-datum-ui/components/Store';
+import utilsCheckStr from '@nest-datum-ui/utils/check/str';
+import utilsCheckObj from '@nest-datum-ui/utils/check/obj';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
+import propRecursiveSet from '../propRecursiveSet.js';
 
-/**
- * @return {Function}
- */
-export const fireFormProp = (id, propName, propValue, path) => (callback = () => {}, prefix = 'api') => {
+export const fireFormProp = (storeFormName, propName, propValue, path) => (callback = () => {}, prefix = 'api') => {
 	Store().dispatch({
 		type: prefix +'.formProp',
 		payload: {
-			id,
+			storeFormName,
 			propName, 
 			propValue,
 			path,
-			callback,
 		},
 	});
+	callback(Store().getState().api || {});
 };
 
-/**
- * @param {object} state - Current redux state
- * @param {object} action - Action data
- * @return {object} New state
- */
 export const reducerFormProp = (state, action) => {
-	if (!state.form[action.payload.id]
-		|| typeof state.form[action.payload.id] !== 'object'
-		|| Array.isArray(state.form[action.payload.id])) {
-		state.form[action.payload.id] = {};
-	}
-	if (((typeof action.payload.id === 'number'
-			&& !Number.isNaN(action.payload.id))
-		|| (action.payload.id
-			&& typeof action.payload.id === 'string'))) {
-		if (Array.isArray(action.payload.path)) {
-			let target = state.form[action.payload.id][action.payload.propName],
-				i = 0;
-
-			if (target
-				&& typeof target === 'object') {
-				if (action.payload.path.length >= 2) {
-					while (i < action.payload.path.length - 2) {
-						target = target[action.payload.path[i]];
-						i++;
-					}
-					target[action.payload.path[action.payload.path.length - 2]][action.payload.path[action.payload.path.length - 1]] = action.payload.propValue;
-				}
-				else if (action.payload.path.length === 1) {
-					target[action.payload.path[action.payload.path.length - 1]] = action.payload.propValue;
-				}
-				state.form[action.payload.id][action.payload.propName] = Array.isArray(state.form[action.payload.id][action.payload.propName])
-					? ([ ...state.form[action.payload.id][action.payload.propName] ])
-					: ({ ...state.form[action.payload.id][action.payload.propName] });
-			}
+	if (utilsCheckStr(action.payload.storeFormName)) {
+		if (!utilsCheckObj(state.form[action.payload.storeFormName])) {
+			state.form[action.payload.storeFormName] = {};
+		}
+		if (utilsCheckArr(action.payload.path)) {
+			state.form = propRecursiveSet(state.form, action.payload);
 		}
 		else {
-			state.form[action.payload.id][action.payload.propName] = action.payload.propValue;
+			state.form[action.payload.storeFormName][action.payload.propName] = action.payload.propValue;
 		}
-		state.form[action.payload.id] = { ...state.form[action.payload.id] };
+		state.form[action.payload.storeFormName] = { ...state.form[action.payload.storeFormName] };
 	}
-
-	setTimeout(() => action.payload.callback(state), 0);
-
 	return ({ 
 		...state,
 		form: {

@@ -1,140 +1,53 @@
-import { fireListProp as actionApiListProp } from '../list/prop.js';
-import { fireListGet as actionApiListGet } from '../list/get.js';
-import { fireFormProp as actionApiFormProp } from './prop.js';
 import axios from 'axios';
-import Store from '@nest-datum-ui/components/Store';
-import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
+import utilsUrlWithToken from '@nest-datum-ui/utils/url/withToken.js';
+import utilsCheckObj from '@nest-datum-ui/utils/check/obj';
+import utilsCheckStrUrl from '@nest-datum-ui/utils/check/str/url.js';
+import utilsConvertStrErr from '@nest-datum-ui/utils/convert/str/err.js';
+import utilsConvertObjErr from '@nest-datum-ui/utils/convert/obj/err.js';
+import { hookSnackbar } from '@nest-datum-ui/utils/hooks';
+import { fireClose as actionDialogClose } from '@nest-datum-ui/components/Store/dialog/actions/close.js';
+import { fireListProp as actionApiListProp } from '../list/prop.js';
+import { fireFormProp as actionApiFormProp } from './prop.js';
+import { fireFormDropOnCurrentPage as actionApiFormDropOnCurrentPage } from './dropOnCurrentPage.js';
+import { fireFormDropOnList as actionApiFormDropOnList } from './dropOnList.js';
 
-/**
- * @return {Function}
- */
-export const fireFormDrop = ({
-	entityId, 
-	storeName,
-	url,
-	path,
-	withAccessToken = false,
-	allowInsecureDeletion = false,
-	notRedirect = false,
-}) => async (snackbar = () => {}, prefix = 'api') => {
-	let apiPath = '';
+export const fireFormDrop = (urlOrStoreFormName, entityId, options) => async (prefix = 'api') => {
+	const snackbar = hookSnackbar();
+	let allowInsecureDeletion = false,
+		notRedirect = false,
+		sliceInList = false;
 
-	try {
-		await actionApiListProp(storeName, 'loader', true)();
-
-		apiPath = `${url}/${path}/${entityId}?${new URLSearchParams({
-			...withAccessToken
-				? { accessToken: localStorage.getItem(`${process.env.SERVICE_CURRENT}_accessToken`) }
-				: {},
-		}).toString()}`;
-
-		await axios.delete(apiPath);
-
-		if (!allowInsecureDeletion) {
-			const formData = Store()
-				.getState()['api']
-				.form[entityId];
-
-			const list = Store()
-				.getState()['api']
-				.list[storeName] || {};
-			const listData = list.data || [];
-			const entityIndex = listData.findIndex((item) => (item.id === entityId));
-
-			if (formData
-				&& typeof formData === 'object') {
-				if (formData.isDeleted) {
-					Store().dispatch({
-						type: prefix +'.formDrop',
-						payload: {
-							id: entityId,
-						}
-					});
-					if (!notRedirect) {
-						const pathnameSplit = window
-							.location
-							.pathname
-							.replace(/\/+$/, '')
-							.split('/');
-
-						if (pathnameSplit[pathnameSplit.length - 1] === entityId) {
-							window.location.href = window.location.pathname.replace(`/${entityId}`, '');
-						}
-					}
-				}
-				else {
-					await actionApiFormProp(entityId, 'isDeleted', true)();
-					await actionApiListProp(storeName, 'loader', false)();
-				}
-			}
-			if (entityIndex >= 0
-				&& listData[entityIndex]) {
-				if (listData[entityIndex].isDeleted) {
-					const query = utilsUrlSearchPathItem('query', window.location.search);
-					const select = utilsUrlSearchPathItem('select', window.location.search);
-					const filter = utilsUrlSearchPathItem('filter', window.location.search);
-					const sort = utilsUrlSearchPathItem('sort', window.location.search);
-
-					actionApiListGet({
-						id: storeName, 
-						url,
-						path,
-						withAccessToken,
-						page: list.page,
-						limit: list.limit,
-						query,
-						...select
-							? { select: JSON.parse(decodeURI(select)) }
-							: {},
-						...filter
-							? { 
-								filter: {
-									...JSON.parse(decodeURI(filter)),
-									id: [ '$Not', entityId ],
-								},
-							}
-							: {
-								filter: {
-									'id': [ '$Not', entityId ],
-								},
-							},
-						...sort
-							? { sort: JSON.parse(decodeURI(sort)) }
-							: {},
-					})(snackbar);
-				}
-				else {
-					await actionApiListProp(storeName, 'data', true, [ entityIndex, 'isDeleted' ])();
-					await actionApiListProp(storeName, 'loader', false)();
-				}
-			}
-		}
-		else {
-			await actionApiListProp(storeName, 'loader', false)();
-		}
+	if (utilsCheckObj(options)) {
+		allowInsecureDeletion = !!(options.allowInsecureDeletion ?? false);
+		notRedirect = !!(options.notRedirect ?? false);
+		sliceInList = !!(options.sliceInList ?? false);
 	}
-	catch (err) {
-		const errorMessage = err.response
-			? (err.response.data
-				? err.response.data.message || (err.response.data.error
-					? err.response.data.error.text
-					: err.message)
-				: err.message)
-			: err.message;
 
-		snackbar(`${errorMessage} - ${apiPath}`, { variant: 'error' });
-		actionApiListProp(storeName, 'loader', false)();
+	if (utilsCheckStrUrl(urlOrStoreFormName)) {
+		try {
+			if (!sliceInList) {
+				await actionApiListProp(urlOrStoreFormName, 'loader', true)();
+			}
+			await actionApiFormProp(urlOrStoreFormName, 'loader', true)();
+			await axios.delete(utilsUrlWithToken(`${urlOrStoreFormName}/${entityId}`));
+
+			if (!allowInsecureDeletion) {
+				actionApiFormDropOnCurrentPage(urlOrStoreFormName, notRedirect)();
+				actionApiFormDropOnList(urlOrStoreFormName, entityId, sliceInList)();
+			}
+			actionDialogClose(urlOrStoreFormName)();
+		}
+		catch (err) {
+			snackbar(utilsConvertStrErr(utilsConvertObjErr(err), `${urlOrStoreFormName}/${entityId}`), { variant: 'error' });
+			actionApiFormProp(urlOrStoreFormName, 'loader', false)();
+			actionApiListProp(urlOrStoreFormName, 'loader', false)();
+		}
 	}
 };
 
-/**
- * @param {object} state - Current redux state
- * @param {object} action - Action data
- * @return {object} New state
- */
 export const reducerFormDrop = (state, action) => {
-	if (state.form[action.payload.id]) {
-		delete state.form[action.payload.id];
+	if (utilsCheckObj(state.form[action.payload.name])) {
+		delete state.form[action.payload.name];
 	}
 	return ({ 
 		...state,

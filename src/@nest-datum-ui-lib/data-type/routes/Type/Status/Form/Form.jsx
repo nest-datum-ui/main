@@ -1,77 +1,13 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
-import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import FormStatus from '@nest-datum-ui/components/Form/Status';
-import DialogStatusDrop from '@nest-datum-ui/components/Dialog/Status/Drop';
+import DataTypeDialogTypeStatusDrop from '@nest-datum-ui-lib/data-type/components/Dialog/Type/Status/Drop';
+import DataTypeFormTypeStatus from '@nest-datum-ui-lib/data-type/components/Form/Type/Status';
+import Title from './Title';
 
 let Form = () => {
-	const { entityId } = useParams();
-	const isDeleted = useSelector(selectorMainExtract([ 'api', 'form', entityId, 'isDeleted' ]));
-	
-	React.useEffect(() => {
-		actionBreadcrumbsListSet('app', [{
-			key: '/',
-			text: '...',
-		}, {
-			key: 'data-type',
-			text: 'Data types',
-		}, {
-			key: `/data-type/type`,
-			text: 'Types',
-		}, {
-			key: `/data-type/type/statuses`,
-			text: 'Statuses',
-		}, {
-			key: `/data-type/type/statuses/${entityId}`,
-			text: (entityId === '0')
-				? 'Create new status'
-				: <span
-					style={{
-						textDecoration: isDeleted
-							? 'line-through'
-							: 'initial',
-					}}>
-					{entityId}
-				</span>,
-		}])();
-	}, [
-		entityId,
-		isDeleted,
-	]);
-
 	return <React.Fragment>
-		<Box pb={2}>
-			<Typography
-				component="div"
-				variant="h5">
-				{(entityId === '0')
-					? 'Add status'
-					: <React.Fragment>
-						Edit status <b
-							style={{
-								textDecoration: isDeleted
-									? 'line-through'
-									: 'initial',
-							}}>
-							{entityId}
-						</b>
-					</React.Fragment>}
-			</Typography>
-		</Box>
-		<FormStatus
-			withAccessToken
-			storeName="dataTypeTypeStatusesList"
-			url={process.env.SERVICE_DATA_TYPE}
-			path="type-status" />
-		<DialogStatusDrop
-			withAccessToken
-			storeName="dataTypeTypeStatusesList"
-			url={process.env.SERVICE_DATA_TYPE}
-			path="type-status" />
+		<Title />
+		<DataTypeDialogTypeStatusDrop />
+		<DataTypeFormTypeStatus />
 	</React.Fragment>;
 };
 

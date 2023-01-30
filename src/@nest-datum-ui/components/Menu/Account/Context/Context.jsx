@@ -3,7 +3,7 @@ import { fireClose as actionMenuClose } from '@nest-datum-ui/components/Store/me
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@nest-datum-ui/components/Menu';
-import Link from '@nest-datum-ui/components/Link';
+import ButtonLink from '@nest-datum-ui/components/Button/Link';
 
 let Context = (props) => {
 	const onClose = React.useCallback((e) => {
@@ -14,7 +14,7 @@ let Context = (props) => {
 	return <React.Fragment>
 		<Menu { ...props }>
 			<MenuItem
-				component={Link}
+				component={ButtonLink}
 				to="/account"
 				onClick={onClose}>
 				<ListItemText>
@@ -29,6 +29,16 @@ let Context = (props) => {
 			<MenuItem>
 				<ListItemText>
 					Clear cache
+				</ListItemText>
+			</MenuItem>
+			<MenuItem>
+				<ListItemText>
+					Reload all services
+				</ListItemText>
+			</MenuItem>
+			<MenuItem>
+				<ListItemText>
+					Rebuild frontend
 				</ListItemText>
 			</MenuItem>
 			<MenuItem>

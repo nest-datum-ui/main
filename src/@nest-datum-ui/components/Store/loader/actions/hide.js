@@ -4,10 +4,13 @@ import Store from '@nest-datum-ui/components/Store';
  * @param {string|number} id - Loader id
  * @return {Function}
  */
-export const fireHide = (id) => async (prefix = 'loader') => {
+export const fireHide = (id, data) => async (prefix = 'loader') => {
 	Store().dispatch({
 		type: prefix +'.hide',
-		payload: id,
+		payload: {
+			id,
+			data,
+		}
 	});
 };
 
@@ -17,18 +20,17 @@ export const fireHide = (id) => async (prefix = 'loader') => {
  * @return {object} New state
  */
 export const reducerHide = (state, action) => {
-	const loaderKey = ((typeof action.payload === 'string' && action.payload)
-		|| typeof action.payload === 'number')
-		? action.payload
+	const loaderKey = ((typeof action.payload.id === 'string' && action.payload.id)
+		|| typeof action.payload.id === 'number')
+		? action.payload.id
 		: 'window';
 
 	return ({
 		...state,
 		[loaderKey]: {
-			progressPercentage: -1,
-			text: '',
+			...(state[loaderKey] || {}),
+			...action.payload,
 			visible: false,
 		},
-		_updater: state._updater + 1,
 	});
 };

@@ -1,6 +1,6 @@
 import utilsCheckStr from './index.js';
 
-const ejs = (value) => {
+const ejs = (value = '') => {
 	if (!utilsCheckStr(value)) {
 		return false;
 	}

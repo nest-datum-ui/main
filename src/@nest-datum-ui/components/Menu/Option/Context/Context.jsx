@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 import Menu from '@nest-datum-ui/components/Menu';
-import Link from '@nest-datum-ui/components/Link';
+import ButtonLink from '@nest-datum-ui/components/Button/Link';
 
 let Context = ({
 	storeName,
@@ -56,7 +56,7 @@ let Context = ({
 	return <React.Fragment>
 		<Menu { ...props }>
 			<MenuItem
-				component={Link}
+				component={ButtonLink}
 				to={entityId}
 				onClick={onClose}>
 				<ListItemIcon>

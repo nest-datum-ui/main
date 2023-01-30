@@ -1,14 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import utilsCheckNumeric from '@nest-datum-ui/utils/check/numeric';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
 import MiuSelect from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
+import MuiPagination from '@mui/material/Pagination';
 import FormHelperText from '@mui/material/FormHelperText';
-import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import FormSearch from '@nest-datum-ui/components/Form/Search';
+import SelectLimit from '@nest-datum-ui/components/Select/Limit';
 
 let Select = ({
 	shrink,
@@ -22,10 +26,14 @@ let Select = ({
 	label,
 	helperText,
 	error,
-	onSource,
-	onHelp,
 	loader,
 	children,
+	total,
+	page,
+	limit,
+	onChangePage,
+	onLimit,
+	onSearch,
 	...props
 }) => {
 	return <React.Fragment>
@@ -71,26 +79,75 @@ let Select = ({
 								<CircularProgress size={40} />
 							</Box>
 						</MenuItem>
-						: children}
+						: ((utilsCheckNumeric(page) 
+							&& utilsCheckNumeric(total) 
+							&& utilsCheckNumeric(limit) 
+							&& utilsCheckArr(children))
+							? ([
+								...(onSearch && !(page === 1 && total < limit))
+									? [
+										<FormSearch
+											key="formSearch"
+											name={`select-${name.toString()}-search`}
+											onSearch={onSearch} />,
+									]
+									: [],
+								...children.map((item) => {
+									return <MenuItem 
+										key={item.id}
+										value={item.id}
+										sx={{
+											backgroundColor: item.active
+												? 'rgba(200, 200, 200, .7)'
+												: 'inherit',
+										}}>
+										{item.name}
+									</MenuItem>;
+								}),
+								...(onChangePage || onLimit) && !(page === 1 && total < limit)
+									? [
+										<Grid
+											key="MuiPagination"
+											container
+											alignItems="center"
+											justifyContent="space-between"
+											sx={{
+												padding: '14px 8px 0px 0px',
+											}}>
+											{onChangePage
+												&& <Grid
+													item
+													xs={true}>
+													<MuiPagination 
+														count={Math.ceil(total / limit)}
+														page={page}
+														onChange={onChangePage} />
+												</Grid>}
+											{onLimit
+												&& <Grid
+													item
+													xs={false}
+													sx={{
+														minWidth: '90px',
+													}}>
+													<SelectLimit
+														label="Limit"
+														size="small"
+														value={limit}
+														onChange={onLimit} />
+												</Grid>}
+										</Grid>,
+									]
+									: [],
+							])
+							: children)}
 				</MiuSelect>
-				{(onHelp || error || helperText)
+				{(error || helperText)
 					? <FormHelperText 
 						error={!!error}
 						sx={{
 							marginLeft: 0,
 						}}>
-						{onHelp
-							? <IconButton 
-								onClick={onHelp}
-								sx={{
-									padding: 4,
-								}}>
-								<HelpOutlineIcon
-									sx={{
-										fontSize: 12,
-									}} />
-							</IconButton>
-							: <React.Fragment />}
 						{error || helperText}
 					</FormHelperText>
 					: <React.Fragment />}
@@ -117,9 +174,14 @@ Select.propTypes = {
 		PropTypes.array,
 	]),
 	onChange: PropTypes.func,
-	onSource: PropTypes.func,
-	onHelp: PropTypes.func,
 	loader: PropTypes.bool,
+	onChangePage: PropTypes.func,
+	onLimit: PropTypes.func,
+	onSearch: PropTypes.func,
+	children: PropTypes.array,
+	total: PropTypes.number,
+	page: PropTypes.number,
+	limit: PropTypes.number,
 };
 
 export default Select;

@@ -2,14 +2,14 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Link from '@nest-datum-ui/components/Link';
+import ButtonLink from '@nest-datum-ui/components/Button/Link';
 
 let Primary = () => {
 	const location = useLocation();
 	const pathname = location.pathname;
 	const urlPathname = pathname.substring(1);
 	const activeFlags = [
-		(urlPathname.indexOf(`registry/serv`) === 0),
+		(urlPathname.indexOf(`registry/type`) === 0),
 		(urlPathname.indexOf(`registry/settings`) === 0),
 	];
 	const [ tab, setTab ] = React.useState(() => (pathname === `/registry`)
@@ -38,8 +38,8 @@ let Primary = () => {
 				: 0}
 			onChange={onTab}>
 			<Tab 
-				label="Services"
-				{ ...(urlPathname.indexOf(`registry/serv`) === 0
+				label="Types"
+				{ ...(urlPathname.indexOf(`registry/type`) === 0
 					|| pathname === `/registry`)
 					? {
 						sx: {
@@ -48,8 +48,8 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
-						to: 'serv',
+						component: ButtonLink,
+						to: 'type',
 						sx: {
 							textTransform: 'initial',
 						},
@@ -64,7 +64,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'settings',
 						sx: {
 							textTransform: 'initial',

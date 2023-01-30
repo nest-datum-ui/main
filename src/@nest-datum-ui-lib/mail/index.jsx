@@ -22,7 +22,7 @@ import RouteReportStatusForm from './routes/Report/Status/Form';
 import RouteSettingList from './routes/Setting/List';
 import RouteSettingForm from './routes/Setting/Form';
 
-let Sso = () => {
+let Mail = () => {
 	return <React.Fragment>
 		<Routes>
 			<Route
@@ -90,10 +90,10 @@ let Sso = () => {
 	</React.Fragment>;
 };
 
-Sso = React.memo(Sso);
-Sso.defaultProps = {
+Mail = React.memo(Mail);
+Mail.defaultProps = {
 };
-Sso.propTypes = {
+Mail.propTypes = {
 };
 
-export default Sso;
+export default Mail;

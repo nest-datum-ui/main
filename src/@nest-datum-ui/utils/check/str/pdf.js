@@ -1,6 +1,6 @@
 import utilsCheckStr from './index.js';
 
-const pdf = (value) => {
+const pdf = (value = '') => {
 	if (!utilsCheckStr(value)) {
 		return false;
 	}

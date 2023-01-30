@@ -5,7 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
-import Link from '@nest-datum-ui/components/Link';
+import ButtonLink from '@nest-datum-ui/components/Button/Link';
 
 let Primary = () => {
 	const location = useLocation();
@@ -15,7 +15,7 @@ let Primary = () => {
 		(urlPathname.indexOf(`data-type/type`) === 0),
 		(urlPathname.indexOf(`data-type/settings`) === 0),
 	];
-	const [ tab, setTab ] = React.useState(() => (pathname.indexOf(`/data-type`) === 0)
+	const [ tab, setTab ] = React.useState(() => (pathname === `/data-type`)
 		? 0
 		: activeFlags.indexOf(true));
 	const onTab = React.useCallback((e, newValue) => {
@@ -51,7 +51,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'type',
 						sx: {
 							textTransform: 'initial',
@@ -67,7 +67,7 @@ let Primary = () => {
 						}
 					}
 					: {
-						component: Link,
+						component: ButtonLink,
 						to: 'settings',
 						sx: {
 							textTransform: 'initial',
@@ -95,7 +95,7 @@ let Primary = () => {
 							} 
 						}
 						: {
-							component: Link,
+							component: ButtonLink,
 							to: `/data-type/type`,
 						} }>
 					Data
@@ -109,7 +109,7 @@ let Primary = () => {
 							} 
 						}
 						: {
-							component: Link,
+							component: ButtonLink,
 							to: `/data-type/type/options`,
 						} }>
 					Options
@@ -123,7 +123,7 @@ let Primary = () => {
 							} 
 						}
 						: {
-							component: Link,
+							component: ButtonLink,
 							to: `/data-type/type/statuses`,
 						} }>
 					Statuses

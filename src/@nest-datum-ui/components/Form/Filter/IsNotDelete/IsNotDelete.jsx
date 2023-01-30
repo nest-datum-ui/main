@@ -1,84 +1,54 @@
 import React from 'react';
-import { 
-	useNavigate,
-	useLocation, 
-} from 'react-router-dom';
-import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
-import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
+import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import { fireListCreateFilterUrl as actionApiListCreateFilterUrl } from '@nest-datum-ui/components/Store/api/actions/list/createFilterUrl.js';
+import utilsUrlItemFilterBool from '@nest-datum-ui/utils/url/item/filter/bool.js';
+import utilsUrlItemFilterGetBool from '@nest-datum-ui/utils/url/item/filter/get/bool.js';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
-let IsNotDelete = ({ storeName }) => {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const filter = React.useMemo(() => utilsUrlSearchPathItem('filter', location.search, true) || {}, [
-		location,
-	]);
-	const value = (filter['isNotDelete'] === true
-		|| filter['isNotDelete'] === false)
-		? Number(filter['isNotDelete'])
-		: '';
-	const onChange = React.useCallback((e) => {
-		actionApiListProp(storeName, 'loader', true)();
-
-		const newValue = e.target.value;
-		let url = ``,
-			query = utilsUrlSearchPathItem('query', window.location.search),
-			sort = utilsUrlSearchPathItem('sort', window.location.search, true);
-
-		if (!newValue) {
-			delete filter['isNotDelete'];
-		}
-		else {
-			filter['isNotDelete'] = Boolean(Number(newValue));
-		}
-		if (Object.keys(filter).length > 0) {
-			url += `?filter=${JSON.stringify(filter)}`;
-		}
-		if (sort
-			&& typeof sort === 'object'
-			&& Object.keys(sort).length > 0) {
-			url += url
-				? `&sort=${JSON.stringify(sort)}`
-				: `?sort=${JSON.stringify(sort)}`;
-		}
-		if (query) {
-			url += url
-				? `&query=${query}`
-				: `?query=${query}`;
-		}
-		navigate(url);
+let IsNotDelete = ({
+	onChange,
+	onInput,
+}) => {
+	const { search } = useLocation();
+	const [ id ] = React.useState(() => uuidv4());
+	const value = utilsUrlItemFilterGetBool(search, 'isNotDelete');
+	const onChangeMemo = React.useCallback((e) => {
+		actionApiListCreateFilterUrl(e, utilsUrlItemFilterBool('isNotDelete'));
+		onChange(e);
+		onInput(e);
 	}, [
-		navigate,
-		filter,
-		storeName,
+		onChange,
+		onInput,
 	]);
 
 	return <React.Fragment>
 		<FormControl>
-			<FormLabel id={`form-filter-option-is_not_delete-${storeName}`}>
+			<FormLabel id={id}>
 				Possibility of deletion
 			</FormLabel>
 			<RadioGroup
-				aria-labelledby={`form-filter-option-is_not_delete-${storeName}`}
-				name={`form-filter-option-is_not_delete-${storeName}`}
+				aria-labelledby={id}
+				name={id}
 				value={value}
-				onChange={onChange}>
+				onChange={onChangeMemo}>
 				<FormControlLabel
 					control={<Radio />}  
 					value="" 
 					label="All" />
 				<FormControlLabel
 					control={<Radio />}  
-					value="1" 
-					label="Unremovable" />
+					value="0" 
+					label="Can be deleted" />
 				<FormControlLabel
 					control={<Radio />}  
-					value="0" 
-					label="Removed" />
+					value="1" 
+					label="Unremovable" />
 			</RadioGroup>
 		</FormControl>
 	</React.Fragment>;
@@ -86,8 +56,12 @@ let IsNotDelete = ({ storeName }) => {
 
 IsNotDelete = React.memo(IsNotDelete);
 IsNotDelete.defaultProps = {
+	onChange: () => {},
+	onInput: () => {},
 };
 IsNotDelete.propTypes = {
+	onChange: PropTypes.func,
+	onInput: PropTypes.func,
 };
 
 export default IsNotDelete;

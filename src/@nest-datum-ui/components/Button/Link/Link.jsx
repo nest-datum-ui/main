@@ -1,35 +1,21 @@
 import React from 'react';
 import { Link as ReactRouterDomLink } from 'react-router-dom';
-import { fireShow as actionLoaderShow } from '@nest-datum-ui/components/Store/loader/actions/show.js';
-import { fireHide as actionLoaderHide } from '@nest-datum-ui/components/Store/loader/actions/hide.js';
+import handlersClickWithUnmountLoader from './handlers/clickWithUnmountLoader.js';
 
-let timeout;
 let Link = ({ 
 	onClick = () => {},
 	disableUnmountFlag,
 	...props
 }, ref) => {
-	const onHandle = React.useCallback((e) => {
-		if (!disableUnmountFlag) {
-			actionLoaderShow('unmount')();
-			clearTimeout(timeout);
-
-			timeout = setTimeout(() => {
-				actionLoaderHide('unmount')();
-			}, 600);
-		}
-		onClick(e);
-	}, [
-		onClick,
+	const onHandle = React.useCallback((e) => handlersClickWithUnmountLoader(e, disableUnmountFlag, onClick), [
 		disableUnmountFlag,
+		onClick,
 	]);
 
-	return <React.Fragment>
-		<ReactRouterDomLink  
-			{ ...props }
-			ref={ref}
-			onClick={onHandle} />
-	</React.Fragment>;
+	return <ReactRouterDomLink
+		{ ...props }
+		ref={ref}
+		onClick={onHandle} />;
 };
 
 Link = React.memo(React.forwardRef(Link));

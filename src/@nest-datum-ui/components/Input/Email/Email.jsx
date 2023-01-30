@@ -1,40 +1,52 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import selectorFindArray from '@nest-datum-ui/components/Store/main/selectors/findArray.js';
-import Input from '@nest-datum-ui/components/Input';
-import utilsValidateEmail from '@nest-datum-ui/utils/validate/email.js';
+import { fireFormProp as actionApiFormProp } from '@nest-datum-ui/components/Store/api/actions/form/prop.js';
+import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
+import Box from '@mui/material/Box';
+import InputText from '@nest-datum-ui/components/Input/Text';
 
-let Email = ({
-	onInput,
-	...props
+let Email = ({ 
+	storeFormName,
+	name,
+	...props 
 }) => {
-	const dataType = useSelector(selectorFindArray([ 'api', 'list', 'dataTypeList', 'data' ], (item) => item['id'] === 'email'));
-	const dataTypeLabel = (dataType || {})['label'];
-	const dataTypePlaceholder = (dataType || {})['placeholder'];
-	const _onInput = React.useCallback((e) => {
-		utilsValidateEmail(e);
-		onInput(e);
+	const loader = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'loader' ]));
+	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, name ])) || '';
+	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', name ]));
+	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, name, e.target.value)(), [
+		storeFormName,
+		name,
+	]);
+	const onInput = React.useCallback((e) => {
+		e.target.value = e.target.value.toLowerCase().replace(/[^a-zа-я0-9.@_-]+/g, '');
 	}, [
-		onInput,
 	]);
 
 	return <React.Fragment>
-		<Input 
-			label={dataTypeLabel}
-			placeholder={dataTypePlaceholder}
-			onInput={_onInput}
-			{ ...props }
-			type="text" />
+		<Box py={2}>
+			<InputText
+				disabled={loader}
+				type="email"
+				name={name}
+				label="Email"
+				placeholder="name@email.com"
+				value={value}
+				onChange={onChange}
+				error={error}
+				onInput={onInput}
+				{ ...props } />
+		</Box>
 	</React.Fragment>;
 };
 
 Email = React.memo(Email);
 Email.defaultProps = {
-	onInput: () => {},
+	name: 'email',
 };
 Email.propTypes = {
-	onInput: PropTypes.func,
+	storeFormName: PropTypes.string.isRequired,
+	name: PropTypes.string,
 };
 
 export default Email;

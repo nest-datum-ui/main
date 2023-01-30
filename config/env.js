@@ -89,6 +89,7 @@ function getClientEnvironment(publicUrl) {
 				// It is defined here so it is available in the webpackHotDevClient.
 				FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
 
+				URL_API: process.env.URL_API,
 				SERVICE_CURRENT: process.env.SERVICE_CURRENT,
 				SERVICE_HTTP: process.env.SERVICE_HTTP,
 				SERVICE_REGISTRY: process.env.SERVICE_REGISTRY,
@@ -100,6 +101,7 @@ function getClientEnvironment(publicUrl) {
 				SERVICE_PAGES: process.env.SERVICE_PAGES,
 				SERVICE_FORMS: process.env.SERVICE_FORMS,
 				SERVICE_CV: process.env.SERVICE_CV,
+				SERVICE_LENSA: process.env.SERVICE_LENSA,
 
 				PAGE_SIGN_UP: process.env.PAGE_SIGN_UP,
 				PAGE_SIGN_IN: process.env.PAGE_SIGN_IN,
