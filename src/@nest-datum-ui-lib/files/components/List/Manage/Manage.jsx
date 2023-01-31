@@ -7,6 +7,7 @@ import { fireListLimit as actionApiListLimit } from '@nest-datum-ui/components/S
 import { fireListPage as actionApiListPage } from '@nest-datum-ui/components/Store/api/actions/list/page.js';
 import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
 import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
+import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
 import { FILES_KEY_MANAGER } from '@nest-datum-ui-lib/files/consts/keys.js';
 import {
 	FILES_PATH_FOLDER,
@@ -49,6 +50,7 @@ let Manage = ({
 	const sort = utilsUrlSearchPathItem('sort', locationSearch);
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
 	const systemIdLocal = useSelector(selectorMainExtract([ 'api', 'form', storeListName, 'systemId' ]));
+	const folderDataParent = useSelector(selectorMainExtract([ 'api', 'list', storeListName, 'data' ]));
 	const folderData = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'data' ]));
 	const folderTotal = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'total' ]));
 	const folderPage = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'page' ])) ?? 1;
@@ -57,7 +59,7 @@ let Manage = ({
 	const fileTotal = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FILE, 'total' ]));
 	const allowLoadFolders = ((folderTotal >= folderLimit * folderPage) || !utilsCheckNumericInt(folderTotal));
 	const generalTotal = (folderTotal || 0) + (fileTotal || 0);
-	const parentId = ((folderData || [])[0] || {})['id'];
+	const parentId = ((folderDataParent || [])[0] || {})['id'];
 	const system = useSelector(selectorFindArray([ 'api', 'list', FILES_PATH_SYSTEM, 'data' ], (item) => item['id'] === systemIdLocal));
 	const systemSystemOption = ((system || {})['systemSystemOptions'] || []).find((item) => item['systemOptionId'] === 'files-system-option-root');
 	const systemSystemOptionContent = systemSystemOption
@@ -93,6 +95,22 @@ let Manage = ({
 	}, [
 		rootPath,
 		parentId,
+	]);
+
+	React.useEffect(() => {
+		if (systemIdLocal) {
+			actionApiListGet(FILES_PATH_FOLDER, {
+				storeListName,
+				page: 1,
+				limit: 1,
+				filter: {
+					systemId: systemIdLocal,
+				},
+			})();
+		}
+	}, [
+		storeListName,
+		systemIdLocal,
 	]);
 
 	React.useEffect(() => {

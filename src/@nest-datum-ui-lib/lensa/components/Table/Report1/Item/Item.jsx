@@ -10,17 +10,11 @@ import Checkbox from '@mui/material/Checkbox';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TypographyTable from '@nest-datum-ui/components/Typography/Table';
 import TypographyDateTable from '@nest-datum-ui/components/Typography/Date/Table';
-import SsoTypographyUser from '@nest-datum-ui-lib/sso/components/Typography/User';
-import CvTypographyReportStatus from '@nest-datum-ui-lib/cv/components/Typography/Report/Status';
-import FilesPaperById from '@nest-datum-ui-lib/files/components/Paper/ById';
 import MenuContext from '@nest-datum-ui/components/Menu/Context';
 
 let Item = ({
 	bulkDeletion,
 	id,
-	fileId,
-	reportStatusId,
-	userId,
 	isDeleted,
 	isNotDelete,
 	createdAt,
@@ -44,29 +38,14 @@ let Item = ({
 						checked={checked}
 						onChange={onCheck} />
 				</TableCell>}
-			<TableCell sx={{ minWidth: '23%' }}>
+			<TableCell sx={{ minWidth: '48%' }}>
 				<TypographyTable
-					to={`/cv/report/${id}`}
+					to={`/lensa/report/${id}`}
 					isDeleted={isDeleted}>
 					{id}
 				</TypographyTable>
 			</TableCell>
-			<TableCell sx={{ minWidth: '12%' }}>
-				<FilesPaperById>
-					{fileId}
-				</FilesPaperById>
-			</TableCell>
-			<TableCell sx={{ minWidth: '23%' }}>
-				<CvTypographyReportStatus>
-					{reportStatusId}
-				</CvTypographyReportStatus>
-			</TableCell>
-			<TableCell sx={{ minWidth: '10%' }}>
-				<SsoTypographyUser>
-					{userId}
-				</SsoTypographyUser>
-			</TableCell>
-			<TableCell sx={{ width: '20%' }}>
+			<TableCell sx={{ width: '48%' }}>
 				<TypographyDateTable
 					createdAt={createdAt}
 					updatedAt={updatedAt} />
@@ -98,9 +77,6 @@ Item.propTypes = {
 		PropTypes.string,
 		PropTypes.number,
 	]).isRequired,
-	fileId: PropTypes.string,
-	reportStatusId: PropTypes.string,
-	userId: PropTypes.string,
 	isDeleted: PropTypes.bool,
 	isNotDelete: PropTypes.bool,
 	createdAt: PropTypes.string,

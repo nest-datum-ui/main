@@ -1,23 +1,23 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { fireFormDrop as actionApiFormDrop } from '@nest-datum-ui/components/Store/api/actions/form/drop.js';
-import { CV_PATH_REPORT } from '@nest-datum-ui-lib/cv/consts/path.js';
+import { LENSA_PATH_REPORT } from '@nest-datum-ui-lib/lensa/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import DialogContentText from '@mui/material/DialogContentText';
 import Dialog from '@nest-datum-ui/components/Dialog';
 import ButtonSave from '@nest-datum-ui/components/Button/Save';
 
 let Drop = () => {
-	const entityId = useSelector(selectorMainExtract([ 'dialog', CV_PATH_REPORT, 'entityId' ]));
-	const formLoader = useSelector(selectorMainExtract([ 'api', 'form', CV_PATH_REPORT, 'loader' ]));
-	const listLoader = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'loader' ]));
-	const onDrop = React.useCallback((e) => actionApiFormDrop(CV_PATH_REPORT, entityId)(), [
+	const entityId = useSelector(selectorMainExtract([ 'dialog', LENSA_PATH_REPORT, 'entityId' ]));
+	const formLoader = useSelector(selectorMainExtract([ 'api', 'form', LENSA_PATH_REPORT, 'loader' ]));
+	const listLoader = useSelector(selectorMainExtract([ 'api', 'list', LENSA_PATH_REPORT, 'loader' ]));
+	const onDrop = React.useCallback((e) => actionApiFormDrop(LENSA_PATH_REPORT, entityId)(), [
 		entityId,
 	]);
 
 	return <React.Fragment>
 		<Dialog 
-			id={CV_PATH_REPORT}
+			id={LENSA_PATH_REPORT}
 			loader={formLoader === true || listLoader === true}
 			maxWidth="xs"
 			title="Delete report?"

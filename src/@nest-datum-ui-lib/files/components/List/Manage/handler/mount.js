@@ -23,7 +23,8 @@ const mount = ({
 	parentId,
 }) => {
 	if (!unmount 
-		&& utilsCheckEntityExists(systemId)) {
+		&& utilsCheckEntityExists(systemId)
+		&& parentId) {
 		const {
 			total: folderTotal,
 			data: folderData,
@@ -48,7 +49,7 @@ const mount = ({
 				select,
 				filter: {
 					...utilsConvertStrObj(filter),
-					parentId: parentId || 'files-folder-root',
+					parentId,
 					systemId,
 				},
 				sort,
