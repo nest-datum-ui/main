@@ -1,4 +1,6 @@
 
+export const FILES_KEY_MANAGER = 'filesManager';
+
 export const FILES_KEY_PROVIDER_RELATION = 'providerProviderOptions';
 export const FILES_KEY_PROVIDER_VALUE = 'providerProviderProviderOptions';
 

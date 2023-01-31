@@ -13,7 +13,7 @@ import RouteAppDashboard from '@nest-datum-ui/routes/App/Dashboard';
 import Layout from 'layouts';
 import LayoutManager from 'layouts/Manager';
 import LayoutManagerService from 'layouts/Manager/Service';
-// import SsoRouteSignIn from '@nest-datum-ui-lib/sso/routes/SignIn';
+import SsoRouteSignIn from '@nest-datum-ui-lib/sso/routes/SignIn';
 // import SsoRouteSignUp from '@nest-datum-ui-lib/sso/routes/SignUp';
 // import SsoRouteRecovery from '@nest-datum-ui-lib/sso/routes/Recovery';
 // import SsoRouteReset from '@nest-datum-ui-lib/sso/routes/Reset';
@@ -33,10 +33,10 @@ root.render(
 							<Route 
 								path=""
 								element={<Layout />}>
-								{/*<Route
+								<Route
 									path="sign-in"
 									element={<SsoRouteSignIn />} />
-								<Route
+								{/*<Route
 									path="sign-up"
 									element={<SsoRouteSignUp />} />
 								<Route

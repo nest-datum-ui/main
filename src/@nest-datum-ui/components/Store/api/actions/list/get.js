@@ -11,6 +11,7 @@ import { hookSnackbar } from '@nest-datum-ui/utils/hooks';
 import { fireListProp as actionApiListProp } from './prop.js';
 
 export const fireListGet = (url, {
+	storeListName,
 	page, 
 	limit, 
 	query, 
@@ -20,14 +21,15 @@ export const fireListGet = (url, {
 	sort, 
 }) => async (prefix = 'api') => {
 	const snackbar = hookSnackbar();
+	const storeName = storeListName || url;
 
 	if (utilsCheckStrUrl(url)) {
 		try {
-			await actionApiListProp(url, 'loader', true)();
+			await actionApiListProp(storeName, 'loader', true)();
 
 			const listData = ((Store()
 				.getState()[prefix] || {})
-				.list || {})[url] || {};
+				.list || {})[storeName] || {};
 			const payload = {
 				...utilsCheckNumericInt(page)
 					? { page }
@@ -65,6 +67,7 @@ export const fireListGet = (url, {
 				type: prefix +'.listGet',
 				payload: {
 					...payload,
+					storeListName: storeName,
 					url,
 					total: request.data.total,
 					data: request.data.rows,
@@ -76,6 +79,7 @@ export const fireListGet = (url, {
 			Store().dispatch({
 				type: prefix +'.listGet',
 				payload: {
+					storeListName: storeName,
 					url,
 					total: 0,
 					data: [],
@@ -86,15 +90,15 @@ export const fireListGet = (url, {
 };
 
 export const reducerListGet = (state, action) => {
-	if (utilsCheckObj(state.list[action.payload.url])) {
-		state.list[action.payload.url] = {
-			...state.list[action.payload.url],
+	if (utilsCheckObj(state.list[action.payload.storeListName])) {
+		state.list[action.payload.storeListName] = {
+			...state.list[action.payload.storeListName],
 			loader: false,
 			...(action.payload || {}),
 		};
 	}
-	else if (utilsCheckStr(action.payload.url)) {
-		state.list[action.payload.id] = {
+	else if (utilsCheckStr(action.payload.storeListName)) {
+		state.list[action.payload.storeListName] = {
 			page: 1,
 			limit: 20,
 			total: 0,

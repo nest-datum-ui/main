@@ -26,7 +26,6 @@ import InputId from '@nest-datum-ui/components/Input/Id';
 import InputName from '@nest-datum-ui/components/Input/Name';
 import InputDescription from '@nest-datum-ui/components/Input/Description';
 import FilesInputProviderStatus from '@nest-datum-ui-lib/files/components/Input/Provider/Status';
-import InputIsRequired from '@nest-datum-ui/components/Input/IsRequired';
 import InputIsNotDelete from '@nest-datum-ui/components/Input/IsNotDelete';
 import handlerSubmit from './handler/submit.js';
 

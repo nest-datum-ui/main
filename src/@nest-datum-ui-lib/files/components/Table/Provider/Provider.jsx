@@ -90,7 +90,9 @@ let Provider = () => {
 		sort,
 	]);
 
-	React.useEffect(() => () => actionApiListClear(FILES_PATH_PROVIDER)(), [
+	React.useEffect(() => () => {
+		actionApiListClear(FILES_PATH_PROVIDER)();
+	}, [
 	]);
 
 	return <React.Fragment>

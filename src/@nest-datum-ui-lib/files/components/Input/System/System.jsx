@@ -9,13 +9,18 @@ import FilesSelectSystem from '@nest-datum-ui-lib/files/components/Select/System
 
 let System = ({ 
 	storeFormName,
+	onChange,
 	...props 
 }) => {
 	const loader = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'loader' ]));
 	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'systemId' ])) || '';
 	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', 'systemId' ]));
-	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, 'systemId', e.target.value)(), [
+	const onChangeLocal = React.useCallback((e) => {
+		actionApiFormProp(storeFormName, 'systemId', e.target.value)();
+		onChange(e);
+	}, [
 		storeFormName,
+		onChange,
 	]);
 
 	return <React.Fragment>
@@ -27,7 +32,7 @@ let System = ({
 				name="systemId"
 				label="System"
 				value={value}
-				onChange={onChange}
+				onChange={onChangeLocal}
 				error={error}
 				{ ...props } />
 		</Box>
@@ -37,9 +42,11 @@ let System = ({
 System = React.memo(System);
 System.defaultProps = {
 	storeFormName: FILES_PATH_FILE,
+	onChange: (() => {}),
 };
 System.propTypes = {
 	storeFormName: PropTypes.string,
+	onChange: PropTypes.func,
 };
 
 export default System;
