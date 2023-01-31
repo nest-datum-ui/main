@@ -33,8 +33,9 @@ let Search = ({
 				inputProps: {
 					form: id,
 				},
-				endAdornment: <InputAdornment position="end"  >
+				endAdornment: <InputAdornment position="end">
 					<IconButton 
+						form={id}
 						type="submit"
 						size="small">
 						<SearchIcon />
