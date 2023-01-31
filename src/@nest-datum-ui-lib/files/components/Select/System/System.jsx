@@ -35,6 +35,11 @@ let System = ({
 				page,
 				limit,
 				query,
+				relations: {
+					systemSystemOptions: {
+						systemSystemSystemOptions: true,
+					},
+				},
 			})();
 		}
 	}, [

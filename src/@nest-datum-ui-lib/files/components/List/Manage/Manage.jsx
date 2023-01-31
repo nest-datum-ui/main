@@ -6,18 +6,25 @@ import { fireFormEmpty as actionApiFormEmpty } from '@nest-datum-ui/components/S
 import { fireListLimit as actionApiListLimit } from '@nest-datum-ui/components/Store/api/actions/list/limit.js';
 import { fireListPage as actionApiListPage } from '@nest-datum-ui/components/Store/api/actions/list/page.js';
 import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
+import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
 import { FILES_KEY_MANAGER } from '@nest-datum-ui-lib/files/consts/keys.js';
 import {
 	FILES_PATH_FOLDER,
 	FILES_PATH_FILE,
+	FILES_PATH_SYSTEM,
 } from '@nest-datum-ui-lib/files/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
+import selectorFindArray from '@nest-datum-ui/components/Store/main/selectors/findArray.js';
 import utilsCheckNumericInt from '@nest-datum-ui/utils/check/numeric/int.js';
 import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Pagination from '@nest-datum-ui/components/Pagination';
 import FilesInputSystem from '@nest-datum-ui-lib/files/components/Input/System';
+import FilesPaper from '@nest-datum-ui-lib/files/components/Paper';
+import FilesPaperFolder from '@nest-datum-ui-lib/files/components/Paper/Folder';
+import FilesMenuBreadcrumbs  from '@nest-datum-ui-lib/files/components/Menu/Breadcrumbs';
 import handlerMount from './handler/mount.js';
 
 let Manage = ({
@@ -45,11 +52,18 @@ let Manage = ({
 	const folderData = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'data' ]));
 	const folderTotal = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'total' ]));
 	const folderPage = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'page' ])) ?? 1;
-	const folderLimit = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'limit' ])) ?? 20;
+	const folderLimit = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'limit' ])) ?? 60;
 	const fileData = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FILE, 'data' ]));
 	const fileTotal = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FILE, 'total' ]));
 	const allowLoadFolders = ((folderTotal >= folderLimit * folderPage) || !utilsCheckNumericInt(folderTotal));
 	const generalTotal = (folderTotal || 0) + (fileTotal || 0);
+	const parentId = ((folderData || [])[0] || {})['id'];
+	const system = useSelector(selectorFindArray([ 'api', 'list', FILES_PATH_SYSTEM, 'data' ], (item) => item['id'] === systemIdLocal));
+	const systemSystemOption = ((system || {})['systemSystemOptions'] || []).find((item) => item['systemOptionId'] === 'files-system-option-root');
+	const systemSystemOptionContent = systemSystemOption
+		? (systemSystemOption['systemSystemSystemOptions'] || []).find((item) => item['systemSystemOptionId'] === systemSystemOption['id'])
+		: undefined;
+	const rootPath = (systemSystemOptionContent || {})['content'];
 	const onPage = React.useCallback((e, newPage) => {
 		actionApiListProp(FILES_PATH_FOLDER, 'data', [])();
 		actionApiListPage(FILES_PATH_FOLDER, newPage);
@@ -69,6 +83,19 @@ let Manage = ({
 	]);
 
 	React.useEffect(() => {
+		if (rootPath && parentId) {
+			actionBreadcrumbsListSet('filesManageList', [{
+				key: parentId,
+				text: '...',
+				path: rootPath,
+			}])();
+		}
+	}, [
+		rootPath,
+		parentId,
+	]);
+
+	React.useEffect(() => {
 		handlerMount({
 			unmount,
 			systemId: systemIdLocal,
@@ -79,6 +106,7 @@ let Manage = ({
 			folderPage,
 			folderLimit,
 			allowLoadFolders,
+			parentId,
 		});
 	}, [
 		unmount,
@@ -90,6 +118,7 @@ let Manage = ({
 		folderPage,
 		folderLimit,
 		allowLoadFolders,
+		parentId,
 	]);
 
 	return <React.Fragment>
@@ -124,21 +153,32 @@ let Manage = ({
 		</Grid>
 		{systemIdLocal
 			&& <React.Fragment>
+				<Box pb={1}>
+					<FilesMenuBreadcrumbs />
+				</Box>
 				<Grid
 					container
-					alignItems="center"
-					spacing={2}>
+					spacing={3}
+					sx={{
+						paddingBottom: '24px',
+					}}>
 					{(folderData || []).map((item) => <Grid
 						key={item.id}
 						item
-						xs={2}>
-						folder
+						xs={1}>
+						<FilesPaperFolder
+							id={item.id}
+							path={item.path}
+							name={item.name} />
 					</Grid>)}
 					{(fileData || []).map((item) => <Grid
 						key={item.id}
 						item
-						xs={2}>
-						file
+						xs={1}>
+						<FilesPaper
+							path={item.path}
+							name={item.name}
+							size={item.size} />
 					</Grid>)}
 				</Grid>
 				{generalTotal > 0

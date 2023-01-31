@@ -30,97 +30,90 @@ let Paper = ({
 	return <React.Fragment>
 		<Loader	visible={loader} />
 		<Box
+			maxWidth="240px"
 			sx={{
+				position: 'relative',
 				display: loader
 					? 'none'
 					: 'block',
-			}}>
-			<Box
-				maxWidth="240px"
-				sx={{
-					position: 'relative',
-					...isMedia
-						? {
-							backgroundSize: 'cover',
-							backgroundPosition: 'center',
-							backgroundRepeat: 'no-repeat',
-							backgroundImage: `url('${utilsUrlFiles(path, true)}')`,
-						}
-						: {},
-						'&:after': {
-							content: '""',
-							display: 'block',
-							paddingBottom: isMedia
-								? '100%'
-								: '0px',
-						},
-					}}>
-				{(() => {
-					switch (true) {
-						case isPdf:
-							return <a
-								href={utilsUrlFiles(path, true)}
-								target="_blank"
-								rel="noreferrer">
-								<PictureAsPdfIcon
-									color="primary"
-									style={{
-										fontSize: '900%',
-									}} />
-							</a>;
-						case isEjs:
-							return <a
-								href={utilsUrlFiles(path, true)}
-								target="_blank"
-								rel="noreferrer">
-								<ViewQuiltIcon
-									color="primary"
-									style={{
-										fontSize: '900%',
-									}} />
-							</a>;
-						case !isMedia:
-							return <a
-								href={utilsUrlFiles(path, true)}
-								target="_blank"
-								rel="noreferrer">
-								<InsertDriveFileIcon
-									style={{
-										fontSize: '900%',
-									}} />
-							</a>;
-						default:
-							return <React.Fragment />;
+				...isMedia
+					? {
+						backgroundSize: 'cover',
+						backgroundPosition: 'center',
+						backgroundRepeat: 'no-repeat',
+						backgroundImage: `url('${utilsUrlFiles(path, true)}')`,
 					}
-				})()}
-			</Box>
-			<Typography 
-				component="div"
-				variant="body2"
-				sx={{
-					wordWrap: 'anywhere',
-					paddingLeft: '6px',
-					paddingTop: '2px',
-				}}>
-				<b>{name
-					? (name.length > 80
-						? `${(name || '').substring(0, 80)}...`
-						: name)
-					: ((path || '').length > 80
-						? `${(path || '').substring(0, 80)}...`
-						: path)}</b>
-			</Typography>
-			{(typeof size === 'number')
-				&& <Typography
-					component="div"
-					variant="caption"
-					sx={{
-						paddingLeft: '6px',
-						paddingBottom: '2px',
-					}}>
-					Size: {size}
-				</Typography>}
+					: {},
+				'&:after': {
+					content: '""',
+					display: 'block',
+					paddingBottom: isMedia
+						? '100%'
+						: '0px',
+				},
+				'& > a': {
+					display: 'block',
+					width: '100%',
+					'& > svg': {
+						width: '100%',
+						height: '100%',
+					},
+				},
+			}}>
+			{(() => {
+				switch (true) {
+					case isPdf:
+						return <a
+							href={utilsUrlFiles(path, true)}
+							target="_blank"
+							rel="noreferrer">
+							<PictureAsPdfIcon color="primary" />
+						</a>;
+					case isEjs:
+						return <a
+							href={utilsUrlFiles(path, true)}
+							target="_blank"
+							rel="noreferrer">
+							<ViewQuiltIcon color="primary" />
+						</a>;
+					case !isMedia:
+						return <a
+							href={utilsUrlFiles(path, true)}
+							target="_blank"
+							rel="noreferrer">
+							<InsertDriveFileIcon />
+						</a>;
+					default:
+						return <React.Fragment />;
+				}
+			})()}
 		</Box>
+		<Typography 
+			component="div"
+			variant="body2"
+			sx={{
+				wordWrap: 'anywhere',
+				paddingLeft: '6px',
+				paddingTop: '2px',
+			}}>
+			<b>{name
+				? (name.length > 80
+					? `${(name || '').substring(0, 80)}...`
+					: name)
+				: ((path || '').length > 80
+					? `${(path || '').substring(0, 80)}...`
+					: path)}</b>
+		</Typography>
+		{(typeof size === 'number')
+			&& <Typography
+				component="div"
+				variant="caption"
+				sx={{
+					paddingLeft: '6px',
+					paddingBottom: '2px',
+				}}>
+				Size: {size}
+			</Typography>}
 	</React.Fragment>;
 };
 

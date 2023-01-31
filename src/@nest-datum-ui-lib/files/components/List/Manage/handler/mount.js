@@ -1,5 +1,4 @@
 import Store from '@nest-datum-ui/components/Store';
-import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
 import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
 import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
 import {
@@ -21,6 +20,7 @@ const mount = ({
 	folderLimit,
 	allowLoadFolders,
 	allowLoadFiles,
+	parentId,
 }) => {
 	if (!unmount 
 		&& utilsCheckEntityExists(systemId)) {
@@ -39,8 +39,6 @@ const mount = ({
 		actionApiListProp(FILES_PATH_FILE, 'loader', false)();
 		actionApiListProp(FILES_PATH_FILE, 'data', [])();
 
-		console.log('prevPage', allowLoadFolders, folderTotal, folderLimit)
-
 		if ((allowLoadFolders || allowLoadFiles || folderTotal <= folderLimit)
 			&& (prevPage !== folderPage || prevLimit !== folderLimit)) {
 			actionApiListGet(FILES_PATH_FOLDER, {
@@ -50,7 +48,8 @@ const mount = ({
 				select,
 				filter: {
 					...utilsConvertStrObj(filter),
-					// systemId
+					parentId: parentId || 'files-folder-root',
+					systemId,
 				},
 				sort,
 			})();
@@ -71,7 +70,8 @@ const mount = ({
 				select,
 				filter: {
 					...utilsConvertStrObj(filter),
-					// systemId
+					parentId,
+					systemId,
 				},
 				sort,
 			})();
