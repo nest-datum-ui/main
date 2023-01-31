@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import utilsCheckStrMedia from '@nest-datum-ui/utils/check/str/media.js';
 import utilsCheckStrPdf from '@nest-datum-ui/utils/check/str/pdf.js';
 import utilsCheckStrEjs from '@nest-datum-ui/utils/check/str/ejs.js';
@@ -17,6 +19,7 @@ let Paper = ({
 	name,
 	size,
 }) => {
+	const accessToken = useSelector(selectorMainExtract([ 'auth', 'accessToken' ]));
 	const isMedia = React.useMemo(() => utilsCheckStrMedia(path), [
 		path,
 	]);
@@ -41,7 +44,7 @@ let Paper = ({
 						backgroundSize: 'cover',
 						backgroundPosition: 'center',
 						backgroundRepeat: 'no-repeat',
-						backgroundImage: `url('${utilsUrlFiles(path, true)}')`,
+						backgroundImage: `url('${utilsUrlFiles(path, true, accessToken)}')`,
 					}
 					: {},
 				'&:after': {
