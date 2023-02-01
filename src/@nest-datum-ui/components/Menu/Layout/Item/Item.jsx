@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useUrlPathname } from '@nest-datum-ui/utils/hooks';
-import { REGISTRY_PATH_SERV } from '@nest-datum-ui-lib/registry/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -10,6 +9,19 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import ButtonLink from '@nest-datum-ui/components/Button/Link';
+
+const initial = {
+	'registry': '/registry/serv',
+	'logs': '/logs/err',
+	'sso': '/sso/user',
+	'http': '/http/settings',
+	'data-type': '/data-type/type',
+	'mail': '/mail/letter',
+	'forms': '/forms/form',
+	'cv': '/cv/report',
+	'files': '/files/manage',
+	'lensa': '/lensa/report',
+};
 
 let ItemMemo = ({ 
 	index,
@@ -30,7 +42,7 @@ let ItemMemo = ({
 					}
 					: {
 						component: ButtonLink,
-						to: name,
+						to: initial[name],
 						sx: {
 							paddingTop: '4px !important',
 							paddingBottom: '4px !important',
@@ -59,7 +71,7 @@ let ItemMemo = ({
 ItemMemo = React.memo(ItemMemo);
 
 let Item = ({ index }) => {
-	const name = useSelector(selectorMainExtract([ 'api', 'list', REGISTRY_PATH_SERV, 'data', index, 'name' ]));
+	const name = useSelector(selectorMainExtract([ 'api', 'list', 'registryServMenuList', 'data', index, 'name' ]));
 	const urlPathname = useUrlPathname();
 	const currentServiceIsOpened = (urlPathname.indexOf(`${name}/`) === 0);
 	

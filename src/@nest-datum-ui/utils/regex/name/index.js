@@ -1,6 +1,6 @@
 import utilsCheckStr from '@nest-datum-ui/utils/check/str';
 
-const name = (e, pattern = /[^a-zA-Zа-яА-Я 0-9'-]+/g) => {
+const name = (e, pattern = /[^a-zA-Zа-яА-Я0-9'-]+/g) => {
 	if (!utilsCheckStr(e.target.value)) {
 		e.target.value = '';
 	}
@@ -9,8 +9,7 @@ const name = (e, pattern = /[^a-zA-Zа-яА-Я 0-9'-]+/g) => {
 			|| e.target.value[0] === '-'
 			|| e.target.value[0] === "'"
 			|| e.target.value[0] === "\n"
-			|| e.target.value[0] === "\t"
-			|| !Number.isNaN(Number(e.target.value[0]))) {
+			|| e.target.value[0] === "\t") {
 			e.target.value = '';
 		}
 		else {

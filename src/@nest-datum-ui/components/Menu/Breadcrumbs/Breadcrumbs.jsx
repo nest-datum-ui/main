@@ -24,7 +24,7 @@ let Breadcrumbs = () => {
 		{!loader
 			? <MuiBreadcrumbs separator='/'>
 				{data.map((item, index) => {
-					return (item.key === pathname)
+					return (item.key === pathname || index === 1)
 						? <Typography key={item.key}>
 							{item.text}
 						</Typography>

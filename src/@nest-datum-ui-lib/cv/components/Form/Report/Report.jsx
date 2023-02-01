@@ -56,7 +56,9 @@ let Report = () => {
 			isNotDelete={isNotDelete}
 			showDropButton={!isNotDelete && utilsCheckEntityExists(entityId)}>
 			<InputId storeFormName={CV_PATH_REPORT} />
-			<FilesInputFile storeFormName={CV_PATH_REPORT} />
+			<FilesInputFile 
+				storeFormName={CV_PATH_REPORT}
+				label="CV file" />
 			<CvInputReportStatus storeFormName={CV_PATH_REPORT} />
 			{utilsCheckEntityExists(entityId)
 				&& <FormsTableContentField 

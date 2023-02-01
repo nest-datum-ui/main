@@ -22,15 +22,18 @@ let Layout = () => {
 			DashboardTitle,
 		},
 	} = React.useContext(ContextLanguage);
-	const loader = useSelector(selectorMainExtract([ 'api', 'list', REGISTRY_PATH_SERV, 'loader' ]));
-	const data = useSelector(selectorMainExtract([ 'api', 'list', REGISTRY_PATH_SERV, 'data' ]));
+	const loader = useSelector(selectorMainExtract([ 'api', 'list', 'registryServMenuList', 'loader' ]));
+	const data = useSelector(selectorMainExtract([ 'api', 'list', 'registryServMenuList', 'data' ]));
 
 	React.useEffect(() => {
-		actionApiListGet(REGISTRY_PATH_SERV, { limit: 99999 })();
+		actionApiListGet(REGISTRY_PATH_SERV, { 
+			limit: 99999,
+			storeListName: 'registryServMenuList', 
+		})();
 	}, [
 	]);
 
-	React.useEffect(() => () => actionApiListClear(REGISTRY_PATH_SERV)(), [
+	React.useEffect(() => () => actionApiListClear('registryServMenuList')(), [
 	]);
 
 	return <React.Fragment>

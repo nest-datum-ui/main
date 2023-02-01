@@ -14,10 +14,10 @@ import Layout from 'layouts';
 import LayoutManager from 'layouts/Manager';
 import LayoutManagerService from 'layouts/Manager/Service';
 import SsoRouteSignIn from '@nest-datum-ui-lib/sso/routes/SignIn';
-// import SsoRouteSignUp from '@nest-datum-ui-lib/sso/routes/SignUp';
-// import SsoRouteRecovery from '@nest-datum-ui-lib/sso/routes/Recovery';
-// import SsoRouteReset from '@nest-datum-ui-lib/sso/routes/Reset';
-// import SsoRouteVerify from '@nest-datum-ui-lib/sso/routes/Verify';
+import SsoRouteSignUp from '@nest-datum-ui-lib/sso/routes/SignUp';
+import SsoRouteRecovery from '@nest-datum-ui-lib/sso/routes/Recovery';
+import SsoRouteReset from '@nest-datum-ui-lib/sso/routes/Reset';
+import SsoRouteVerify from '@nest-datum-ui-lib/sso/routes/Verify';
 import GlobalStyles from './globalStyles.js';
 
 const container = document.getElementById('root');
@@ -36,7 +36,7 @@ root.render(
 								<Route
 									path="sign-in"
 									element={<SsoRouteSignIn />} />
-								{/*<Route
+								<Route
 									path="sign-up"
 									element={<SsoRouteSignUp />} />
 								<Route
@@ -47,7 +47,7 @@ root.render(
 									element={<SsoRouteReset />} />
 								<Route
 									path="verify"
-									element={<SsoRouteVerify />} />*/}
+									element={<SsoRouteVerify />} />
 								<Route
 									path=""
 									element={<LayoutManager />}>

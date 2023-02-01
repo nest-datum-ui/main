@@ -9,7 +9,7 @@ let Primary = () => {
 	const pathname = location.pathname;
 	const urlPathname = pathname.substring(1);
 	const activeFlags = [
-		(urlPathname.indexOf(`registry/type`) === 0),
+		(urlPathname.indexOf(`registry/serv`) === 0),
 		(urlPathname.indexOf(`registry/settings`) === 0),
 	];
 	const [ tab, setTab ] = React.useState(() => (pathname === `/registry`)
@@ -38,8 +38,8 @@ let Primary = () => {
 				: 0}
 			onChange={onTab}>
 			<Tab 
-				label="Types"
-				{ ...(urlPathname.indexOf(`registry/type`) === 0
+				label="Services"
+				{ ...(urlPathname.indexOf(`registry/serv`) === 0
 					|| pathname === `/registry`)
 					? {
 						sx: {
@@ -49,7 +49,7 @@ let Primary = () => {
 					}
 					: {
 						component: ButtonLink,
-						to: 'type',
+						to: 'serv',
 						sx: {
 							textTransform: 'initial',
 						},

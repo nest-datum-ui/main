@@ -5,10 +5,10 @@ const setBreadcrumbs = () => {
 		key: '/',
 		text: '...',
 	}, {
-		key: 'logs',
+		key: '/logs',
 		text: 'Logs',
 	}, {
-		key: '/logs/Notification',
+		key: '/logs/notification',
 		text: 'Notifications',
 	}])();
 };

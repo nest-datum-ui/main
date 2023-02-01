@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { fireProp as actionAuthProp } from '@nest-datum-ui/components/Store/auth/actions/prop.js';
 import { fireRecovery as actionAuthRecovery } from '@nest-datum-ui/components/Store/auth/actions/recovery.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import Box from '@mui/material/Box';
@@ -21,12 +20,6 @@ let Recovery = () => {
 	const { enqueueSnackbar } = useSnackbar();
 	const loader = useSelector(selectorMainExtract([ 'auth', 'loader' ]));
 	const recovery = useSelector(selectorMainExtract([ 'auth', 'recovery' ]));
-	const email = useSelector(selectorMainExtract([ 'auth', 'email' ]));
-	const emailError = useSelector(selectorMainExtract([ 'auth', 'errors', 'email' ]));
-	const onEmail = React.useCallback((e) => {
-		actionAuthProp('email', e.target.value)();
-	}, [
-	]);
 	const onRecovery = React.useCallback((e) => {
 		e.preventDefault();
 
@@ -58,12 +51,7 @@ let Recovery = () => {
 				: <React.Fragment>
 					<InputEmail
 						required
-						name="email"
-						placeholder="name@email.com"
-						label="Email"
-						value={email || ''}
-						onChange={onEmail}
-						error={emailError}
+						storeFormName="auth"
 						InputProps={{
 							startAdornment: <InputAdornment position="start">
 								<EmailIcon />

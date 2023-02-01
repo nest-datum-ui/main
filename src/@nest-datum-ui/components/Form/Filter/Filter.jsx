@@ -140,7 +140,10 @@ let Filter = ({
 							sm={6}
 							md={4}
 							lg={3}
-							xl={2}>
+							xl={2}
+							sx={{
+								marginTop: '8px !important',
+							}}>
 							{item}
 						</Grid>)}
 					</Grid>

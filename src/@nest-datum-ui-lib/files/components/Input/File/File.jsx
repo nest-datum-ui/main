@@ -16,14 +16,15 @@ let File = ({
 	]);
 
 	return <React.Fragment>
-		<Box py={2}>
-			<FilesInputSelect
-				name="fileId"
-				label="File id"
-				value={value}
-				onChange={onChange}
-				{ ...props } />
-		</Box>
+		{value
+			&& <Box py={2}>
+				<FilesInputSelect
+					name="fileId"
+					label="File"
+					value={value}
+					onChange={onChange}
+					{ ...props } />
+			</Box>}
 	</React.Fragment>;
 };
 

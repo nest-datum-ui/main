@@ -34,16 +34,11 @@ let SignUp = () => {
 	const register = useSelector(selectorMainExtract([ 'auth', 'register' ]));
 	const loader = useSelector(selectorMainExtract([ 'auth', 'loader' ]));
 	const errors = useSelector(selectorMainExtract([ 'auth', 'errors' ])) ?? {};
-	const email = useSelector(selectorMainExtract([ 'auth', 'email' ])) ?? '';
 	const login = useSelector(selectorMainExtract([ 'auth', 'login' ])) ?? '';
 	const firstname = useSelector(selectorMainExtract([ 'auth', 'firstname' ])) ?? '';
 	const lastname = useSelector(selectorMainExtract([ 'auth', 'lastname' ])) ?? '';
 	const password = useSelector(selectorMainExtract([ 'auth', 'password' ])) ?? '';
 	const repeatedPassword = useSelector(selectorMainExtract([ 'auth', 'repeatedPassword' ])) ?? '';
-	const onEmail = React.useCallback((e) => {
-		actionAuthProp('email', e.target.value)();
-	}, [
-	]);
 	const onLogin = React.useCallback((e) => {
 		actionAuthProp('login', e.target.value)();
 	}, [
@@ -130,12 +125,7 @@ let SignUp = () => {
 						md={6}>
 						<InputEmail
 							required
-							name="email"
-							placeholder="name@email.com"
-							label="Email"
-							value={email}
-							onChange={onEmail}
-							error={errors['email']}
+							storeFormName="auth"
 							InputProps={{
 								startAdornment: <InputAdornment position="start">
 									<EmailIcon />
@@ -147,21 +137,23 @@ let SignUp = () => {
 						xs={12}
 						sm={12}
 						md={6}>
-						<Input
-							required
-							type="text"
-							name="login"
-							placeholder="john95"
-							label="Login"
-							value={login}
-							onChange={onLogin}
-							onInput={utilsRegexName}
-							error={errors['login']}
-							InputProps={{
-								startAdornment: <InputAdornment position="start">
-									<AlternateEmailIcon />
-								</InputAdornment>,
-							}} />
+						<Box py={2}>
+							<Input
+								required
+								type="text"
+								name="login"
+								placeholder="john95"
+								label="Login"
+								value={login}
+								onChange={onLogin}
+								onInput={utilsRegexName}
+								error={errors['login']}
+								InputProps={{
+									startAdornment: <InputAdornment position="start">
+										<AlternateEmailIcon />
+									</InputAdornment>,
+								}} />
+						</Box>
 					</Grid>
 					<Grid
 						item

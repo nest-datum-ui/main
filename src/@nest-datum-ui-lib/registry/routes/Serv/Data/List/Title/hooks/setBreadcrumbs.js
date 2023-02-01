@@ -5,7 +5,7 @@ const setBreadcrumbs = () => {
 		key: '/',
 		text: '...',
 	}, {
-		key: 'registry',
+		key: '/registry',
 		text: 'Registry',
 	}, {
 		key: '/registry/serv',

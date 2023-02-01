@@ -5,7 +5,10 @@ const setBreadcrumbs = () => {
 		key: '/',
 		text: '...',
 	}, {
-		key: 'mail',
+		key: '/mail',
+		text: 'Letters',
+	}, {
+		key: '/mail/letter',
 		text: 'Letters',
 	}])();
 };

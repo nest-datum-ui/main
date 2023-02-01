@@ -28,7 +28,7 @@ import FormFilterIsDeleted from '@nest-datum-ui/components/Form/Filter/IsDeleted
 import FormFilterIsNotDelete from '@nest-datum-ui/components/Form/Filter/IsNotDelete';
 import FormFilter from '@nest-datum-ui/components/Form/Filter';
 import ButtonCreate from '@nest-datum-ui/components/Button/Create';
-import SsoFormFilterStatusAccess from '@nest-datum-ui-lib/sso/components/Form/Filter/Status/Access';
+import SsoFormFilterStatusUser from '@nest-datum-ui-lib/sso/components/Form/Filter/Status/User';
 import Item from './Item';
 
 let User = () => {
@@ -105,7 +105,7 @@ let User = () => {
 			onLoader={onLoader}>
 			<FormFilterIsDeleted onInput={onLoader} />
 			<FormFilterIsNotDelete onInput={onLoader} />
-			<SsoFormFilterStatusAccess onInput={onLoader} />
+			<SsoFormFilterStatusUser onInput={onLoader} />
 		</FormFilter>
 		{(!displayLoader)
 			&& <React.Fragment>
