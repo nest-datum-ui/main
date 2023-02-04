@@ -41,6 +41,8 @@ export const fireFormCreateOptions = (storeFormNameOrUrl, options) => async (pre
 				.list || {})[storeFormName] || {})
 				.data;
 
+			console.log('data', storeFormName, data);
+
 			if (utilsCheckArr(data) && data.length > 0) {
 				await actionApiFormProp(storeFormName, 'loader', true)();
 
