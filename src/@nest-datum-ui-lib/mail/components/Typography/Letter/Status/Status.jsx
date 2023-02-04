@@ -19,6 +19,7 @@ let Status = ({
 			actionApiFormGet(() => `${MAIL_PATH_LETTER_STATUS}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

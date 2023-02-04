@@ -19,6 +19,7 @@ let Status = ({
 			actionApiFormGet(() => `${SSO_PATH_ROLE_STATUS}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

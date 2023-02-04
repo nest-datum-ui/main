@@ -19,6 +19,7 @@ let System = ({
 			actionApiFormGet(() => `${FILES_PATH_SYSTEM}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

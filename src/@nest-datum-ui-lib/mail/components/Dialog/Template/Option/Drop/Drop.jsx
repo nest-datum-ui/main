@@ -9,7 +9,7 @@ let Drop = () => {
 	const entityId = useSelector(selectorMainExtract([ 'dialog', MAIL_PATH_TEMPLATE_OPTION, 'entityId' ]));
 	const formLoader = useSelector(selectorMainExtract([ 'api', 'form', MAIL_PATH_TEMPLATE_OPTION, 'loader' ]));
 	const listLoader = useSelector(selectorMainExtract([ 'api', 'list', MAIL_PATH_TEMPLATE_OPTION, 'loader' ]));
-	const onDrop = React.useCallback((e) => actionApiFormDrop(MAIL_PATH_TEMPLATE_OPTION, entityId, { sliceInList: true })(), [
+	const onDrop = React.useCallback((e) => actionApiFormDrop(MAIL_PATH_TEMPLATE_OPTION, entityId)(), [
 		entityId,
 	]);
 

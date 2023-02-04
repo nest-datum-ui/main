@@ -1,4 +1,4 @@
 
-const regex = (value = '') => (value instanceof RegExp);
+const regex = (value = '') => ((new RegExp(value)) instanceof RegExp);
 
 export default regex;

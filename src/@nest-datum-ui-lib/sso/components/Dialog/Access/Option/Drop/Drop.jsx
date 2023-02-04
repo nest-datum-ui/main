@@ -9,7 +9,7 @@ let Drop = () => {
 	const entityId = useSelector(selectorMainExtract([ 'dialog', SSO_PATH_ACCESS_OPTION, 'entityId' ]));
 	const formLoader = useSelector(selectorMainExtract([ 'api', 'form', SSO_PATH_ACCESS_OPTION, 'loader' ]));
 	const listLoader = useSelector(selectorMainExtract([ 'api', 'list', SSO_PATH_ACCESS_OPTION, 'loader' ]));
-	const onDrop = React.useCallback((e) => actionApiFormDrop(SSO_PATH_ACCESS_OPTION, entityId, { sliceInList: true })(), [
+	const onDrop = React.useCallback((e) => actionApiFormDrop(SSO_PATH_ACCESS_OPTION, entityId)(), [
 		entityId,
 	]);
 

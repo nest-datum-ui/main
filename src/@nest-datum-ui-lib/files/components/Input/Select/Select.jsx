@@ -27,8 +27,6 @@ let Select = ({
 	const path = useSelector(selectorMainExtract([ 'api', 'form', `${FILES_PATH_FILE}/${valueMemo}`, 'path' ]));
 	const size = useSelector(selectorMainExtract([ 'api', 'form', `${FILES_PATH_FILE}/${valueMemo}`, 'size' ]));
 	
-	console.log('valueMemo', value, defaultValue, valueMemo);
-
 	React.useEffect(() => {
 		if (valueMemo && !systemId) {
 			actionApiFormGet(() => `${FILES_PATH_FILE}/${valueMemo}`, { entityId: valueMemo })();

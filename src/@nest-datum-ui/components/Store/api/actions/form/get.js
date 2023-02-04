@@ -22,6 +22,7 @@ const request = async ({
 	url,
 	processedUrl,
 	entityId,
+	notRedirect = false,
 }) => {
 	const snackbar = hookSnackbar();
 	const navigate = hookNavigate();
@@ -40,7 +41,7 @@ const request = async ({
 		return processedUrl;
 	}
 	catch (err) {
-		if (utilsCheckObjAxiosErrNotFound(err)) {
+		if (!notRedirect && utilsCheckObjAxiosErrNotFound(err)) {
 			navigate(utilsUrlLevelUp());
 		}
 		else {
@@ -57,15 +58,18 @@ export const fireFormGet = (url, options) => async (prefix = 'api') => {
 		? url()
 		: url;
 	let entityId,
-		withLoop;
+		withLoop,
+		notRedirect;
 
 	if (utilsCheckObj(options)) {
 		entityId = options.entityId;
 		withLoop = !!options.withLoop;
+		notRedirect = !!options.notRedirect;
 	}
 	else {
 		entityId = options;
 		withLoop = false;
+		notRedirect = false;
 	}
 	if (utilsCheckEntityExists(entityId)) {
 		if (utilsCheckStrUrl(processedUrl)) {
@@ -77,6 +81,7 @@ export const fireFormGet = (url, options) => async (prefix = 'api') => {
 					url,
 					processedUrl,
 					entityId,
+					notRedirect,
 				}));
 			}
 			else {
@@ -85,6 +90,7 @@ export const fireFormGet = (url, options) => async (prefix = 'api') => {
 					url,
 					processedUrl,
 					entityId,
+					notRedirect,
 				})
 			}
 		}

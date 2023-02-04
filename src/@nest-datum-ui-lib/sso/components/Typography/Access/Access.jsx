@@ -19,6 +19,7 @@ let Access = ({
 			actionApiFormGet(() => `${SSO_PATH_ACCESS}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

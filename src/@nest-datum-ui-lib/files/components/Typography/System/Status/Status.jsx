@@ -19,6 +19,7 @@ let Status = ({
 			actionApiFormGet(() => `${FILES_PATH_SYSTEM_STATUS}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

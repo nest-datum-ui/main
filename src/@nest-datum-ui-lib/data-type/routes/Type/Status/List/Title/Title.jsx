@@ -9,7 +9,7 @@ let Title = () => {
 	]);
 
 	return <React.Fragment>
-		<Box pb={2}>
+		<Box pt={2}>
 			<TypographyTitleRoute>
 				Statuses
 			</TypographyTitleRoute>

@@ -19,6 +19,7 @@ let Type = ({
 			actionApiFormGet(() => `${DATA_TYPE_PATH_TYPE}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

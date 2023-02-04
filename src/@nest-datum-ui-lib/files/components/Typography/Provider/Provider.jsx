@@ -19,6 +19,7 @@ let Provider = ({
 			actionApiFormGet(() => `${FILES_PATH_PROVIDER}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

@@ -9,13 +9,15 @@ import DataTypeSelectType from '@nest-datum-ui-lib/data-type/components/Select/T
 
 let Type = ({ 
 	storeFormName,
+	name,
 	...props 
 }) => {
 	const loader = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'loader' ]));
-	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'dataTypeId' ])) || '';
-	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', 'dataTypeId' ]));
-	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, 'dataTypeId', e.target.value)(), [
+	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, name ])) || '';
+	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', name ]));
+	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, name, e.target.value)(), [
 		storeFormName,
+		name,
 	]);
 
 	return <React.Fragment>
@@ -24,7 +26,7 @@ let Type = ({
 			maxWidth="240px">
 			<DataTypeSelectType
 				disabled={loader}
-				name="dataTypeId"
+				name={name}
 				label="Data type"
 				value={value}
 				onChange={onChange}
@@ -37,6 +39,7 @@ let Type = ({
 Type = React.memo(Type);
 Type.defaultProps = {
 	storeFormName: DATA_TYPE_PATH_TYPE,
+	name: 'dataTypeId',
 };
 Type.propTypes = {
 	storeFormName: PropTypes.string,

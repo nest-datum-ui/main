@@ -33,10 +33,10 @@ export const fireListGet = (url, {
 			const payload = {
 				...utilsCheckNumericInt(page)
 					? { page }
-					: (listData.page && 1),
+					: { page: (listData.page && 1) },
 				...utilsCheckNumericInt(limit)
 					? { limit }
-					: (listData.limit && 10),
+					: { limit: (listData.limit && 10) },
 				...utilsCheckStr(query)
 					? { query }
 					: {},

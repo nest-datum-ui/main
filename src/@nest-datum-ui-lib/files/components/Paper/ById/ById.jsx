@@ -23,6 +23,7 @@ let ById = ({
 			actionApiFormGet(() => `${FILES_PATH_FILE}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

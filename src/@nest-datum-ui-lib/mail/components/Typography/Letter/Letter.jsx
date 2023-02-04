@@ -19,6 +19,7 @@ let Letter = ({
 			actionApiFormGet(() => `${MAIL_PATH_LETTER}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

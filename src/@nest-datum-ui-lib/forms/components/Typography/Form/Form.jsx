@@ -19,6 +19,7 @@ let Form = ({
 			actionApiFormGet(() => `${FORMS_PATH_FORM}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

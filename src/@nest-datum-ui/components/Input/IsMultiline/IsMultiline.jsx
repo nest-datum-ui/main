@@ -35,7 +35,7 @@ let IsMultiline = ({
 
 IsMultiline = React.memo(IsMultiline);
 IsMultiline.defaultProps = {
-	name: 'isMultiline,'
+	name: 'isMultiline'
 };
 IsMultiline.propTypes = {
 	storeFormName: PropTypes.string.isRequired,

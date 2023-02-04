@@ -1,7 +1,6 @@
 
-const str = (value = '') => {
-	return value
-		&& typeof value === 'string';
+const str = (value) => {
+	return typeof value === 'string';
 };
 
 export default str;

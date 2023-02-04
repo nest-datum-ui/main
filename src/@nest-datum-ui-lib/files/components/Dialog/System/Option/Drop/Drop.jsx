@@ -9,7 +9,7 @@ let Drop = () => {
 	const entityId = useSelector(selectorMainExtract([ 'dialog', FILES_PATH_SYSTEM_OPTION, 'entityId' ]));
 	const formLoader = useSelector(selectorMainExtract([ 'api', 'form', FILES_PATH_SYSTEM_OPTION, 'loader' ]));
 	const listLoader = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_SYSTEM_OPTION, 'loader' ]));
-	const onDrop = React.useCallback((e) => actionApiFormDrop(FILES_PATH_SYSTEM_OPTION, entityId, { sliceInList: true })(), [
+	const onDrop = React.useCallback((e) => actionApiFormDrop(FILES_PATH_SYSTEM_OPTION, entityId)(), [
 		entityId,
 	]);
 

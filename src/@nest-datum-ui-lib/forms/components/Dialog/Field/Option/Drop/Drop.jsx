@@ -9,7 +9,7 @@ let Drop = () => {
 	const entityId = useSelector(selectorMainExtract([ 'dialog', FORMS_PATH_FIELD_OPTION, 'entityId' ]));
 	const formLoader = useSelector(selectorMainExtract([ 'api', 'form', FORMS_PATH_FIELD_OPTION, 'loader' ]));
 	const listLoader = useSelector(selectorMainExtract([ 'api', 'list', FORMS_PATH_FIELD_OPTION, 'loader' ]));
-	const onDrop = React.useCallback((e) => actionApiFormDrop(FORMS_PATH_FIELD_OPTION, entityId, { sliceInList: true })(), [
+	const onDrop = React.useCallback((e) => actionApiFormDrop(FORMS_PATH_FIELD_OPTION, entityId)(), [
 		entityId,
 	]);
 

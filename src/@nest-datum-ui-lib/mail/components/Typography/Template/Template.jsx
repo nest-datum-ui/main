@@ -19,6 +19,7 @@ let Template = ({
 			actionApiFormGet(() => `${MAIL_PATH_TEMPLATE}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [

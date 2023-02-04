@@ -19,6 +19,7 @@ let Field = ({
 			actionApiFormGet(() => `${FORMS_PATH_FIELD}/${children}`, {
 				entityId: children,
 				withLoop: true,
+				notRedirect: true,
 			})();
 		}
 	}, [
