@@ -1,8 +1,12 @@
 import Store from '@nest-datum-ui/components/Store';
 import { fireFormProp as actionApiFormProp } from '@nest-datum-ui/components/Store/api/actions/form/prop.js';
+import { fireFormCreateOptions as actionApiFormCreateOptions } from '@nest-datum-ui/components/Store/api/actions/form/createOptions.js';
 import { fireFormCreate as actionApiFormCreate } from '@nest-datum-ui/components/Store/api/actions/form/create.js';
 import { fireFormUpdate as actionApiFormUpdate } from '@nest-datum-ui/components/Store/api/actions/form/update.js';
-import { DATA_TYPE_PATH_TYPE } from '@nest-datum-ui-lib/data-type/consts/path.js';
+import { 
+	DATA_TYPE_PATH_TYPE,
+	DATA_TYPE_PATH_TYPE_OPTION, 
+} from '@nest-datum-ui-lib/data-type/consts/path.js';
 import utilsCheckBool from '@nest-datum-ui/utils/check/bool.js';
 import utilsCheckExists from '@nest-datum-ui/utils/check/exists.js';
 import utilsCheckEntityExists from '@nest-datum-ui/utils/check/entity/exists.js';
@@ -48,9 +52,11 @@ const submit = async (e, entityId) => {
 	}
 	else if (utilsCheckEntityExists(entityId)) {
 		actionApiFormUpdate(DATA_TYPE_PATH_TYPE, entityId)();
+		actionApiFormCreateOptions(DATA_TYPE_PATH_TYPE_OPTION, { path: `${DATA_TYPE_PATH_TYPE}/${entityId}/options` })();
 	}
 	else {
 		actionApiFormCreate(DATA_TYPE_PATH_TYPE)();
+		actionApiFormCreateOptions(DATA_TYPE_PATH_TYPE_OPTION, { path: `${DATA_TYPE_PATH_TYPE}/${entityId}/options` })();
 	}
 };
 
