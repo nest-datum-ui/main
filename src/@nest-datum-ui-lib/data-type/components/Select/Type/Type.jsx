@@ -5,7 +5,10 @@ import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/S
 import { fireListGet as actionApiListGet } from '@nest-datum-ui/components/Store/api/actions/list/get.js';
 import { fireListPage as actionApiListPage } from '@nest-datum-ui/components/Store/api/actions/list/page.js';
 import { fireListLimit as actionApiListLimit } from '@nest-datum-ui/components/Store/api/actions/list/limit.js';
-import { DATA_TYPE_PATH_TYPE } from '@nest-datum-ui-lib/data-type/consts/path.js';
+import { 
+	DATA_TYPE_PATH_TYPE,
+	DATA_TYPE_PATH_TYPE_OPTION_CREATE, 
+} from '@nest-datum-ui-lib/data-type/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import Select from '@nest-datum-ui/components/Select';
 import LoaderSmall from '@nest-datum-ui/components/Loader/Small';
@@ -50,7 +53,11 @@ let Type = ({
 		filter,
 	]);
 
-	React.useEffect(() => () => actionApiListClear(DATA_TYPE_PATH_TYPE)(), [
+	React.useEffect(() => () => {
+		if (window.location.pathname.indexOf(DATA_TYPE_PATH_TYPE_OPTION_CREATE.replace('/0', '')) !== 0) {
+			actionApiListClear(DATA_TYPE_PATH_TYPE)();
+		}
+	}, [
 	]);
 
 	return <React.Fragment>

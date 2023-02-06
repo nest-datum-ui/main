@@ -10,7 +10,7 @@ let Title = () => {
 	return <React.Fragment>
 		<Box pb={2}>
 			<TypographyTitleRoute>
-				Accessed list
+				Accesses list
 			</TypographyTitleRoute>
 		</Box>
 	</React.Fragment>;

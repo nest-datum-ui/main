@@ -5,7 +5,7 @@ import { fireFormProp as actionApiFormProp } from '@nest-datum-ui/components/Sto
 import { SSO_PATH_ACCESS } from '@nest-datum-ui-lib/sso/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import Box from '@mui/material/Box';
-import SsoSelectRoleStatus from '@nest-datum-ui-lib/sso/components/Select/Role/Status';
+import SsoSelectAccessStatus from '@nest-datum-ui-lib/sso/components/Select/Access/Status';
 
 let Status = ({ 
 	storeFormName,
@@ -22,7 +22,7 @@ let Status = ({
 		<Box 
 			py={2}
 			maxWidth="240px">
-			<SsoSelectRoleStatus
+			<SsoSelectAccessStatus
 				disabled={loader}
 				name="accessStatusId"
 				label="Access status"

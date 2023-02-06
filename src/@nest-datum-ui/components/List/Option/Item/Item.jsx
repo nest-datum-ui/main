@@ -109,7 +109,7 @@ let Item = ({
 						<ButtonCancelIcon onClick={onDropMemo} />
 				</Grid>}
 		</Grid>
-		{(isMultiline && optionValueIndex === optionValueLength - 1)
+		{(isMultiline && optionValueIndex === (optionValueLength <= 0 ? 0 : (optionValueLength - 1)))
 			&& <ButtonCreate onClick={onAddMemo}>
 				Add field
 			</ButtonCreate>}

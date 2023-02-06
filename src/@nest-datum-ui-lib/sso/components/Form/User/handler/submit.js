@@ -1,11 +1,11 @@
 import Store from '@nest-datum-ui/components/Store';
 import { fireFormProp as actionApiFormProp } from '@nest-datum-ui/components/Store/api/actions/form/prop.js';
-// import { fireFormCreateOptions as actionApiFormCreateOptions } from '@nest-datum-ui/components/Store/api/actions/form/createOptions.js';
+import { fireFormCreateOptions as actionApiFormCreateOptions } from '@nest-datum-ui/components/Store/api/actions/form/createOptions.js';
 import { fireFormCreate as actionApiFormCreate } from '@nest-datum-ui/components/Store/api/actions/form/create.js';
 import { fireFormUpdate as actionApiFormUpdate } from '@nest-datum-ui/components/Store/api/actions/form/update.js';
 import { 
 	SSO_PATH_USER,
-	// SSO_PATH_USER_OPTION, 
+	SSO_PATH_USER_OPTION, 
 } from '@nest-datum-ui-lib/sso/consts/path.js';
 import utilsCheckBool from '@nest-datum-ui/utils/check/bool.js';
 import utilsCheckExists from '@nest-datum-ui/utils/check/exists.js';
@@ -63,11 +63,11 @@ const submit = async (e, entityId) => {
 	}
 	else if (utilsCheckEntityExists(entityId)) {
 		actionApiFormUpdate(SSO_PATH_USER, entityId)();
-		// actionApiFormCreateOptions(SSO_PATH_USER_OPTION, { path: `${SSO_PATH_USER}/${entityId}/options` })();
+		actionApiFormCreateOptions(SSO_PATH_USER_OPTION, { path: `${SSO_PATH_USER}/${entityId}/options` })();
 	}
 	else {
 		actionApiFormCreate(SSO_PATH_USER)();
-		// actionApiFormCreateOptions(SSO_PATH_USER_OPTION, { path: `${SSO_PATH_USER}/${entityId}/options` })();
+		actionApiFormCreateOptions(SSO_PATH_USER_OPTION, { path: `${SSO_PATH_USER}/${entityId}/options` })();
 	}
 };
 

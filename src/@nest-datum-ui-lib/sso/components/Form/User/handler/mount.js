@@ -1,5 +1,4 @@
 import Store from '@nest-datum-ui/components/Store';
-import { v4 as uuidv4 } from 'uuid';
 import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
 import { 
 	SSO_PATH_USER,
@@ -21,20 +20,20 @@ const mount = () => {
 	let i = 0;
 
 	while (i < listOptions.length) {
-		const id = uuidv4();
 		const listOptionsItem = listOptions[i];
+		const id = listOptionsItem.id;
 
 		listOptions[i]['userUserOptions'] = [{
-			userId: listOptionValue.id,
-			userOptionId: listOptions[i].id,
+			userId: listOptionValue.userId || '',
+			userOptionId: listOptionsItem.id,
 			id,
-			userUserUserOptions: listOptionValueData
+			userUserUserOptions: (listOptionValueData ?? [])
 				.filter((item) => item.userOptionId === listOptionsItem.id)
 				.map((item) => ({
 					id: item.id,
 					userUserOptionId: id,
-					userId: item.userId,
-					content: item.content,
+					userId: item.userId || '',
+					content: item.content ?? listOptionsItem.defaultValue ?? '',
 				})),
 			}];
 		i++;

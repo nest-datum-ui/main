@@ -41,8 +41,6 @@ export const fireFormCreateOptions = (storeFormNameOrUrl, options) => async (pre
 				.list || {})[storeFormName] || {})
 				.data;
 
-			console.log('data', storeFormName, data);
-
 			if (utilsCheckArr(data) && data.length > 0) {
 				await actionApiFormProp(storeFormName, 'loader', true)();
 
@@ -100,10 +98,27 @@ export const fireFormCreateOptions = (storeFormNameOrUrl, options) => async (pre
 
 						while (ii < dataItemRelation[valueTableName].length) {
 							const dataItemValue = dataItemRelation[valueTableName][ii];
+							let entityOptionId,
+								entityId;
+
+							if (dataItemValue['entityOptionId']
+								&& dataItemValue['entityId']) {
+								entityOptionId = dataItemValue['entityOptionId'];
+								entityId = dataItemValue['entityId'];
+							}
+							else {
+								const entityOptionKey = Object
+									.keys(dataItemValue)
+									.find((key) => key.indexOf('OptionId') > 3);
+								const entityKey = (entityOptionKey.split(/(?=[A-Z])/))[0];
+							
+								entityOptionId = dataItemValue[entityOptionKey];
+								entityId = dataItemValue[`${entityKey}Id`];
+							}
 
 							collector.push({
-								entityOptionId: dataItemValue.formFormOptionId,
-								entityId: dataItemValue.formId,
+								entityOptionId,
+								entityId,
 								content: dataItemValue.content,
 								id: dataItemValue.id,
 							});

@@ -75,13 +75,14 @@ let TablePagination = ({
 							</tbody>}
 					</Table>
 				</Box>
-				<Pagination
-					withChangeLimit={withChangeLimit}
-					total={total}
-					page={page}
-					limit={limit}
-					onChange={onChange}
-					onLimit={onLimit} />
+				{(total > 5)
+					&& <Pagination
+						withChangeLimit={withChangeLimit}
+						total={total}
+						page={page}
+						limit={limit}
+						onChange={onChange}
+						onLimit={onLimit} />}
 			</StyledBoxWrapper>
 			: <Box
 				py={6}
@@ -102,7 +103,7 @@ TablePagination.defaultProps = {
 	isSelected: false,
 	total: 0,
 	page: 1,
-	limit: 10,
+	limit: 20,
 	onChange: () => {},
 	children: [],
 };

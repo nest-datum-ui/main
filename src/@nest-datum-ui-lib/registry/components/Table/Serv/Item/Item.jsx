@@ -14,24 +14,24 @@ let Item = ({
 	mysqlMasterHost,
 	mysqlMasterPort,
 	active,
-	serviceResponsLoadingIndicator,
+	indicator,
 	createdAt,
 	updatedAt,
 	restartedAt,
 }) => {
 	return <React.Fragment>
 		<TableRow key={id}>
-			<TableCell sx={{ minWidth: '18%' }}>
+			<TableCell sx={{ minWidth: '21%' }}>
 				<Typography component="div">
 					{id}
 				</Typography>
 			</TableCell>
-			<TableCell sx={{ minWidth: '14%' }}>
+			<TableCell sx={{ minWidth: '17%' }}>
 				<Typography component="div">
 					{name}
 				</Typography>
 			</TableCell>
-			<TableCell sx={{ minWidth: '24%' }}>
+			<TableCell sx={{ minWidth: '27%' }}>
 				<Box pb={1}>
 					<Typography component="div">
 						Host: <b>{host}</b>
@@ -40,25 +40,10 @@ let Item = ({
 						Port: <b>{port}</b>
 					</Typography>
 				</Box>
-				<Box>
-					<Typography component="div">
-						Mysql master host: <b>{mysqlMasterHost}</b>
-					</Typography>
-					<Typography component="div">
-						Mysql master port: <b>{mysqlMasterPort}</b>
-					</Typography>
-				</Box>
 			</TableCell>
-			<TableCell sx={{ minWidth: '12%' }}>
+			<TableCell sx={{ minWidth: '17%' }}>
 				<Typography component="div">
-					{active
-						? 'Online'
-						: 'Stopped'}
-				</Typography>
-			</TableCell>
-			<TableCell sx={{ minWidth: '14%' }}>
-				<Typography component="div">
-					{Number(serviceResponsLoadingIndicator)}
+					{Number(indicator)}
 				</Typography>
 			</TableCell>
 			<TableCell sx={{ width: '18%' }}>

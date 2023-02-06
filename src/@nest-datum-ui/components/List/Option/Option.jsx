@@ -35,7 +35,7 @@ let Option = ({
 						{item[relationTableName].map((option, optionIndex) => ((option[valueTableName].length === 0)
 							? ([{
 								id: uuidv4(),
-								content: '',
+								content: item.defaultValue ?? '',
 								entityId,
 								entityOptionId: item[relationTableName][0].id,
 							}])

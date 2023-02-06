@@ -29,17 +29,16 @@ let Pagination = ({
 					page={page}
 					onChange={onChange} />
 			</Grid>
-			<Grid
-				item
-				xs={2}>
-				{withChangeLimit
-					? <SelectLimit
+			{withChangeLimit
+				&& <Grid
+					item
+					xs={2}>
+					<SelectLimit
 						label="Pagination"
 						size="small"
 						value={limit}
 						onChange={onLimit} />
-					: <React.Fragment />}
-			</Grid>
+				</Grid>}
 		</Grid>
 	</React.Fragment>;
 };

@@ -67,14 +67,6 @@ let Serv = () => {
 									Network
 								</Typography>
 							</TableCell>
-							<TableCell key="status">
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Status
-								</Typography>
-							</TableCell>
 							<TableCell key="load">
 								<Typography 
 									component="div"
@@ -104,7 +96,7 @@ let Serv = () => {
 							mysqlMasterHost={item.mysqlMasterHost}
 							mysqlMasterPort={item.mysqlMasterPort}
 							active={item.active}
-							serviceResponsLoadingIndicator={item.serviceResponsLoadingIndicator}
+							indicator={item.indicator}
 							createdAt={item.createdAt}
 							updatedAt={item.updatedAt}
 							restartedAt={item.restartedAt} />)}

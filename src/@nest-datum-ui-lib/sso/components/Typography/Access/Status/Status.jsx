@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { fireFormGet as actionApiFormGet } from '@nest-datum-ui/components/Store/api/actions/form/get.js';
 import { fireFormClear as actionApiFormClear } from '@nest-datum-ui/components/Store/api/actions/form/clear.js';
 import { fireFormDropLoop as actionApiFormDropLoop } from '@nest-datum-ui/components/Store/api/actions/form/loop.js';
-import { SSO_PATH_ROLE_STATUS } from '@nest-datum-ui-lib/sso/consts/path.js';
+import { SSO_PATH_ACCESS_STATUS } from '@nest-datum-ui-lib/sso/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import Typography from '@mui/material/Typography';
 
@@ -12,11 +12,11 @@ let Status = ({
 	...props
 }) => {
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
-	const name = useSelector(selectorMainExtract([ 'api', 'form', `${SSO_PATH_ROLE_STATUS}/${children}`, 'name' ]));
+	const name = useSelector(selectorMainExtract([ 'api', 'form', `${SSO_PATH_ACCESS_STATUS}/${children}`, 'name' ]));
 
 	React.useEffect(() => {
 		if (!unmount) {
-			actionApiFormGet(() => `${SSO_PATH_ROLE_STATUS}/${children}`, {
+			actionApiFormGet(() => `${SSO_PATH_ACCESS_STATUS}/${children}`, {
 				entityId: children,
 				withLoop: true,
 				notRedirect: true,
@@ -28,8 +28,8 @@ let Status = ({
 	]);
 
 	React.useEffect(() => () => {
-		actionApiFormClear(`${SSO_PATH_ROLE_STATUS}/${children}`)();
-		actionApiFormDropLoop(`${SSO_PATH_ROLE_STATUS}/${children}`);
+		actionApiFormClear(`${SSO_PATH_ACCESS_STATUS}/${children}`)();
+		actionApiFormDropLoop(`${SSO_PATH_ACCESS_STATUS}/${children}`);
 	}, [
 		children,
 	]);

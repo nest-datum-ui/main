@@ -36,7 +36,7 @@ export const fireListGet = (url, {
 					: { page: (listData.page && 1) },
 				...utilsCheckNumericInt(limit)
 					? { limit }
-					: { limit: (listData.limit && 10) },
+					: { limit: (listData.limit && 20) },
 				...utilsCheckStr(query)
 					? { query }
 					: {},
