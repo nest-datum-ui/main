@@ -21,6 +21,7 @@ import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import Store from '@nest-datum-ui/components/Store';
 import Pagination from '@nest-datum-ui/components/Pagination';
 import FilesInputSystem from '@nest-datum-ui-lib/files/components/Input/System';
 import FilesPaper from '@nest-datum-ui-lib/files/components/Paper';
@@ -57,17 +58,17 @@ let Manage = ({
 	const folderLimit = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'limit' ])) ?? 60;
 	const fileData = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FILE, 'data' ]));
 	const fileTotal = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FILE, 'total' ]));
+	const breadcrumbs = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'filesManageList', 'data' ])) || [];
 	const allowLoadFolders = ((folderTotal >= folderLimit * folderPage) || !utilsCheckNumericInt(folderTotal));
 	const generalTotal = (folderTotal || 0) + (fileTotal || 0);
-	const parentId = (systemIdLocal === 'files-system-default')
-		? 'files-folder-root'
-		: ((folderDataParent || [])[0] || {})['id'];
+	const parentId = ((folderDataParent || [])[0] || {})['id'];
 	const system = useSelector(selectorFindArray([ 'api', 'list', FILES_PATH_SYSTEM, 'data' ], (item) => item['id'] === systemIdLocal));
 	const systemSystemOption = ((system || {})['systemSystemOptions'] || []).find((item) => item['systemOptionId'] === 'files-system-option-root');
 	const systemSystemOptionContent = systemSystemOption
 		? (systemSystemOption['systemSystemSystemOptions'] || []).find((item) => item['systemSystemOptionId'] === systemSystemOption['id'])
 		: undefined;
-	const rootPath = (systemSystemOptionContent || {})['content'];
+	const rootPath = (breadcrumbs[breadcrumbs.length - 1] || {}).path
+		|| (systemSystemOptionContent || {})['content'];
 	const onPage = React.useCallback((e, newPage) => {
 		actionApiListProp(FILES_PATH_FOLDER, 'data', [])();
 		actionApiListPage(FILES_PATH_FOLDER, newPage);
@@ -78,8 +79,6 @@ let Manage = ({
 		actionApiListPage(FILES_PATH_FOLDER, 1);
 	}, [
 	]);
-
-	console.log('parentId', systemIdLocal);
 
 	React.useEffect(() => {
 		actionApiFormEmpty(storeListName, { systemId, page: 1 })();
@@ -102,19 +101,21 @@ let Manage = ({
 	]);
 
 	React.useEffect(() => {
-		if (systemIdLocal && systemIdLocal !== 'files-system-default') {
+		if (systemIdLocal && rootPath) {
 			actionApiListGet(FILES_PATH_FOLDER, {
 				storeListName,
 				page: 1,
 				limit: 1,
 				filter: {
 					systemId: systemIdLocal,
+					path: rootPath,
 				},
 			})();
 		}
 	}, [
 		storeListName,
 		systemIdLocal,
+		rootPath,
 	]);
 
 	React.useEffect(() => {
@@ -129,6 +130,7 @@ let Manage = ({
 			folderLimit,
 			allowLoadFolders,
 			parentId,
+			rootPath,
 		});
 	}, [
 		unmount,
@@ -141,6 +143,7 @@ let Manage = ({
 		folderLimit,
 		allowLoadFolders,
 		parentId,
+		rootPath,
 	]);
 
 	return <React.Fragment>

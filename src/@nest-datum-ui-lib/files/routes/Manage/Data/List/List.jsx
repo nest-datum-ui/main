@@ -3,7 +3,7 @@ import {
 	Routes,
 	Route, 
 } from 'react-router-dom';
-import FilesListManage from '@nest-datum-ui-lib/files/components/List/Manage';
+import FilesFormManager from '@nest-datum-ui-lib/files/components/Form/Manager';
 import FilesDialogFolder from '@nest-datum-ui-lib/files/components/Dialog/Folder';
 import FilesDialogFile from '@nest-datum-ui-lib/files/components/Dialog/File';
 import FilesDialogFolderDrop from '@nest-datum-ui-lib/files/components/Dialog/Folder/Drop';
@@ -13,7 +13,8 @@ import Title from './Title';
 let List = () => {
 	return <React.Fragment>
 		<Title />
-		<FilesListManage
+		<FilesFormManager
+			displayBreadcrumbs
 			filters
 			search
 			menu

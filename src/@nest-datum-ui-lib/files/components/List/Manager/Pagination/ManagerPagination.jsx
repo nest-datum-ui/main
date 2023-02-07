@@ -4,12 +4,15 @@ import { useSelector } from 'react-redux';
 import { fireListLimit as actionApiListLimit } from '@nest-datum-ui/components/Store/api/actions/list/limit.js';
 import { fireListPage as actionApiListPage } from '@nest-datum-ui/components/Store/api/actions/list/page.js';
 import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
-import { FILES_KEY_MANAGER } from '@nest-datum-ui-lib/files/consts/keys.js';
 import { FILES_PATH_FOLDER } from '@nest-datum-ui-lib/files/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import Pagination from '@nest-datum-ui/components/Pagination';
+import ListManager from '../Manager.jsx';
 
-let ManagerPagination = ({ total }) => {
+let ManagerPagination = ({ 
+	total,
+	...props 
+}) => {
 	const page = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'page' ])) ?? 1;
 	const limit = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'limit' ])) ?? 60;
 	const onPage = React.useCallback((e, newPage) => {
@@ -24,7 +27,7 @@ let ManagerPagination = ({ total }) => {
 	]);
 
 	return <React.Fragment>
-		<ListManager />
+		<ListManager { ...props } />
 		{total > 5
 			&& <Pagination
 				withChangeLimit

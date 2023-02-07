@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { fireListPush as actionBreadcrumbsListPush } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/push.js';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -14,11 +13,6 @@ let Folder = ({
 	onClick,
 }) => {
 	const onHandle = React.useCallback((e) => {
-		actionBreadcrumbsListPush('filesManageList', { 
-			key: id,
-			text: name, 
-			path,
-		})();
 		onClick(e, {
 			id,
 			name,

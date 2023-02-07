@@ -1,3 +1,3 @@
-import Pagination from './Pagination.jsx';
+import ManagerPagination from './ManagerPagination.jsx';
 
-export default Pagination;
+export default ManagerPagination;

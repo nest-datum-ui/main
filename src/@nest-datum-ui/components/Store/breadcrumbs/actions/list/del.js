@@ -24,6 +24,7 @@ export const reducerListDel = (state, action) => {
 		&& !Array.isArray(state.list[action.payload.id])
 		&& Array.isArray(state.list[action.payload.id].data)
 		&& action.payload.index >= 0) {
+		state.list[action.payload.id]['prev'] = state.list[action.payload.id].data[state.list[action.payload.id].data.length - 1];
 		state.list[action.payload.id].data = state
 			.list[action.payload.id]
 			.data

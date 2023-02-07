@@ -21,6 +21,7 @@ const mount = ({
 	allowLoadFolders,
 	allowLoadFiles,
 	parentId,
+	rootPath,
 }) => {
 	if (!unmount 
 		&& utilsCheckEntityExists(systemId)
@@ -34,14 +35,35 @@ const mount = ({
 			.getState()
 			.api
 			.list[FILES_PATH_FOLDER] || {};
+		const breadcrumbsRootPath = ((Store()
+			.getState()
+			.breadcrumbs
+			.list['filesManageList'] || {})
+			.prev || {}).path;
 		const allowLoadFiles = folderLimit > (folderData || []).length 
 			&& utilsCheckArr(folderData, (folderData || []).length);
 
 		actionApiListProp(FILES_PATH_FILE, 'loader', false)();
 		actionApiListProp(FILES_PATH_FILE, 'data', [])();
 
-		if ((allowLoadFolders || allowLoadFiles || folderTotal <= folderLimit)
-			&& (prevPage !== folderPage || prevLimit !== folderLimit)) {
+		console.log('11111', (breadcrumbsRootPath
+			? (breadcrumbsRootPath !== rootPath)
+			: !folderTotal));
+
+		if ((allowLoadFolders 
+			|| allowLoadFiles 
+			|| folderTotal <= folderLimit)
+				&& (prevPage !== folderPage 
+					|| prevLimit !== folderLimit 
+					|| (breadcrumbsRootPath
+						? (breadcrumbsRootPath !== rootPath)
+						: !folderTotal))) {
+			console.log('?????????/', {
+					...utilsConvertStrObj(filter),
+					parentId,
+					systemId,
+				});
+
 			actionApiListGet(FILES_PATH_FOLDER, {
 				page: folderPage,
 				limit: folderLimit,

@@ -1,69 +1,75 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { FILES_KEY_MANAGER } from '@nest-datum-ui-lib/files/consts/keys.js';
 import {
 	FILES_PATH_FOLDER,
 	FILES_PATH_FILE,
 } from '@nest-datum-ui-lib/files/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
+import utilsCheckNumericInt from '@nest-datum-ui/utils/check/numeric/int.js';
 import Grid from '@mui/material/Grid';
 import FilesPaper from '@nest-datum-ui-lib/files/components/Paper';
 import FilesPaperFolder from '@nest-datum-ui-lib/files/components/Paper/Folder';
+import handlerMountParent from './handler/mountParent.js';
+import handlerMount from './handler/mount.js';
 
 let Manager = ({ 
 	storeListName,
 	wrapperProps, 
 	systemId,
+	parentId,
 	query,
 	select,
 	filter,
 	sort,
+	onFile,
+	onFolder,
 }) => {
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
-	const folderDataParentId = useSelector(selectorMainExtract([ 'api', 'list', storeListName, 'data', 0, 'id' ]));
 	const folderData = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'data' ]));
 	const fileData = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FILE, 'data' ]));
 	const total = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'total' ]));
 	const page = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'page' ])) ?? 1;
 	const limit = useSelector(selectorMainExtract([ 'api', 'list', FILES_PATH_FOLDER, 'limit' ])) ?? 60;
-	const allowLoadFolders = ((total >= limit * page) 
-		|| !utilsCheckNumericInt(total));
-	const parentId = (systemId === 'files-system-default')
-		? 'files-folder-root'
-		: folderDataParentId;
+	const allowLoadFiles = limit > (folderData || []).length 
+		&& utilsCheckArr(folderData);
+	const allowLoadFolders = (total >= limit * page) 
+		|| !utilsCheckNumericInt(total);
+	const allowLoadFoldersFull = allowLoadFolders || total <= limit;
 
 	React.useEffect(() => {
-		if (systemId && systemId !== 'files-system-default') {
-			actionApiListGet(FILES_PATH_FOLDER, {
-				storeListName,
-				page: 1,
-				limit: 1,
-				filter: {
-					systemId,
-				},
-			})();
-		}
+		handlerMountParent({
+			storeListName,
+			systemId,
+			parentId,
+		});
 	}, [
 		storeListName,
 		systemId,
+		parentId,
 	]);
 
 	React.useEffect(() => {
 		handlerMount({
 			unmount,
 			systemId,
+			parentId,
 			query,
 			select,
 			filter,
 			sort,
-			folderPage: page,
-			folderLimit: limit,
+			page,
+			limit,
 			allowLoadFolders,
-			parentId,
+			allowLoadFoldersFull,
+			allowLoadFiles,
 		});
 	}, [
 		unmount,
 		systemId,
+		parentId,
 		query,
 		select,
 		filter,
@@ -71,7 +77,8 @@ let Manager = ({
 		page,
 		limit,
 		allowLoadFolders,
-		parentId,
+		allowLoadFoldersFull,
+		allowLoadFiles,
 	]);
 
 	return <React.Fragment>
@@ -89,7 +96,8 @@ let Manager = ({
 				<FilesPaperFolder
 					id={item.id}
 					path={item.path}
-					name={item.name} />
+					name={item.name}
+					onClick={onFolder} />
 			</Grid>)}
 			{(fileData || []).map((item) => <Grid
 				key={item.id}
@@ -98,7 +106,8 @@ let Manager = ({
 				<FilesPaper
 					path={item.path}
 					name={item.name}
-					size={item.size} />
+					size={item.size}
+					onClick={onFile} />
 			</Grid>)}
 		</Grid>
 	</React.Fragment>;
@@ -106,10 +115,23 @@ let Manager = ({
 
 Manager = React.memo(Manager);
 Manager.defaultProps = {
+	storeListName: FILES_KEY_MANAGER,
 	wrapperProps: {},
+	parentId: 'files-folder-root',
+	onFile: (() => {}),
+	onFolder: (() => {}),
 };
 Manager.propTypes = {
+	storeListName: PropTypes.string,
 	wrapperProps: PropTypes.object,
+	systemId: PropTypes.string.isRequired,
+	parentId: PropTypes.string,
+	query: PropTypes.string,
+	select: PropTypes.object,
+	filter: PropTypes.object,
+	sort: PropTypes.object,
+	onFile: PropTypes.func,
+	onFolder: PropTypes.func,
 };
 
 export default Manager;
