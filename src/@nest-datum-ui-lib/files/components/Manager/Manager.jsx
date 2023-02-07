@@ -26,9 +26,10 @@ import FilesInputSystem from '@nest-datum-ui-lib/files/components/Input/System';
 import FilesPaper from '@nest-datum-ui-lib/files/components/Paper';
 import FilesPaperFolder from '@nest-datum-ui-lib/files/components/Paper/Folder';
 import FilesMenuBreadcrumbs  from '@nest-datum-ui-lib/files/components/Menu/Breadcrumbs';
+import FilesListManagerPagination from '@nest-datum-ui-lib/files/components/List/Manager/Pagination';
 import handlerMount from './handler/mount.js';
 
-let Manage = ({
+let Manager = ({
 	storeListName,
 	createFolder,
 	createFile,
@@ -42,6 +43,7 @@ let Manage = ({
 	systemWrapperProps,
 	systemProps,
 	onChangeSystem,
+	displayBreadcrumbs,
 }) => {
 	const { search: locationSearch } = useLocation();
 	const query = utilsUrlSearchPathItem('query', locationSearch);
@@ -78,8 +80,6 @@ let Manage = ({
 		actionApiListPage(FILES_PATH_FOLDER, 1);
 	}, [
 	]);
-
-	console.log('parentId', systemIdLocal);
 
 	React.useEffect(() => {
 		actionApiFormEmpty(storeListName, { systemId, page: 1 })();
@@ -170,53 +170,23 @@ let Manage = ({
 				<FilesInputSystem 
 					storeFormName={storeListName}
 					label="Select file system"
-					onChange={onChangeSystem} />
+					onChange={onChangeSystem}
+					{ ...systemProps } />
 			</Grid>
 		</Grid>
 		{systemIdLocal
 			&& <React.Fragment>
-				<Box pb={1}>
-					<FilesMenuBreadcrumbs />
-				</Box>
-				<Grid
-					container
-					spacing={3}
-					sx={{
-						paddingBottom: '24px',
-					}}>
-					{(folderData || []).map((item) => <Grid
-						key={item.id}
-						item
-						xs={1}>
-						<FilesPaperFolder
-							id={item.id}
-							path={item.path}
-							name={item.name} />
-					</Grid>)}
-					{(fileData || []).map((item) => <Grid
-						key={item.id}
-						item
-						xs={1}>
-						<FilesPaper
-							path={item.path}
-							name={item.name}
-							size={item.size} />
-					</Grid>)}
-				</Grid>
-				{generalTotal > 0
-					&& <Pagination
-						withChangeLimit
-						total={generalTotal}
-						page={folderPage}
-						limit={folderLimit}
-						onChange={onPage}
-						onLimit={onLimit} />}
+				{displayBreadcrumbs
+					&& <Box pb={1}>
+						<FilesMenuBreadcrumbs />
+					</Box>}
+				<FilesListManagerPagination total={generalTotal} />
 			</React.Fragment>}
 	</React.Fragment>;
 };
 
-Manage = React.memo(Manage);
-Manage.defaultProps = {
+Manager = React.memo(Manager);
+Manager.defaultProps = {
 	storeListName: FILES_KEY_MANAGER,
 	labelWrapperProps: {},
 	labelProps: {},
@@ -224,8 +194,9 @@ Manage.defaultProps = {
 	systemProps: {},
 	onChangeSystem: (() => {}),
 	systemId: '',
+	displayBreadcrumbs: false,
 };
-Manage.propTypes = {
+Manager.propTypes = {
 	storeListName: PropTypes.string,
 	createFolder: PropTypes.bool,
 	createFile: PropTypes.bool,
@@ -239,6 +210,7 @@ Manage.propTypes = {
 	systemWrapperProps: PropTypes.object,
 	systemProps: PropTypes.object,
 	onChangeSystem: PropTypes.func,
+	displayBreadcrumbs: PropTypes.bool,
 };
 
-export default Manage;
+export default Manager;
