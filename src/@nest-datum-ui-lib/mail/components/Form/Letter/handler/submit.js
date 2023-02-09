@@ -51,6 +51,8 @@ const submit = async (e, entityId) => {
 	(utilsCheckExists(isNotDelete) && !utilsCheckBool(isNotDelete))
 		&& (errors['isNotDelete'] = 'The value is in the wrong format.');
 
+	console.log('errors', templateId, errors);
+
 	if (Object.keys(errors).length > 0) {
 		await actionApiFormProp(MAIL_PATH_LETTER, 'errors', errors)();
 		await actionApiFormProp(MAIL_PATH_LETTER, 'loader', false)();

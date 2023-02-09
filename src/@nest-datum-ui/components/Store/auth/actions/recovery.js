@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Store from '@nest-datum-ui/components/Store';
-import utilsValidateEmail from '@nest-datum-ui/utils/validate/email.js';
+import utilsCheckStrEmail from '@nest-datum-ui/utils/check/str/email.js';
 import { fireProp } from './prop.js';
 
 /**
@@ -18,19 +18,26 @@ export const fireRecovery = ({
 		apiPath = `${url}/${path}`;
 
 		const data = { ...Store().getState()[prefix] };
+		const email = ((Store()
+			.getState()
+			.api
+			.form || {})[prefix] || {})
+			.email;
 
 		if (!data.errors
 			|| typeof data.errors !== 'object') {
 			data.errors = {};
 		}
 
-		if (!data.email
-			|| !utilsValidateEmail(data.email, true)) {
+		if (!(data.email || email)
+			|| !utilsCheckStrEmail(data.email || email)) {
 			data.errors['email'] = 'The email is in the wrong format.';
 		}
+		console.log('??????', data, email, !data.email, !email, !utilsCheckStrEmail(data.email || email));
+
 		if (Object.keys(data.errors || {}).length === 0) {
 			await axios.post(apiPath, {
-				email: data.email,
+				email: data.email || email,
 			});
 
 			Store().dispatch({

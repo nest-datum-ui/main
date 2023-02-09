@@ -9,14 +9,18 @@ import MailSelectTemplate from '@nest-datum-ui-lib/mail/components/Select/Templa
 
 let Template = ({ 
 	storeFormName,
+	name,
 	...props 
 }) => {
 	const loader = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'loader' ]));
-	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'templateStatusId' ])) || '';
-	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', 'templateStatusId' ]));
-	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, 'templateStatusId', e.target.value)(), [
+	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, name ])) || '';
+	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', name ]));
+	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, name, e.target.value)(), [
 		storeFormName,
+		name,
 	]);
+
+	console.log('name?', name, value);
 
 	return <React.Fragment>
 		<Box 
@@ -24,7 +28,7 @@ let Template = ({
 			maxWidth="240px">
 			<MailSelectTemplate
 				disabled={loader}
-				name="templateStatusId"
+				name={name}
 				label="Template status"
 				value={value}
 				onChange={onChange}
@@ -37,9 +41,11 @@ let Template = ({
 Template = React.memo(Template);
 Template.defaultProps = {
 	storeFormName: MAIL_PATH_TEMPLATE,
+	name: 'templateId',
 };
 Template.propTypes = {
 	storeFormName: PropTypes.string,
+	name: PropTypes.string,
 };
 
 export default Template;

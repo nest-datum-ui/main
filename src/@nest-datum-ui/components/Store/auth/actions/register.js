@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Store from '@nest-datum-ui/components/Store';
-import utilsValidateEmail from '@nest-datum-ui/utils/validate/email.js';
+import utilsCheckStrEmail from '@nest-datum-ui/utils/check/str/email.js';
 import { fireProp } from './prop.js';
 
 let timeout;
@@ -17,8 +17,13 @@ export const fireRegister = ({
 		fireProp('loader', true)();
 
 		apiPath = `${url}/${path}`;
-	
+
 		const data = { ...Store().getState()[prefix] };
+		const email = ((Store()
+			.getState()
+			.api
+			.form || {})[prefix] || {})
+			.email;
 
 		data['errors'] = {};
 
@@ -34,8 +39,8 @@ export const fireRegister = ({
 			|| typeof data.lastname !== 'string') {
 			data.errors['lastname'] = 'The lastname was not specified.';
 		}
-		if (!data.email
-			|| !utilsValidateEmail(data.email, true)) {
+		if (!(data.email || email)
+			|| !utilsCheckStrEmail(data.email || email)) {
 			data.errors['email'] = 'The email is in the wrong format.';
 		}
 		if (!data.password) {
@@ -62,7 +67,7 @@ export const fireRegister = ({
 				login: data.login,
 				firstname: data.firstname,
 				lastname: data.lastname,
-				email: data.email,
+				email: data.email || email,
 				password: data.password,
 				repeatedPassword: data.repeatedPassword,
 			});

@@ -9,13 +9,15 @@ import MailSelectTemplateStatus from '@nest-datum-ui-lib/mail/components/Select/
 
 let Status = ({ 
 	storeFormName,
+	name,
 	...props 
 }) => {
 	const loader = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'loader' ]));
-	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'templateStatusId' ])) || '';
-	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', 'templateStatusId' ]));
-	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, 'templateStatusId', e.target.value)(), [
+	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, name ])) || '';
+	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', name ]));
+	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, name, e.target.value)(), [
 		storeFormName,
+		name,
 	]);
 
 	return <React.Fragment>
@@ -24,7 +26,7 @@ let Status = ({
 			maxWidth="240px">
 			<MailSelectTemplateStatus
 				disabled={loader}
-				name="templateStatusId"
+				name={name}
 				label="Template status"
 				value={value}
 				onChange={onChange}
@@ -37,9 +39,11 @@ let Status = ({
 Status = React.memo(Status);
 Status.defaultProps = {
 	storeFormName: MAIL_PATH_TEMPLATE,
+	name: 'templateStatusId',
 };
 Status.propTypes = {
 	storeFormName: PropTypes.string,
+	name: PropTypes.string,
 };
 
 export default Status;

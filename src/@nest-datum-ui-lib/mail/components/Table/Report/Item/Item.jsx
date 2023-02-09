@@ -9,6 +9,7 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import TypographyJson from '@nest-datum-ui/components/Typography/Json';
 import TypographyDateTable from '@nest-datum-ui/components/Typography/Date/Table';
 import MailTypographyReportStatus from '@nest-datum-ui-lib/mail/components/Typography/Report/Status';
 import SsoTypographyUser from '@nest-datum-ui-lib/sso/components/Typography/User';
@@ -35,7 +36,11 @@ let Item = ({
 	const checked = useSelector(selectorMainIncludes([ ...storePath, 'selected' ], id));
 
 	return <React.Fragment>
-		<TableRow key={id}>
+		<TableRow 
+			key={id}
+			sx={{
+				verticalAlign: 'top',
+			}}>
 			{(bulkDeletion && utilsCheckArr(storePath))
 				&& <TableCell
 					padding="checkbox"
@@ -44,22 +49,22 @@ let Item = ({
 						checked={checked}
 						onChange={onCheck} />
 				</TableCell>}
-			<TableCell sx={{ minWidth: '14%' }}>
+			<TableCell sx={{ minWidth: '11%' }}>
 				<Typography component="div">
 					{id}
 				</Typography>
 			</TableCell>
-			<TableCell sx={{ minWidth: '14%' }}>
+			<TableCell sx={{ minWidth: '13%' }}>
 				<Typography component="div">
 					{action}
 				</Typography>
 			</TableCell>
-			<TableCell sx={{ minWidth: '25%' }}>
-				<Typography component="div">
+			<TableCell sx={{ minWidth: '33%' }}>
+				<TypographyJson>
 					{content}
-				</Typography>
+				</TypographyJson>
 			</TableCell>
-			<TableCell sx={{ minWidth: '14%' }}>
+			<TableCell sx={{ minWidth: '10%' }}>
 				<MailTypographyReportStatus>
 					{reportStatusId}
 				</MailTypographyReportStatus>

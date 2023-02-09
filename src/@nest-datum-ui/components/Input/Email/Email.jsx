@@ -23,6 +23,8 @@ let Email = ({
 	}, [
 	]);
 
+	console.log('value', storeFormName, name, value);
+
 	return <React.Fragment>
 		<Box py={2}>
 			<InputText
