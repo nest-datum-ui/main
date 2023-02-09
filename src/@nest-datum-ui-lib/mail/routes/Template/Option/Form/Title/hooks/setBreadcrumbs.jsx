@@ -9,6 +9,9 @@ const setBreadcrumbs = (entityId, isDeleted) => {
 		key: 'mail',
 		text: 'Mail',
 	}, {
+		key: `/mail/template`,
+		text: 'Templates',
+	}, {
 		key: `/mail/template/options`,
 		text: 'Options',
 	}, {

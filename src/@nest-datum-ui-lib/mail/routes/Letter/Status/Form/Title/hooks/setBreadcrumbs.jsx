@@ -9,6 +9,9 @@ const setBreadcrumbs = (entityId, isDeleted) => {
 		key: 'mail',
 		text: 'Mail',
 	}, {
+		key: 'mail/letter',
+		text: 'Letters',
+	}, {
 		key: `/mail/letter/statuses`,
 		text: 'Statuses',
 	}, {

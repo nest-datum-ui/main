@@ -1,7 +1,8 @@
 import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
+import utilsCheckFileList from '@nest-datum-ui/utils/check/file/list.js';
 
 const formData = (data = {}) => {
-	if (utilsCheckArr(data)) {
+	if (utilsCheckArr(data) || utilsCheckFileList(data)) {
 		const formData = new FormData();
 		let i = 0;
 
@@ -9,9 +10,12 @@ const formData = (data = {}) => {
 			formData.append('files', data[i]);
 			i++;
 		}
-		formData.append('systemId', data['systemId']);
-		formData.append('path', data['path']);
-
+		if (data['systemId']) {
+			formData.append('systemId', data['systemId']);
+		}
+		if (data['path']) {
+			formData.append('path', data['path']);
+		}
 		return formData;
 	}
 	return null;

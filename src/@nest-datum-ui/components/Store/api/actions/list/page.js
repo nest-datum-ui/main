@@ -1,7 +1,7 @@
 import Store from '@nest-datum-ui/components/Store';
 import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
 
-export const fireListPage = async (storeListName, newPage) => {
+export const fireListPage = async (storeListName, newPage, callback = () => {}) => {
 	const currentPage = Number((Store()
 		.getState()
 		.api
@@ -11,5 +11,6 @@ export const fireListPage = async (storeListName, newPage) => {
 	if (newPage !== currentPage) {
 		actionApiListProp(storeListName, 'loader', true)();
 		actionApiListProp(storeListName, 'page', newPage)();
+		callback(currentPage, newPage);
 	}
 };

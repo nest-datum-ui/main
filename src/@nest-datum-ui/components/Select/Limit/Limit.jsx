@@ -1,16 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@nest-datum-ui/components/Select';
 
-const range = [
-	5,
-	10,
-	20,
-	50,
-	100,
-];
 let Limit = ({
 	children,
+	range,
 	value,
 	...props
 }) => {
@@ -35,8 +30,16 @@ let Limit = ({
 
 Limit = React.memo(Limit);
 Limit.defaultProps = {
+	range: [
+		5,
+		10,
+		20,
+		50,
+		100,
+	],
 };
 Limit.propTypes = {
+	range: PropTypes.array,
 };
 
 export default Limit;

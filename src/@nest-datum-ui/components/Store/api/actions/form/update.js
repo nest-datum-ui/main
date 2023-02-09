@@ -2,6 +2,7 @@ import axios from 'axios';
 import Store from '@nest-datum-ui/components/Store';
 import utilsUrlWithToken from '@nest-datum-ui/utils/url/withToken.js';
 import utilsCheckStrUrl from '@nest-datum-ui/utils/check/str/url.js';
+import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
 import utilsCheckObj from '@nest-datum-ui/utils/check/obj';
 import utilsConvertStrErr from '@nest-datum-ui/utils/convert/str/err.js';
 import utilsConvertObjErr from '@nest-datum-ui/utils/convert/obj/err.js';
@@ -14,15 +15,24 @@ export const fireFormUpdate = (storeFormNameOrUrl, options) => async (prefix = '
 	if (utilsCheckStrUrl(storeFormNameOrUrl)) {
 		await actionApiFormProp(storeFormNameOrUrl, 'loader', true)();
 
-		const url = utilsCheckObj(options)
-			? options.path
-			: `${storeFormNameOrUrl}/${options}`;
+		let data = { ...(((Store()
+			.getState()[prefix] || {})
+			.form || {})[storeFormNameOrUrl] || {}) },
+			url;
 
 		try {
-			const data = { ...(((Store()
-				.getState()[prefix] || {})
-				.form || {})[storeFormNameOrUrl] || {}) };
+			if (utilsCheckObj(options)) {
+				url = options.path;
 
+				if (utilsCheckArr(options.excludeFromFetchPayload)) {
+					options.excludeFromFetchPayload.forEach((key) => {
+						delete data[key];
+					});
+				}
+			}
+			else {
+				url = `${storeFormNameOrUrl}/${options}`;
+			}
 			delete data['loader'];
 			delete data['errors'];
 

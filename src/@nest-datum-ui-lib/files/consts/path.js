@@ -1,6 +1,4 @@
 
-export const FILES_PATH_MANAGER_FILE_ONE = process.env.SERVICE_FILES + '/files';
-
 export const FILES_PATH_FILE = process.env.SERVICE_FILES +'/file';
 export const FILES_PATH_FOLDER = process.env.SERVICE_FILES +'/folder';
 

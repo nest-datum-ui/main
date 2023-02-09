@@ -46,10 +46,6 @@ const mount = ({
 		actionApiListProp(FILES_PATH_FILE, 'loader', false)();
 		actionApiListProp(FILES_PATH_FILE, 'data', [])();
 
-		console.log('11111', (breadcrumbsRootPath
-			? (breadcrumbsRootPath !== rootPath)
-			: !folderTotal));
-
 		if ((allowLoadFolders 
 			|| allowLoadFiles 
 			|| folderTotal <= folderLimit)
@@ -58,12 +54,6 @@ const mount = ({
 					|| (breadcrumbsRootPath
 						? (breadcrumbsRootPath !== rootPath)
 						: !folderTotal))) {
-			console.log('?????????/', {
-					...utilsConvertStrObj(filter),
-					parentId,
-					systemId,
-				});
-
 			actionApiListGet(FILES_PATH_FOLDER, {
 				page: folderPage,
 				limit: folderLimit,

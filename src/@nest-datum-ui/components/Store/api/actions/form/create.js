@@ -12,7 +12,7 @@ import {
 	hookSnackbar,
 	hookNavigate,
 } from '@nest-datum-ui/utils/hooks';
-import { FILES_PATH_MANAGER_FILE_ONE } from '@nest-datum-ui-lib/files/consts/path.js';
+import { FILES_PATH_FILE } from '@nest-datum-ui-lib/files/consts/path.js';
 import { fireFormProp as actionApiFormProp } from './prop.js';
 import { fireFormCreateFile as actionApiFormCreateFile } from './createFile.js';
 
@@ -51,7 +51,7 @@ export const fireFormCreate = (storeFormNameOrUrl, options) => async (callback =
 				filesResponses,
 			} = await actionApiFormCreateFile(data)(snackbar);
 
-			if (storeFormNameOrUrl !== FILES_PATH_MANAGER_FILE_ONE) {
+			if (storeFormNameOrUrl !== FILES_PATH_FILE) {
 				const request = await axios.post(utilsUrlWithToken(url), formData);
 				
 				newId = request.data.id;
@@ -93,7 +93,7 @@ export const fireFormCreate = (storeFormNameOrUrl, options) => async (callback =
 
 export const reducerFormCreate = (state, action) => {
 	if (!utilsCheckObj(action.payload.url)) {
-		state.form[FILES_PATH_MANAGER_FILE_ONE] = {
+		state.form[FILES_PATH_FILE] = {
 			loader: false,
 			errors: {},
 		};

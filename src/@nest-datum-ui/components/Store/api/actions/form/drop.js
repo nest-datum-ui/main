@@ -1,3 +1,4 @@
+import Store from '@nest-datum-ui/components/Store';
 import axios from 'axios';
 import utilsUrlWithToken from '@nest-datum-ui/utils/url/withToken.js';
 import utilsCheckObj from '@nest-datum-ui/utils/check/obj';
@@ -15,12 +16,14 @@ export const fireFormDrop = (urlOrStoreFormName, entityId, options) => async (pr
 	const snackbar = hookSnackbar();
 	let allowInsecureDeletion = false,
 		notRedirect = false,
-		sliceInList = false;
+		sliceInList = false,
+		forceUpdate = false;
 
 	if (utilsCheckObj(options)) {
 		allowInsecureDeletion = !!(options.allowInsecureDeletion ?? false);
 		notRedirect = !!(options.notRedirect ?? false);
 		sliceInList = !!(options.sliceInList ?? false);
+		forceUpdate = !!(options.forceUpdate ?? false);
 	}
 
 	if (utilsCheckStrUrl(urlOrStoreFormName)) {
@@ -34,6 +37,14 @@ export const fireFormDrop = (urlOrStoreFormName, entityId, options) => async (pr
 			if (!allowInsecureDeletion) {
 				actionApiFormDropOnCurrentPage(urlOrStoreFormName, notRedirect)();
 				actionApiFormDropOnList(urlOrStoreFormName, entityId, sliceInList)();
+			}
+			else if (forceUpdate) {
+				Store().dispatch({
+					type: prefix +'.formDrop',
+					payload: {
+						name: urlOrStoreFormName,
+					},
+				});
 			}
 			actionDialogClose(urlOrStoreFormName)();
 		}

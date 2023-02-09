@@ -1,6 +1,6 @@
 
-const restore = (e, onRestore, onClose) => {
-	onRestore(e);
+const restore = (e, onRestore, onClose, id) => {
+	onRestore(e, id);
 	onClose();
 };
 

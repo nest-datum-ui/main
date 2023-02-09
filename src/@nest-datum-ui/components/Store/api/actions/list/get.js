@@ -19,7 +19,7 @@ export const fireListGet = (url, {
 	select,
 	filter, 
 	sort, 
-}) => async (prefix = 'api') => {
+}) => async (callback = () => {}, prefix = 'api') => {
 	const snackbar = hookSnackbar();
 	const storeName = storeListName || url;
 
@@ -71,6 +71,7 @@ export const fireListGet = (url, {
 					url,
 					total: request.data.total,
 					data: request.data.rows,
+					callback,
 				},
 			});
 		}
@@ -83,6 +84,7 @@ export const fireListGet = (url, {
 					url,
 					total: 0,
 					data: [],
+					callback,
 				},
 			});
 		}
@@ -128,6 +130,8 @@ export const reducerListGet = (state, action) => {
 			selected: [],
 		};
 	}
+	setTimeout(() => action.payload.callback(state.list[action.payload.storeListName || 0]), 0);
+	
 	return {
 		...state,
 		list: {

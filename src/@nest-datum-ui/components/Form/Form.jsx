@@ -59,7 +59,7 @@ Form.defaultProps = {
 };
 Form.propTypes = {
 	onSubmit: PropTypes.func.isRequired,
-	onDrop: PropTypes.func.isRequired,
+	onDrop: PropTypes.func,
 	loader: PropTypes.bool,
 	isDeleted: PropTypes.bool,
 	showDropButton: PropTypes.bool,

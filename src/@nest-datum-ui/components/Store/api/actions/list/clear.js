@@ -1,10 +1,11 @@
 import Store from '@nest-datum-ui/components/Store';
 
-export const fireListClear = (storeListName) => async (prefix = 'api') => {
+export const fireListClear = (storeListName, defaultObj = {}) => async (prefix = 'api') => {
 	Store().dispatch({
 		type: prefix +'.listClear',
 		payload: {
 			storeListName,
+			defaultObj,
 		},
 	});
 };
@@ -27,6 +28,7 @@ export const reducerListClear = (state, action) => ({
 					data: null,
 					errors: {},
 					selected: [],
+					...(action.payload.defaultObj || {}),
 				},
 			},
 		}

@@ -58,7 +58,7 @@ let Filter = ({
 					justifyContent={bulkDeletion
 						? 'space-between'
 						: 'flex-start'}>
-					{utilsCheckBool(bulkDeletion)
+					{utilsCheckBool(bulkDeletion) && storePath
 						&& <ButtonCheckBulk 
 							show={bulkDeletion}
 							storePath={storePath}
@@ -101,15 +101,16 @@ let Filter = ({
 								Clear
 							</ButtonClear>
 						</Grid>}
-					<Grid
-						item
-						xs={false}>
-						<ButtonCollapse
-							open={filterFlag}
-							onClick={onFilterFlag}>
-							Filters
-						</ButtonCollapse>
-					</Grid>
+					{(utilsCheckArr(children) && children.length > 0)
+						&& <Grid
+							item
+							xs={false}>
+							<ButtonCollapse
+								open={filterFlag}
+								onClick={onFilterFlag}>
+								Filters
+							</ButtonCollapse>
+						</Grid>}
 				</Grid>
 			</Grid>
 			<Box 
@@ -129,7 +130,7 @@ let Filter = ({
 							opacity: '0.01',
 						},
 					}}>
-				{utilsCheckArr(children)
+				{(utilsCheckArr(children) && children.length > 0)
 					? <Grid
 						container
 						spacing={3}>

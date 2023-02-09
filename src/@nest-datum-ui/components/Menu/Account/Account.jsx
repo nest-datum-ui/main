@@ -18,9 +18,14 @@ let Account = () => {
 		firstname,
 		lastname,
 		avatar,
+		...props
 	} = useUserData();
 	const onMenu = React.useCallback((e) => actionMenuOpen('menu-account-primary', e.target)(), [
 	]);
+
+	console.log('---', props, firstname,
+		lastname,
+		avatar);
 
 	return <React.Fragment>
 		<StyledGridWrapper

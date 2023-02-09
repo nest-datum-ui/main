@@ -8,6 +8,8 @@ import Loader from '@nest-datum-ui/components/Loader';
 let Folder = ({
 	loader,
 	id,
+	isDeleted,
+	isNotDelete,
 	path,
 	name,
 	onClick,
@@ -39,16 +41,26 @@ let Folder = ({
 					height: '100%',
 				},
 			}}>
-			<FolderIcon color="primary" />
+			<FolderIcon 
+				color={isDeleted
+					? 'disabled'
+					: 'primary'} />
 		</Button>
 		<Typography 
 			onClick={onHandle}
 			component="div"
-			variant="body2"
+			variant="caption"
+			color={isDeleted
+				? 'textSecondary'
+				: 'initial'}
 			sx={{
 				wordWrap: 'anywhere',
 				paddingLeft: '6px',
 				paddingTop: '2px',
+				wordBreak: 'break-all',
+				textDecoration: isDeleted
+					? 'line-through'
+					: 'initial',
 			}}>
 			<b>{name
 				? (name.length > 80

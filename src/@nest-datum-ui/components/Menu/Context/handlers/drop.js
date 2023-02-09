@@ -1,6 +1,6 @@
 
-const drop = (e, onDrop, onClose) => {
-	onDrop(e);
+const drop = (e, onDrop, onClose, id) => {
+	onDrop(e, id);
 	onClose();
 };
 

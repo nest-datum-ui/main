@@ -11,6 +11,9 @@ let Pagination = ({
 	limit,
 	onChange,
 	onLimit, 
+	displayButtons,
+	displayLimit,
+	range,
 }) => {
 	return <React.Fragment>
 		<Grid
@@ -24,12 +27,13 @@ let Pagination = ({
 			<Grid
 				item
 				xs={false}>
-				<MuiPagination 
-					count={Math.ceil(total / limit)}
-					page={page}
-					onChange={onChange} />
+				{displayButtons
+					&& <MuiPagination 
+						count={Math.ceil(total / limit)}
+						page={page}
+						onChange={onChange} />}
 			</Grid>
-			{withChangeLimit
+			{(withChangeLimit && displayLimit)
 				&& <Grid
 					item
 					xs={2}>
@@ -37,7 +41,8 @@ let Pagination = ({
 						label="Pagination"
 						size="small"
 						value={limit}
-						onChange={onLimit} />
+						onChange={onLimit}
+						range={range} />
 				</Grid>}
 		</Grid>
 	</React.Fragment>;
@@ -50,6 +55,15 @@ Pagination.defaultProps = {
 	page: 1,
 	limit: 10,
 	onChange: () => {},
+	displayButtons: true,
+	displayLimit: true,
+	range: [
+		5,
+		10,
+		20,
+		50,
+		100,
+	],
 };
 Pagination.propTypes = {
 	withChangeLimit: PropTypes.bool,
@@ -58,6 +72,9 @@ Pagination.propTypes = {
 	limit: PropTypes.number,
 	onChange: PropTypes.func,
 	onLimit: PropTypes.func,
+	displayButtons: PropTypes.bool,
+	displayLimit: PropTypes.bool,
+	range: PropTypes.array,
 };
 
 export default Pagination;

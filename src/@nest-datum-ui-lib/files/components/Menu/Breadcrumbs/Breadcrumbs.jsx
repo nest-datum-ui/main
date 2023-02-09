@@ -1,26 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { fireListSet as actionBreadcrumbsListSet } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/set.js';
 import { fireListClear as actionBreadcrumbsListClear } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/clear.js';
 import { FILES_PATH_SYSTEM } from '@nest-datum-ui-lib/files/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Store from '@nest-datum-ui/components/Store';
 
-let Breadcrumbs = () => {
+let Breadcrumbs = ({ onClick }) => {
 	const loader = useSelector(selectorMainExtract([ 'api', 'form', FILES_PATH_SYSTEM, 'loader' ]));
 	const breadcrumbs = useSelector(selectorMainExtract([ 'breadcrumbs', 'list', 'filesManageList', 'data' ])) ?? [];
-	const onFolder = React.useCallback((id, index) => (e) => {
-		const breadcrumbs = (Store()
-			.getState()['breadcrumbs']
-			.list
-			.filesManageList || {})
-			.data || [];
-
-		actionBreadcrumbsListSet('filesManageList', [ ...breadcrumbs.slice(0, index) ])();
-	}, [
+	const onFolder = React.useCallback((id, index) => (e) => onClick(e, { id, index }), [
+		onClick,
 	]);
 
 	React.useEffect(() => () => {
@@ -56,8 +48,10 @@ let Breadcrumbs = () => {
 
 Breadcrumbs = React.memo(Breadcrumbs);
 Breadcrumbs.defaultProps = {
+	onClick: (() => {}),
 };
 Breadcrumbs.propTypes = {
+	onClick: PropTypes.func,
 };
 
 export default Breadcrumbs;

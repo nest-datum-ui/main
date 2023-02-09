@@ -103,8 +103,7 @@ let Provider = () => {
 			loader={displayLoader}
 			length={(data || []).length ?? 0}
 			onBulk={onBulk}
-			onDrop={onBulkDrop}
-			onLoader={onLoader}>
+			onDrop={onBulkDrop}>
 			<FormFilterIsDeleted onInput={onLoader} />
 			<FormFilterIsNotDelete onInput={onLoader} />
 			<FilesFormFilterStatusProvider onInput={onLoader} />

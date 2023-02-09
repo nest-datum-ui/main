@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
+import utilsCheckFunc from '@nest-datum-ui/utils/check/func';
 import utilsCheckStrMedia from '@nest-datum-ui/utils/check/str/media.js';
 import utilsCheckStrPdf from '@nest-datum-ui/utils/check/str/pdf.js';
 import utilsCheckStrEjs from '@nest-datum-ui/utils/check/str/ejs.js';
@@ -12,12 +13,17 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import Loader from '@nest-datum-ui/components/Loader';
+import Preview from './Preview';
 
 let Paper = ({
 	loader,
+	id,
+	isDeleted,
+	isNotDelete,
 	path,
 	name,
 	size,
+	onClick,
 }) => {
 	const accessToken = useSelector(selectorMainExtract([ 'auth', 'accessToken' ]));
 	const isMedia = React.useMemo(() => utilsCheckStrMedia(path), [
@@ -29,16 +35,42 @@ let Paper = ({
 	const isEjs = React.useMemo(() => utilsCheckStrEjs(path), [
 		path,
 	]);
+	const onHandle = React.useCallback((e) => {
+		onClick(e, {
+			id,
+			isDeleted,
+			isNotDelete,
+			path,
+			name,
+			size,
+		});
+	}, [
+		onClick,
+		id,
+		isDeleted,
+		isNotDelete,
+		path,
+		name,
+		size,
+	]);
 
 	return <React.Fragment>
 		<Loader	visible={loader} />
 		<Box
 			maxWidth="240px"
+			{ ...utilsCheckFunc(onClick)
+				? { onClick: onHandle }
+				: {} }
 			sx={{
 				position: 'relative',
 				display: loader
 					? 'none'
 					: 'block',
+				...utilsCheckFunc(onClick)
+					? {
+						cursor: 'pointer',
+					}
+					: {},
 				...isMedia
 					? {
 						backgroundSize: 'cover',
@@ -63,41 +95,28 @@ let Paper = ({
 					},
 				},
 			}}>
-			{(() => {
-				switch (true) {
-					case isPdf:
-						return <a
-							href={utilsUrlFiles(path, true)}
-							target="_blank"
-							rel="noreferrer">
-							<PictureAsPdfIcon color="primary" />
-						</a>;
-					case isEjs:
-						return <a
-							href={utilsUrlFiles(path, true)}
-							target="_blank"
-							rel="noreferrer">
-							<ViewQuiltIcon color="primary" />
-						</a>;
-					case !isMedia:
-						return <a
-							href={utilsUrlFiles(path, true)}
-							target="_blank"
-							rel="noreferrer">
-							<InsertDriveFileIcon />
-						</a>;
-					default:
-						return <React.Fragment />;
-				}
-			})()}
+			{utilsCheckFunc(onClick)
+				? <Preview value={path} />
+				: <a
+					href={utilsUrlFiles(path, true)}
+					target="_blank"
+					rel="noreferrer">
+					<Preview value={path} />
+				</a>}
 		</Box>
 		<Typography 
 			component="div"
-			variant="body2"
+			variant="caption"
+			color={isDeleted
+				? 'textSecondary'
+				: 'initial'}
 			sx={{
 				wordWrap: 'anywhere',
-				paddingLeft: '6px',
 				paddingTop: '2px',
+				wordBreak: 'break-all',
+				textDecoration: isDeleted
+					? 'line-through'
+					: 'initial',
 			}}>
 			<b>{name
 				? (name.length > 80
@@ -112,8 +131,8 @@ let Paper = ({
 				component="div"
 				variant="caption"
 				sx={{
-					paddingLeft: '6px',
 					paddingBottom: '2px',
+					fontSize: '10px',
 				}}>
 				Size: {size}
 			</Typography>}
@@ -128,6 +147,8 @@ Paper.propTypes = {
 	name: PropTypes.string,
 	path: PropTypes.string,
 	size: PropTypes.number,
+	onClick: PropTypes.func,
+	withSelect: PropTypes.bool,
 };
 
 export default Paper;

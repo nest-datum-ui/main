@@ -8,6 +8,9 @@ const setBreadcrumbs = () => {
 		key: 'mail',
 		text: 'Mail',
 	}, {
+		key: 'mail/letter',
+		text: 'Letters',
+	}, {
 		key: `/mail/letter/options`,
 		text: 'Options',
 	}])();

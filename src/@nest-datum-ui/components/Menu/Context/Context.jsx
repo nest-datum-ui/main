@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import utilsCheckFunc from '@nest-datum-ui/utils/check/func';
 import Menu from '@nest-datum-ui/components/Menu';
 import ButtonMenuEdit from '@nest-datum-ui/components/Button/Menu/Edit';
 import ButtonMenuCopy from '@nest-datum-ui/components/Button/Menu/Copy';
@@ -8,11 +9,13 @@ import ButtonMenuDrop from '@nest-datum-ui/components/Button/Menu/Drop';
 import handlersClose from './handlers/close.js';
 import handlersDrop from './handlers/drop.js';
 import handlersRestore from './handlers/restore.js';
+import handlersEdit from './handlers/edit.js';
 
 let Context = ({
 	id,
 	isDeleted,
 	isNotDelete,
+	onEdit,
 	onClose,
 	onDrop,
 	onRestore,
@@ -25,13 +28,20 @@ let Context = ({
 	const onContextClose = React.useCallback((e) => handlersClose(e, onClose), [
 		onClose,
 	]);
-	const onContextDrop = React.useCallback((e) => handlersDrop(e, onDrop, onContextClose), [
+	const onContextEdit = React.useCallback((e) => handlersEdit(e, onEdit, onContextClose, id), [
+		onEdit,
+		onContextClose,
+		id,
+	]);
+	const onContextDrop = React.useCallback((e) => handlersDrop(e, onDrop, onContextClose, id), [
 		onDrop,
 		onContextClose,
+		id,
 	]);
-	const onContextRestore = React.useCallback((e) => handlersRestore(e, onRestore, onContextClose), [
+	const onContextRestore = React.useCallback((e) => handlersRestore(e, onRestore, onContextClose, id), [
 		onRestore,
 		onContextClose,
+		id,
 	]);
 	const isDefault = edit
 		|| copy
@@ -42,8 +52,12 @@ let Context = ({
 		<Menu id={id} { ...props }>
 			{(!isDefault || edit)
 				&& <ButtonMenuEdit 
-					to={id}
-					onClick={onContextClose}>
+					{ ...(utilsCheckFunc(onEdit))
+						? { onClick: onContextEdit }
+						: {
+							to: id,
+							onClick: onContextClose,
+						} }>
 					Edit
 				</ButtonMenuEdit>}
 			{(!isDefault || copy)

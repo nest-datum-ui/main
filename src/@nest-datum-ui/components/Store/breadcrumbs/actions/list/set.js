@@ -29,6 +29,7 @@ export const reducerListSet = (state, action) => {
 	if (!Array.isArray(state.list[action.payload.id].data)) {
 		state.list[action.payload.id].data = [];
 	}
+	state.list[action.payload.id]['prev'] = state.list[action.payload.id].data[state.list[action.payload.id].data.length - 1];
 	state.list[action.payload.id].data = action.payload.data;
 	state.list[action.payload.id].data = [ ...state.list[action.payload.id].data ];
 
