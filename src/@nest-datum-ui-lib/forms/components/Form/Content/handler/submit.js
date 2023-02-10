@@ -7,8 +7,6 @@ import utilsCheckBool from '@nest-datum-ui/utils/check/bool.js';
 import utilsCheckExists from '@nest-datum-ui/utils/check/exists.js';
 import utilsCheckEntityExists from '@nest-datum-ui/utils/check/entity/exists.js';
 import utilsCheckStrId from '@nest-datum-ui/utils/check/str/id.js';
-import utilsCheckStrName from '@nest-datum-ui/utils/check/str/name.js';
-import utilsCheckStrDescription from '@nest-datum-ui/utils/check/str/description.js';
 
 const submit = async (e, entityId) => {
 	e.preventDefault();
@@ -17,9 +15,8 @@ const submit = async (e, entityId) => {
 
 	const {
 		id,
-		name,
-		description,
-		formStatusId,
+		contentStatusId,
+		formId,
 		isNotDelete,
 	} = ((Store()
 		.getState()
@@ -29,12 +26,10 @@ const submit = async (e, entityId) => {
 
 	(id && !utilsCheckStrId(id))
 		&& (errors['id'] = 'The value is in the wrong format.');
-	!utilsCheckStrName(name)
-		&& (errors['name'] = 'The value is in the wrong format.');
-	(description && !utilsCheckStrDescription(description))
-		&& (errors['description'] = 'The value is in the wrong format.');
-	!utilsCheckStrId(formStatusId)
-		&& (errors['formStatusId'] = 'The value is in the wrong format.');
+	!utilsCheckStrId(formId)
+		&& (errors['formId'] = 'The value is in the wrong format.');
+	!utilsCheckStrId(contentStatusId)
+		&& (errors['contentStatusId'] = 'The value is in the wrong format.');
 	(utilsCheckExists(isNotDelete) && !utilsCheckBool(isNotDelete))
 		&& (errors['isNotDelete'] = 'The value is in the wrong format.');
 

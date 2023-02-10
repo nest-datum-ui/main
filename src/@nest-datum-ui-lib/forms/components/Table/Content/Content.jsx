@@ -78,6 +78,9 @@ let Content = () => {
 				select,
 				filter,
 				sort,
+				relations: {
+					form: true,
+				},
 			})();
 		}
 	}, [
@@ -136,7 +139,7 @@ let Content = () => {
 								component="div"
 								variant="caption"
 								color="textSecondary">
-								Main
+								Form
 							</Typography>
 						</TableCell>,
 						<TableCell key="formStatusId">
@@ -174,6 +177,7 @@ let Content = () => {
 						name={item.name}
 						description={item.description}
 						formId={item.formId}
+						formName={(item['form'] || {})['name']}
 						contentStatusId={item.contentStatusId}
 						userId={item.userId}
 						createdAt={item.createdAt}

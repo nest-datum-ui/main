@@ -23,7 +23,6 @@ const submit = async (e, entityId) => {
 		description,
 		dataTypeId,
 		regex,
-		isRequired,
 		isNotDelete,
 	} = ((Store()
 		.getState()
@@ -41,8 +40,6 @@ const submit = async (e, entityId) => {
 		&& (errors['dataTypeId'] = 'The value is in the wrong format.');
 	(regex && !utilsCheckStrRegex(regex))
 		&& (errors['regex'] = 'The value is in the wrong format.');
-	(utilsCheckExists(isRequired) && !utilsCheckBool(isRequired))
-		&& (errors['isRequired'] = 'The value is in the wrong format.');
 	(utilsCheckExists(isNotDelete) && !utilsCheckBool(isNotDelete))
 		&& (errors['isNotDelete'] = 'The value is in the wrong format.');
 

@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import SettingsIcon from '@mui/icons-material/Settings';
+import FilesPaperById from '@nest-datum-ui-lib/files/components/Paper/ById';
 import StyledGridWrapper from './Styled/GridWrapper.jsx';
 import Context from './Context';
 
@@ -23,10 +24,6 @@ let Account = () => {
 	const onMenu = React.useCallback((e) => actionMenuOpen('menu-account-primary', e.target)(), [
 	]);
 
-	console.log('---', props, firstname,
-		lastname,
-		avatar);
-
 	return <React.Fragment>
 		<StyledGridWrapper
 			container
@@ -38,7 +35,9 @@ let Account = () => {
 				xs={false}>
 				{avatar
 					&& <Box className="avatar__box">
-						avatar
+						<FilesPaperById>
+							{avatar}
+						</FilesPaperById>
 					</Box>}
 			</Grid>
 			<Grid

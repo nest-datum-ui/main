@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { fireListClear as actionApiListClear } from '@nest-datum-ui/components/Store/api/actions/list/clear.js';
 import { fireListProp as actionApiListProp } from '@nest-datum-ui/components/Store/api/actions/list/prop.js';
+import { fireFormClear as actionApiFormClear } from '@nest-datum-ui/components/Store/api/actions/form/clear.js';
 import { fireFormProp as actionApiFormProp } from '@nest-datum-ui/components/Store/api/actions/form/prop.js';
 import { fireListPush as actionBreadcrumbsListPush } from '@nest-datum-ui/components/Store/breadcrumbs/actions/list/push.js';
 import { fireOpen as actionDialogOpen } from '@nest-datum-ui/components/Store/dialog/actions/open.js';
@@ -40,6 +41,12 @@ import handlerMountAllowLoadList from './handler/mountAllowLoadList.js';
 import handlerFileUpload from './handler/fileUpload.js';
 import handlerMountParent from './handler/mountParent.js';
 
+/**
+ * TODO:
+ * грузить фолдеры:
+ * 	если предыдущая загрука folderTotal > limit
+ * 	если поменялись опции пагинации
+ */
 let Panel = ({
 	storeListName, 
 	systemId,
@@ -285,6 +292,13 @@ let Manager = ({
 		setInitParentId,
 		setParentId,
 		key,
+	]);
+
+	React.useEffect(() => () => {
+		actionApiFormClear(storeListName)();
+		actionApiListClear(`${storeListName}parent`)();
+	}, [
+		storeListName,
 	]);
 
 	return <React.Fragment>

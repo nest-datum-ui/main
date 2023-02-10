@@ -19,6 +19,7 @@ let Item = ({
 	bulkDeletion,
 	id,
 	formId,
+	formName,
 	contentStatusId,
 	userId,
 	isDeleted,
@@ -53,7 +54,7 @@ let Item = ({
 			</TableCell>
 			<TableCell sx={{ minWidth: '17%' }}>
 				<Typography component="div">
-					{formId}
+					{formName}
 				</Typography>
 			</TableCell>
 			<TableCell sx={{ minWidth: '20%' }}>
@@ -99,6 +100,7 @@ Item.propTypes = {
 		PropTypes.number,
 	]).isRequired,
 	formId: PropTypes.string,
+	formName: PropTypes.string,
 	contentStatusId: PropTypes.string,
 	userId: PropTypes.string,
 	isDeleted: PropTypes.bool,

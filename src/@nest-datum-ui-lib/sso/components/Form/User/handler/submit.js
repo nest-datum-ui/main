@@ -44,7 +44,7 @@ const submit = async (e, entityId) => {
 		&& (errors['login'] = 'The value is in the wrong format.');
 	!utilsCheckStrEmail(email)
 		&& (errors['email'] = 'The value is in the wrong format.');
-	!utilsCheckStrPassword(password)
+	(password && !utilsCheckStrPassword(password))
 		&& (errors['password'] = 'The value is in the wrong format.');
 	(emailVerifyKey && !utilsCheckStr(emailVerifyKey))
 		&& (errors['emailVerifyKey'] = 'The value is in the wrong format.');

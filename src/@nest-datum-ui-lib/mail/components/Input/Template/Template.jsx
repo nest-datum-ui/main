@@ -29,7 +29,7 @@ let Template = ({
 			<MailSelectTemplate
 				disabled={loader}
 				name={name}
-				label="Template status"
+				label="Template"
 				value={value}
 				onChange={onChange}
 				error={error}

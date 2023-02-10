@@ -9,6 +9,9 @@ const setBreadcrumbs = (entityId, isDeleted) => {
 		key: 'forms',
 		text: 'Forms',
 	}, {
+		key: 'forms/form',
+		text: 'Forms list',
+	}, {
 		key: `/forms/form/${entityId}`,
 		text: (entityId === '0')
 			? 'Create new form'
