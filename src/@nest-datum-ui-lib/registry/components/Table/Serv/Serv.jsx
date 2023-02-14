@@ -67,22 +67,6 @@ let Serv = () => {
 									Network
 								</Typography>
 							</TableCell>
-							<TableCell key="load">
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Load
-								</Typography>
-							</TableCell>
-							<TableCell key="createdAt">
-								<Typography 
-									component="div"
-									variant="caption"
-									color="textSecondary">
-									Story
-								</Typography>
-							</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -92,14 +76,7 @@ let Serv = () => {
 							id={item.id}
 							name={item.name}
 							host={item.host}
-							port={item.port}
-							mysqlMasterHost={item.mysqlMasterHost}
-							mysqlMasterPort={item.mysqlMasterPort}
-							active={item.active}
-							indicator={item.indicator}
-							createdAt={item.createdAt}
-							updatedAt={item.updatedAt}
-							restartedAt={item.restartedAt} />)}
+							port={item.port} />)}
 					</TableBody>
 				</Table>
 			</React.Fragment>}

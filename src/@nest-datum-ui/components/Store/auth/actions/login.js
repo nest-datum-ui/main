@@ -34,30 +34,33 @@ export const fireLogin = ({
 				password: data.password,
 			});
 
-			localStorage.setItem(`${process.env.SERVICE_CURRENT}_accessToken`, request.data.accessToken);
-			localStorage.setItem(`${process.env.SERVICE_CURRENT}_refreshToken`, request.data.refreshToken);
+			if (request.data.accessToken
+				&& request.data.refreshToken) {
+				localStorage.setItem(`${process.env.SERVICE_CURRENT}_accessToken`, request.data.accessToken);
+				localStorage.setItem(`${process.env.SERVICE_CURRENT}_refreshToken`, request.data.refreshToken);
 
-			Store().dispatch({
-				type: prefix +'.login',
-				payload: {
-					authFlag: true,
-					accessToken: request.data.accessToken,
-					refreshToken: request.data.refreshToken,
-					...request.data.userData,
-					password: '',
-					loginFlag: true,
-				},
-			});
-			clearTimeout(timeout);
+				Store().dispatch({
+					type: prefix +'.login',
+					payload: {
+						authFlag: true,
+						accessToken: request.data.accessToken,
+						refreshToken: request.data.refreshToken,
+						...request.data.userData,
+						password: '',
+						loginFlag: true,
+					},
+				});
+				clearTimeout(timeout);
 
-			timeout = setTimeout(() => {
-				fireRefresh({
-					url,
-					path: 'user/refresh',
-				})(navigate, snackbar);
-			}, 70000);
+				timeout = setTimeout(() => {
+					fireRefresh({
+						url,
+						path: 'user/refresh',
+					})(navigate, snackbar);
+				}, 70000);
 
-			navigate(`/`);
+				navigate(`/`);
+			}
 		}
 		else {
 			Store().dispatch({

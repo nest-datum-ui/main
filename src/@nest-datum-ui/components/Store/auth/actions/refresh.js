@@ -25,27 +25,30 @@ export const fireRefresh = ({
 				refreshToken,
 			});
 
-			localStorage.setItem(`${process.env.SERVICE_CURRENT}_accessToken`, request.data.accessToken);
-			localStorage.setItem(`${process.env.SERVICE_CURRENT}_refreshToken`, request.data.refreshToken);
+			if (request.data.accessToken
+				&& request.data.refreshToken) {
+				localStorage.setItem(`${process.env.SERVICE_CURRENT}_accessToken`, request.data.accessToken);
+				localStorage.setItem(`${process.env.SERVICE_CURRENT}_refreshToken`, request.data.refreshToken);
 
-			Store().dispatch({
-				type: prefix +'.refresh',
-				payload: {
-					refresh: true,
-					authFlag: true,
-					accessToken: request.data.accessToken,
-					refreshToken: request.data.refreshToken,
-					...request.data.userData,
-				},
-			});
-			clearTimeout(timeout);
+				Store().dispatch({
+					type: prefix +'.refresh',
+					payload: {
+						refresh: true,
+						authFlag: true,
+						accessToken: request.data.accessToken,
+						refreshToken: request.data.refreshToken,
+						...request.data.userData,
+					},
+				});
+				clearTimeout(timeout);
 
-			timeout = setTimeout(() => {
-				fireRefresh({
-					url,
-					path,
-				})(snackbar);
-			}, 50000);
+				timeout = setTimeout(() => {
+					fireRefresh({
+						url,
+						path,
+					})(snackbar);
+				}, 50000);
+			}
 		}
 		else {
 			return navigate(`/${process.env.PAGE_SIGN_IN}`);

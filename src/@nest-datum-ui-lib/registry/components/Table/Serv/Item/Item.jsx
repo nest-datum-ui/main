@@ -11,27 +11,20 @@ let Item = ({
 	name,
 	host,
 	port,
-	mysqlMasterHost,
-	mysqlMasterPort,
-	active,
-	indicator,
-	createdAt,
-	updatedAt,
-	restartedAt,
 }) => {
 	return <React.Fragment>
 		<TableRow key={id}>
-			<TableCell sx={{ minWidth: '21%' }}>
+			<TableCell sx={{ minWidth: '33%' }}>
 				<Typography component="div">
 					{id}
 				</Typography>
 			</TableCell>
-			<TableCell sx={{ minWidth: '17%' }}>
+			<TableCell sx={{ minWidth: '34%' }}>
 				<Typography component="div">
 					{name}
 				</Typography>
 			</TableCell>
-			<TableCell sx={{ minWidth: '27%' }}>
+			<TableCell sx={{ minWidth: '33%' }}>
 				<Box pb={1}>
 					<Typography component="div">
 						Host: <b>{host}</b>
@@ -40,17 +33,6 @@ let Item = ({
 						Port: <b>{port}</b>
 					</Typography>
 				</Box>
-			</TableCell>
-			<TableCell sx={{ minWidth: '17%' }}>
-				<Typography component="div">
-					{Number(indicator)}
-				</Typography>
-			</TableCell>
-			<TableCell sx={{ width: '18%' }}>
-				<TypographyDateTable
-					createdAt={createdAt}
-					updatedAt={updatedAt}
-					restartedAt={restartedAt} />
 			</TableCell>
 		</TableRow>
 	</React.Fragment>;

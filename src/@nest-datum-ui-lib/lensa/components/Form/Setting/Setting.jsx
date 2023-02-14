@@ -14,7 +14,6 @@ import InputDescription from '@nest-datum-ui/components/Input/Description';
 import DataTypeInputType from '@nest-datum-ui-lib/data-type/components/Input/Type';
 import InputValue from '@nest-datum-ui/components/Input/Value';
 import InputRegex from '@nest-datum-ui/components/Input/Regex';
-import InputIsRequired from '@nest-datum-ui/components/Input/IsRequired';
 import InputIsNotDelete from '@nest-datum-ui/components/Input/IsNotDelete';
 import handlerSubmit from './handler/submit.js';
 
@@ -58,7 +57,6 @@ let Setting = () => {
 			<DataTypeInputType storeFormName={LENSA_PATH_SETTING} />
 			<InputValue storeFormName={LENSA_PATH_SETTING} />
 			<InputRegex storeFormName={LENSA_PATH_SETTING} />
-			<InputIsRequired storeFormName={LENSA_PATH_SETTING} />
 			<InputIsNotDelete storeFormName={LENSA_PATH_SETTING} />
 		</Form>
 	</React.Fragment>;
