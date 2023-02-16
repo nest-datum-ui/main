@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { fireFormProp as actionApiFormProp } from '@nest-datum-ui/components/Store/api/actions/form/prop.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
+import utilsCheckExists from '@nest-datum-ui/utils/check/exists.js';
 import Box from '@mui/material/Box';
 import FilesInputSelect from '../Select';
 
@@ -16,7 +17,7 @@ let File = ({
 	]);
 
 	return <React.Fragment>
-		{value
+		{utilsCheckExists(value)
 			&& <Box py={2}>
 				<FilesInputSelect
 					name="fileId"

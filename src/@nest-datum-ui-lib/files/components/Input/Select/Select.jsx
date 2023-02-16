@@ -45,6 +45,15 @@ let Select = ({
 	}, [
 		onChange,
 	]);
+
+	React.useEffect(() => {
+		setValueMemo((currentState) => (value && currentState === '')
+			? value
+			: currentState);
+	}, [
+		setValueMemo,
+		value,
+	]);
 	
 	React.useEffect(() => {
 		if (valueMemo && !systemId) {

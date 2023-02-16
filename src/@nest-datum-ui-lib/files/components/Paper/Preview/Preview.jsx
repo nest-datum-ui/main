@@ -21,6 +21,9 @@ let Preview = ({
 		value,
 	]);
 
+	if (value === undefined) {
+		return <React.Fragment />;
+	}
 	switch (true) {
 		case isPdf:
 			return <PictureAsPdfIcon

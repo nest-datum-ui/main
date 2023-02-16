@@ -65,8 +65,11 @@ let Report = () => {
 					contentId={contentId}
 					onAdd={onRelationAdd} />}
 		</Form>
-		<FormsDialogContentField contentId={contentId} />
-		<FormsDialogContentFieldDrop />
+		{utilsCheckEntityExists(entityId)
+			&& <React.Fragment>
+				<FormsDialogContentField contentId={contentId} />
+				<FormsDialogContentFieldDrop />
+			</React.Fragment>}
 	</React.Fragment>;
 };
 

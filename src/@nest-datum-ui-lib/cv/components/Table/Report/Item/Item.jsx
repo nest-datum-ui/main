@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import selectorMainIncludes from '@nest-datum-ui/components/Store/main/selectors/includes.js';
 import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
+import Box from '@mui/material/Box';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
@@ -52,9 +53,11 @@ let Item = ({
 				</TypographyTable>
 			</TableCell>
 			<TableCell sx={{ minWidth: '12%' }}>
-				<FilesPaperById>
-					{fileId}
-				</FilesPaperById>
+				<Box maxWidth="100px">
+					<FilesPaperById>
+						{fileId}
+					</FilesPaperById>
+				</Box>
 			</TableCell>
 			<TableCell sx={{ minWidth: '23%' }}>
 				<CvTypographyReportStatus>

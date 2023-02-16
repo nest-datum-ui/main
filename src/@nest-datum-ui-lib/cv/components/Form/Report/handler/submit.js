@@ -23,7 +23,7 @@ const submit = async (e, entityId) => {
 
 	(id && !utilsCheckStrId(id))
 		&& (errors['id'] = 'The value is in the wrong format.');
-	(fileId && !utilsCheckStrId(fileId))
+	!utilsCheckStrId(fileId)
 		&& (errors['fileId'] = 'The value is in the wrong format.');
 	(reportStatusId && !utilsCheckStrId(reportStatusId))
 		&& (errors['reportStatusId'] = 'The value is in the wrong format.');

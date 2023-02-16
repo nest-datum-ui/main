@@ -9,13 +9,15 @@ import FormsSelectForm from '@nest-datum-ui-lib/forms/components/Select/Form';
 
 let Form = ({ 
 	storeFormName,
+	name,
 	...props 
 }) => {
 	const loader = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'loader' ]));
-	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'formId' ])) || '';
-	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', 'formId' ]));
-	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, 'formId', e.target.value)(), [
+	const value = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, name ])) || '';
+	const error = useSelector(selectorMainExtract([ 'api', 'form', storeFormName, 'errors', name ]));
+	const onChange = React.useCallback((e) => actionApiFormProp(storeFormName, name, e.target.value)(), [
 		storeFormName,
+		name,
 	]);
 
 	return <React.Fragment>
@@ -24,7 +26,7 @@ let Form = ({
 			maxWidth="240px">
 			<FormsSelectForm
 				disabled={loader}
-				name="formId"
+				name={name}
 				label="Form"
 				value={value}
 				onChange={onChange}
@@ -37,9 +39,11 @@ let Form = ({
 Form = React.memo(Form);
 Form.defaultProps = {
 	storeFormName: FORMS_PATH_CONTENT,
+	name: 'formId',
 };
 Form.propTypes = {
 	storeFormName: PropTypes.string,
+	name: PropTypes.string,
 };
 
 export default Form;
