@@ -9,6 +9,7 @@ import { FORMS_PATH_FORM_STATUS } from '@nest-datum-ui-lib/forms/consts/path.js'
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import utilsUrlItemFilterGetId from '@nest-datum-ui/utils/url/item/filter/get/id.js';
 import utilsUrlItemFilterId from '@nest-datum-ui/utils/url/item/filter/id.js';
+import utilsCheckArrFilled from '@nest-datum-ui/utils/check/arr/filled.js';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -45,16 +46,17 @@ let Form = ({
 		<Grid
 			container
 			alignItems="center">
-			<Grid
-				item
-				xs={false}>
-				<IconButton 
-					size="small"
-					color="error"
-					onClick={onClear}>
-					<CloseIcon fontSize="small" />
-				</IconButton>
-			</Grid>
+			{utilsCheckArrFilled(value)
+				&& <Grid
+					item
+					xs={false}>
+					<IconButton 
+						size="small"
+						color="error"
+						onClick={onClear}>
+						<CloseIcon fontSize="small" />
+					</IconButton>
+				</Grid>}
 			<Grid
 				item
 				xs={true}>
