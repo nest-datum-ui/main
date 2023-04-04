@@ -69,6 +69,7 @@ function getClientEnvironment(publicUrl) {
 				return env;
 			},
 			{
+				...process.env,
 				// Useful for determining whether we’re running in production mode.
 				// Most importantly, it switches React into the correct mode.
 				NODE_ENV: process.env.NODE_ENV || 'development',
@@ -88,27 +89,6 @@ function getClientEnvironment(publicUrl) {
 				// Whether or not react-refresh is enabled.
 				// It is defined here so it is available in the webpackHotDevClient.
 				FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
-
-				URL_API: process.env.URL_API,
-				SERVICE_CURRENT: process.env.SERVICE_CURRENT,
-				SERVICE_HTTP: process.env.SERVICE_HTTP,
-				SERVICE_REGISTRY: process.env.SERVICE_REGISTRY,
-				SERVICE_LOGS: process.env.SERVICE_LOGS,
-				SERVICE_MAIL: process.env.SERVICE_MAIL,
-				SERVICE_SSO: process.env.SERVICE_SSO,
-				SERVICE_DATA_TYPE: process.env.SERVICE_DATA_TYPE,
-				SERVICE_FILES: process.env.SERVICE_FILES,
-				SERVICE_PAGES: process.env.SERVICE_PAGES,
-				SERVICE_FORMS: process.env.SERVICE_FORMS,
-				SERVICE_CV: process.env.SERVICE_CV,
-				SERVICE_LENSA: process.env.SERVICE_LENSA,
-
-				PAGE_SIGN_UP: process.env.PAGE_SIGN_UP,
-				PAGE_SIGN_IN: process.env.PAGE_SIGN_IN,
-				PAGE_RECOVERY: process.env.PAGE_RECOVERY,
-				PAGE_RESET: process.env.PAGE_RESET,
-
-				LANG_DEFAULT: process.env.LANG_DEFAULT,
 			}
 		);
 	// Stringify all values so we can feed into webpack DefinePlugin

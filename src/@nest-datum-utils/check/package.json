@@ -1,0 +1,12 @@
+{
+  "name": "@nest-datum-utils/check",
+  "version": "1.0.0",
+  "description": "Set of functions for checking values.",
+  "author": "ihor-bielchenko",
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [ "validatation", "value", "check", "react", "helper", "utils", "script", "nest", "datum" ]
+}
