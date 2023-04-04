@@ -46,6 +46,7 @@ import handlerMountParent from './handler/mountParent.js';
  * грузить фолдеры:
  * 	если предыдущая загрука folderTotal > limit
  * 	если поменялись опции пагинации
+ * 	если data === null
  */
 let Panel = ({
 	storeListName, 

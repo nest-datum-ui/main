@@ -7,24 +7,29 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
+import Typography from '@mui/material/Typography';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TypographyTable from '@nest-datum-ui/components/Typography/Table';
 import TypographyDateTable from '@nest-datum-ui/components/Typography/Date/Table';
-import SsoTypographyUser from '@nest-datum-ui-lib/sso/components/Typography/User';
-import CvTypographyReportStatus from '@nest-datum-ui-lib/cv/components/Typography/Report/Status';
-import FilesPaperById from '@nest-datum-ui-lib/files/components/Paper/ById';
+import LensaTypographyReportStatus from '@nest-datum-ui-lib/lensa/components/Typography/Report/Status';
+// import FilesPaperById from '@nest-datum-ui-lib/files/components/Paper/ById';
 import MenuContext from '@nest-datum-ui/components/Menu/Context';
 
 let Item = ({
 	bulkDeletion,
 	id,
-	fileId,
 	reportStatusId,
-	userId,
-	isDeleted,
-	isNotDelete,
+	email,
+	firstName,
+	city,
+	state,
+	language,
+	customerCategory,
+	jobTitle,
+	fileId,
 	createdAt,
 	updatedAt,
+	isDeleted,
 	onClose,
 	onDrop,
 	onRestore,
@@ -44,29 +49,57 @@ let Item = ({
 						checked={checked}
 						onChange={onCheck} />
 				</TableCell>}
-			<TableCell sx={{ minWidth: '23%' }}>
+			<TableCell sx={{ minWidth: '16%' }}>
 				<TypographyTable
-					to={`/cv/report/${id}`}
+					to={`/lensa/report/${id}`}
 					isDeleted={isDeleted}>
 					{id}
 				</TypographyTable>
 			</TableCell>
+			<TableCell sx={{ minWidth: '16%' }}>
+				{firstName
+					&& <Typography
+						component="div"
+						variant="body2">
+						<b>{firstName}</b>
+					</Typography>}
+				{email
+					&& <Typography 
+						component="div"
+						variant="body2">
+						{email}
+					</Typography>}
+			</TableCell>
+			<TableCell sx={{ minWidth: '16%' }}>
+				{state
+					&& <Typography component="div">
+						<b>state:</b> {state}
+					</Typography>}
+				{city
+					&& <Typography component="div">
+						<b>city:</b> {city}
+					</Typography>}
+				{language
+					&& <Typography component="div">
+						<b>language:</b> {language}
+					</Typography>}
+			</TableCell>
+			<TableCell sx={{ minWidth: '22%' }}>
+				{customerCategory
+					&& <Typography component="div">
+						<b>customer category:</b> {customerCategory}
+					</Typography>}
+				{jobTitle
+					&& <Typography component="div">
+						<b>title:</b> {jobTitle}
+					</Typography>}
+			</TableCell>
 			<TableCell sx={{ minWidth: '12%' }}>
-				<FilesPaperById>
-					{fileId}
-				</FilesPaperById>
-			</TableCell>
-			<TableCell sx={{ minWidth: '23%' }}>
-				<CvTypographyReportStatus>
+				<LensaTypographyReportStatus>
 					{reportStatusId}
-				</CvTypographyReportStatus>
+				</LensaTypographyReportStatus>
 			</TableCell>
-			<TableCell sx={{ minWidth: '10%' }}>
-				<SsoTypographyUser>
-					{userId}
-				</SsoTypographyUser>
-			</TableCell>
-			<TableCell sx={{ width: '20%' }}>
+			<TableCell sx={{ width: '16%' }}>
 				<TypographyDateTable
 					createdAt={createdAt}
 					updatedAt={updatedAt} />
@@ -78,7 +111,6 @@ let Item = ({
 				<MenuContext 
 					id={id}
 					isDeleted={isDeleted}
-					isNotDelete={isNotDelete}
 					onClose={onClose}
 					onDrop={onDrop}
 					onRestore={onRestore} />
@@ -98,13 +130,18 @@ Item.propTypes = {
 		PropTypes.string,
 		PropTypes.number,
 	]).isRequired,
-	fileId: PropTypes.string,
 	reportStatusId: PropTypes.string,
-	userId: PropTypes.string,
-	isDeleted: PropTypes.bool,
-	isNotDelete: PropTypes.bool,
+	email: PropTypes.string,
+	firstName: PropTypes.string,
+	city: PropTypes.string,
+	state: PropTypes.string,
+	language: PropTypes.string,
+	customerCategory: PropTypes.string,
+	jobTitle: PropTypes.string,
+	fileId: PropTypes.string,
 	createdAt: PropTypes.string,
 	updatedAt: PropTypes.string,
+	isDeleted: PropTypes.bool,
 	onClose: PropTypes.func,
 	onDrop: PropTypes.func,
 	onRestore: PropTypes.func,

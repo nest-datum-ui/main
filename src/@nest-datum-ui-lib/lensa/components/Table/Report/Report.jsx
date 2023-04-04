@@ -14,9 +14,9 @@ import { fireListBulkDrop as actionApiListBulkDrop } from '@nest-datum-ui/compon
 import { fireListCheck as actionApiListCheck } from '@nest-datum-ui/components/Store/api/actions/list/check.js';
 import { fireOpen as actionMenuOpen } from '@nest-datum-ui/components/Store/menu/actions/open.js';
 import { 
-	CV_PATH_REPORT,
-	CV_PATH_REPORT_CREATE, 
-} from '@nest-datum-ui-lib/cv/consts/path.js';
+	LENSA_PATH_REPORT,
+	LENSA_PATH_REPORT_CREATE, 
+} from '@nest-datum-ui-lib/lensa/consts/path.js';
 import selectorMainExtract from '@nest-datum-ui/components/Store/main/selectors/extract.js';
 import utilsUrlSearchPathItem from '@nest-datum-ui/utils/url/searchPathItem.js';
 import utilsCheckArr from '@nest-datum-ui/utils/check/arr';
@@ -28,7 +28,7 @@ import FormFilterIsDeleted from '@nest-datum-ui/components/Form/Filter/IsDeleted
 import FormFilterIsNotDelete from '@nest-datum-ui/components/Form/Filter/IsNotDelete';
 import FormFilter from '@nest-datum-ui/components/Form/Filter';
 import ButtonCreate from '@nest-datum-ui/components/Button/Create';
-import CvFormFilterStatusReport from '@nest-datum-ui-lib/cv/components/Form/Filter/Status/Report';
+import LensaFormFilterStatusReport from '@nest-datum-ui-lib/lensa/components/Form/Filter/Status/Report';
 import Item from './Item';
 
 let Report = () => {
@@ -38,40 +38,40 @@ let Report = () => {
 	const filter = utilsUrlSearchPathItem('filter', search);
 	const sort = utilsUrlSearchPathItem('sort', search);
 	const unmount = useSelector(selectorMainExtract([ 'loader', 'unmount', 'visible' ]));
-	const loader = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'loader' ]));
-	const total = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'total' ])) ?? 0;
-	const page = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'page' ])) ?? 1;
-	const limit = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'limit' ])) ?? 20;
-	const data = useSelector(selectorMainExtract([ 'api', 'list', CV_PATH_REPORT, 'data' ]));
-	const storePath = React.useMemo(() => [ 'api', 'list', CV_PATH_REPORT ], [
+	const loader = useSelector(selectorMainExtract([ 'api', 'list', LENSA_PATH_REPORT, 'loader' ]));
+	const total = useSelector(selectorMainExtract([ 'api', 'list', LENSA_PATH_REPORT, 'total' ])) ?? 0;
+	const page = useSelector(selectorMainExtract([ 'api', 'list', LENSA_PATH_REPORT, 'page' ])) ?? 1;
+	const limit = useSelector(selectorMainExtract([ 'api', 'list', LENSA_PATH_REPORT, 'limit' ])) ?? 20;
+	const data = useSelector(selectorMainExtract([ 'api', 'list', LENSA_PATH_REPORT, 'data' ]));
+	const storePath = React.useMemo(() => [ 'api', 'list', LENSA_PATH_REPORT ], [
 	]);
 	const displayLoader = !utilsCheckArr(data) || unmount || loader;
-	const onChangePage = React.useCallback((e, newPage) => actionApiListPage(CV_PATH_REPORT, newPage), [
+	const onChangePage = React.useCallback((e, newPage) => actionApiListPage(LENSA_PATH_REPORT, newPage), [
 	]);
-	const onLimit = React.useCallback((e) => actionApiListLimit(CV_PATH_REPORT, e), [
+	const onLimit = React.useCallback((e) => actionApiListLimit(LENSA_PATH_REPORT, e), [
 	]);
-	const onSortId = React.useCallback((value) => actionApiListSort(CV_PATH_REPORT, 'id', value), [
+	const onSortId = React.useCallback((value) => actionApiListSort(LENSA_PATH_REPORT, 'id', value), [
 	]);
-	const onSortCreatedAt = React.useCallback((value) => actionApiListSort(CV_PATH_REPORT, 'createdAt', value), [
+	const onSortCreatedAt = React.useCallback((value) => actionApiListSort(LENSA_PATH_REPORT, 'createdAt', value), [
 	]);
-	const onDrop = React.useCallback((id) => (e) => actionApiListDrop(CV_PATH_REPORT, id), [
+	const onDrop = React.useCallback((id) => (e) => actionApiListDrop(LENSA_PATH_REPORT, id), [
 	]);
-	const onRestore = React.useCallback((id) => (e) => actionApiListRestore(CV_PATH_REPORT, id), [
+	const onRestore = React.useCallback((id) => (e) => actionApiListRestore(LENSA_PATH_REPORT, id), [
 	]);
-	const onCheck = React.useCallback((id) => actionApiListCheck(CV_PATH_REPORT, id), [
+	const onCheck = React.useCallback((id) => actionApiListCheck(LENSA_PATH_REPORT, id), [
 	]);
-	const onBulk = React.useCallback((e) => actionApiListBulk(CV_PATH_REPORT, e), [
+	const onBulk = React.useCallback((e) => actionApiListBulk(LENSA_PATH_REPORT, e), [
 	]);
-	const onBulkDrop = React.useCallback(() => actionApiListBulkDrop(CV_PATH_REPORT), [
+	const onBulkDrop = React.useCallback(() => actionApiListBulkDrop(LENSA_PATH_REPORT), [
 	]);
-	const onLoader = React.useCallback(() => actionApiListProp(CV_PATH_REPORT, 'loader', true)(), [
+	const onLoader = React.useCallback(() => actionApiListProp(LENSA_PATH_REPORT, 'loader', true)(), [
 	]);
 	const onMenu = React.useCallback((id) => (e) => actionMenuOpen(id, e.target)(), [
 	]);
 
 	React.useEffect(() => {
 		if (!unmount) {
-			actionApiListGet(CV_PATH_REPORT, {
+			actionApiListGet(LENSA_PATH_REPORT, {
 				page,
 				limit,
 				query,
@@ -90,13 +90,13 @@ let Report = () => {
 		sort,
 	]);
 
-	React.useEffect(() => () => actionApiListClear(CV_PATH_REPORT)(), [
+	React.useEffect(() => () => actionApiListClear(LENSA_PATH_REPORT)(), [
 	]);
 
 	return <React.Fragment>
 		<FormFilter 
 			bulkDeletion
-			toolbarComponent={<ButtonCreate to={CV_PATH_REPORT_CREATE} />}
+			toolbarComponent={<ButtonCreate to={LENSA_PATH_REPORT_CREATE} />}
 			storePath={storePath}
 			loader={displayLoader}
 			length={(data || []).length ?? 0}
@@ -105,7 +105,7 @@ let Report = () => {
 			onLoader={onLoader}>
 			<FormFilterIsDeleted onInput={onLoader} />
 			<FormFilterIsNotDelete onInput={onLoader} />
-			<CvFormFilterStatusReport onInput={onLoader} />
+			<LensaFormFilterStatusReport onInput={onLoader} />
 		</FormFilter>
 		{(!displayLoader)
 			&& <React.Fragment>
@@ -131,12 +131,28 @@ let Report = () => {
 								ID
 							</Typography>
 						</TableCellSort>,
-						<TableCell key="fileId">
+						<TableCell key="user">
 							<Typography 
 								component="div"
 								variant="caption"
 								color="textSecondary">
-								File
+								User
+							</Typography>
+						</TableCell>,
+						<TableCell key="about">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								About
+							</Typography>
+						</TableCell>,
+						<TableCell key="job">
+							<Typography 
+								component="div"
+								variant="caption"
+								color="textSecondary">
+								Job
 							</Typography>
 						</TableCell>,
 						<TableCell key="reportStatusId">
@@ -145,14 +161,6 @@ let Report = () => {
 								variant="caption"
 								color="textSecondary">
 								Status
-							</Typography>
-						</TableCell>,
-						<TableCell key="userId">
-							<Typography 
-								component="div"
-								variant="caption"
-								color="textSecondary">
-								User
 							</Typography>
 						</TableCell>,
 						<TableCellSort
@@ -172,13 +180,18 @@ let Report = () => {
 							bulkDeletion
 							key={item.id}
 							id={item.id}
-							fileId={item.fileId}
 							reportStatusId={item.reportStatusId}
-							userId={item.userId}
+							email={item.email}
+							firstName={item.firstName}
+							city={item.city}
+							state={item.state}
+							language={item.language}
+							customerCategory={item.customerCategory}
+							jobTitle={item.jobTitle}
+							fileId={item.fileId}
 							createdAt={item.createdAt}
 							updatedAt={item.updatedAt}
 							isDeleted={item.isDeleted}
-							isNotDelete={item.isNotDelete}
 							onDrop={onDrop(item.id)}
 							onRestore={onRestore(item.id)}
 							onMenu={onMenu(item.id)}
