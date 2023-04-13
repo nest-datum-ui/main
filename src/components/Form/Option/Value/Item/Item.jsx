@@ -48,14 +48,16 @@ let Item = ({
 	const id = React.useMemo(() => value.id, [
 		value,
 	]);
-	const onDrop = React.useCallback(() => actionApiFormDropOption(storeName, {
-		id,
-		relation,
-		relationContent,
-		optionIndex,
-		optionValueIndex,
-		entityRelationId: option[entityRelation],
-	}), [
+	const onDrop = React.useCallback(() => {
+		actionApiFormDropOption(storeName, {
+			id,
+			relation,
+			relationContent,
+			optionIndex,
+			optionValueIndex,
+			entityRelationId: option[entityRelation],
+		});
+	}, [
 		storeName,
 		id,
 		relation,

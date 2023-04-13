@@ -1,124 +1,101 @@
-import dataTypeAccessForm from './accessForm.js';
-import dataTypeAccessFormRelationList from './accessFormRelationList.js';
-import dataTypeAccessFormRelationForm from './accessFormRelationForm.js';
-import dataTypeAccessList from './accessList.js';
-import dataTypeAccessOptionForm from './accessOptionForm.js';
-import dataTypeAccessOptionRelationForm from './accessOptionRelationForm.js';
-import dataTypeAccessOptionRelationList from './accessOptionRelationList.js';
-import dataTypeAccessOptionList from './accessOptionList.js';
-import dataTypeAccessStatusForm from './accessStatusForm.js';
-import dataTypeAccessStatusList from './accessStatusList.js';
-import dataTypeSettingForm from './settingForm.js';
-import dataTypeSettingList from './settingList.js';
-import dataTypeForm from './form.js';
-import dataTypeFormRelationList from './formRelationList.js';
-import dataTypeFormRelationForm from './formRelationForm.js';
-import dataTypeList from './list.js';
-import dataTypeOptionRelationForm from './optionRelationForm.js';
-import dataTypeOptionRelationList from './optionRelationList.js';
-import dataTypeOptionForm from './optionForm.js';
-import dataTypeOptionList from './optionList.js';
-import dataTypeStatusForm from './statusForm.js';
-import dataTypeStatusList from './statusList.js';
+import filesSetting from './setting.js';
+import filesSettingForm from './settingForm.js';
+import filesSettingList from './settingList.js';
+import filesAccess from './access.js';
+import filesAccessForm from './accessForm.js';
+import filesAccessFormRelationList from './accessFormRelationList.js';
+import filesAccessFormRelationForm from './accessFormRelationForm.js';
+import filesAccessList from './accessList.js';
+import filesAccessOption from './accessOption.js';
+import filesAccessOptionRelationForm from './accessOptionRelationForm.js';
+import filesAccessOptionRelationList from './accessOptionRelationList.js';
+import filesAccessOptionForm from './accessOptionForm.js';
+import filesAccessOptionList from './accessOptionList.js';
+import filesAccessStatus from './accessStatus.js';
+import filesAccessStatusForm from './accessStatusForm.js';
+import filesAccessStatusList from './accessStatusList.js';
+import filesManager from './manager.js';
+import filesManagerList from './managerList.js';
+import filesProvider from './provider.js';
+import filesProviderForm from './providerForm.js';
+import filesProviderFormRelationList from './providerFormRelationList.js';
+import filesProviderFormRelationForm from './providerFormRelationForm.js';
+import filesProviderList from './providerList.js';
+import filesProviderOption from './providerOption.js';
+import filesProviderOptionRelationForm from './providerOptionRelationForm.js';
+import filesProviderOptionRelationList from './providerOptionRelationList.js';
+import filesProviderOptionForm from './providerOptionForm.js';
+import filesProviderOptionList from './providerOptionList.js';
+import filesProviderStatus from './providerStatus.js';
+import filesProviderStatusForm from './providerStatusForm.js';
+import filesProviderStatusList from './providerStatusList.js';
+import filesSystem from './system.js';
+import filesSystemForm from './systemForm.js';
+import filesSystemFormRelationList from './systemFormRelationList.js';
+import filesSystemFormRelationForm from './systemFormRelationForm.js';
+import filesSystemList from './systemList.js';
+import filesSystemOption from './systemOption.js';
+import filesSystemOptionRelationForm from './systemOptionRelationForm.js';
+import filesSystemOptionRelationList from './systemOptionRelationList.js';
+import filesSystemOptionForm from './systemOptionForm.js';
+import filesSystemOptionList from './systemOptionList.js';
+import filesSystemStatus from './systemStatus.js';
+import filesSystemStatusForm from './systemStatusForm.js';
+import filesSystemStatusList from './systemStatusList.js';
 
 const config = {
-	name: 'data-type',
+	name: 'files',
 	pagePrefixUrl: 'app',
-	pageSeparateBaseUrl: 'data-type',
-	pageBaseUrl: 'data-type',
-	pageInitialUrl: 'types',
+	pageSeparateBaseUrl: 'files',
+	pageBaseUrl: 'files',
+	pageInitialUrl: 'manager',
 	apiBaseUrl: process.env.URL_API_FILES,
-	title: 'Data types',
-
-	dataTypeAccess: {
-		displayInBreadcrumbsMenu: true,
-		breadcrumbsMenuTitle: 'Accesses',
-
-		displayInHeaderTabMenu: true,
-		orderInHeaderTabMenu: 1,
-		headerTabMenuTitle: 'Accesses',
-
-		pageUrl: 'accesses',
-		pageTitle: 'Accesses',
-	},
-	dataTypeAccessOption: {
-		displayInBreadcrumbsMenu: true,
-		breadcrumbsMenuTitle: 'Options',
-
-		pageUrl: 'accesses/options',
-		pageTitle: 'Options',
-
-		fieldsBlock: true,
-		fieldsBlockTitle: 'Options:',
-	},
-	dataTypeAccessStatus: {
-		displayInBreadcrumbsMenu: true,
-		breadcrumbsMenuTitle: 'Statuses',
-
-		pageUrl: 'accesses/statuses',
-		pageTitle: 'Options',
-	},
-	dataTypeSetting: {
-		displayInBreadcrumbsMenu: true,
-		breadcrumbsMenuTitle: 'Settings',
-
-		displayInHeaderTabMenu: true,
-		orderInHeaderTabMenu: 9999,
-		headerTabMenuTitle: 'Settings',
-
-		pageUrl: 'settings',
-		pageTitle: 'Settings',
-	},
-	dataType: {
-		displayInBreadcrumbsMenu: true,
-		breadcrumbsMenuTitle: 'Data types',
-
-		displayInHeaderTabMenu: true,
-		orderInHeaderTabMenu: 0,
-		headerTabMenuTitle: 'Data types',
-
-		pageUrl: 'types',
-		pageTitle: 'Data types',
-	},
-	dataTypeOption: {
-		displayInBreadcrumbsMenu: true,
-		breadcrumbsMenuTitle: 'Options',
-
-		pageUrl: 'types/options',
-		pageTitle: 'Options',
-
-		fieldsBlock: true,
-		fieldsBlockTitle: 'Options:',
-	},
-	dataTypeStatus: {
-		displayInBreadcrumbsMenu: true,
-		breadcrumbsMenuTitle: 'Statuses',
-
-		pageUrl: 'types/statuses',
-		pageTitle: 'Options',
-	},
-	dataTypeAccessForm,
-	dataTypeAccessFormRelationList,
-	dataTypeAccessFormRelationForm,
-	dataTypeAccessList,
-	dataTypeAccessOptionForm,
-	dataTypeAccessOptionRelationForm,
-	dataTypeAccessOptionRelationList,
-	dataTypeAccessOptionList,
-	dataTypeAccessStatusForm,
-	dataTypeAccessStatusList,
-	dataTypeSettingForm,
-	dataTypeSettingList,
-	dataTypeForm,
-	dataTypeFormRelationList,
-	dataTypeFormRelationForm,
-	dataTypeList,
-	dataTypeOptionRelationForm,
-	dataTypeOptionRelationList,
-	dataTypeOptionForm,
-	dataTypeOptionList,
-	dataTypeStatusForm,
-	dataTypeStatusList,
+	title: 'Files',
+	
+	filesSetting,
+	filesSettingForm,
+	filesSettingList,
+	filesAccess,
+	filesAccessForm,
+	filesAccessFormRelationList,
+	filesAccessFormRelationForm,
+	filesAccessList,
+	filesAccessOption,
+	filesAccessOptionRelationForm,
+	filesAccessOptionRelationList,
+	filesAccessOptionForm,
+	filesAccessOptionList,
+	filesAccessStatus,
+	filesAccessStatusForm,
+	filesAccessStatusList,
+	filesManager,
+	filesManagerList,
+	filesProvider,
+	filesProviderForm,
+	filesProviderFormRelationList,
+	filesProviderFormRelationForm,
+	filesProviderList,
+	filesProviderOption,
+	filesProviderOptionRelationForm,
+	filesProviderOptionRelationList,
+	filesProviderOptionForm,
+	filesProviderOptionList,
+	filesProviderStatus,
+	filesProviderStatusForm,
+	filesProviderStatusList,
+	filesSystem,
+	filesSystemForm,
+	filesSystemFormRelationList,
+	filesSystemFormRelationForm,
+	filesSystemList,
+	filesSystemOption,
+	filesSystemOptionRelationForm,
+	filesSystemOptionRelationList,
+	filesSystemOptionForm,
+	filesSystemOptionList,
+	filesSystemStatus,
+	filesSystemStatusForm,
+	filesSystemStatusList,
 };
 
 export default config;

@@ -17,32 +17,48 @@ import { func as utilsCheckFunc } from '@nest-datum-utils/check';
 import PaperFilter from 'components/Paper/Filter';
 import StyledWrapper from './Styled/Wrapper.jsx';
 
-let ListMemo = ({ page, limit, query, select, filter, initialFilter, sort, children, ...props }) => {
+let ListMemo = ({ 
+	apiUrl: propsApiUrl,
+	page, 
+	limit, 
+	query, 
+	select, 
+	filter, 
+	initialFilter, 
+	sort, 
+	processFilter,
+	ManageComponent,
+	children, 
+	...props 
+}) => {
 	const serviceName = React.useContext(ContextService);
 	const routeName = React.useContext(ContextRoute);
 	const { 
 		[serviceName]: { 
 			[routeName]: { 
 				storeName, 
-				apiFullUrl: 
-				apiUrl, 
+				apiFullUrl: contextApiUrl, 
 				withFilter, 
 			}, 
 		}, 
 	} = React.useContext(ContextProps);
+	const apiUrl = propsApiUrl ?? contextApiUrl;
+	const updatedIndex = useSelector(selectorMainExtract([ 'api', 'list', storeName, 'updatedIndex' ])) || 0;
 
 	React.useEffect(() => {
-		actionApiListGet(storeName, {
-			apiUrl,
-			page,
-			limit,
-			query,
-			select,
-			filter: utilsCheckFunc(initialFilter)
-				? initialFilter()
-				: (filter ?? initialFilter),
-			sort,
-		})();
+		if (updatedIndex >= 0) {
+			actionApiListGet(storeName, {
+				apiUrl,
+				page,
+				limit,
+				query,
+				select,
+				filter: processFilter(utilsCheckFunc(initialFilter)
+					? initialFilter()
+					: (filter ?? initialFilter)),
+				sort,
+			})();
+		}
 	}, [
 		storeName,
 		apiUrl,
@@ -53,6 +69,8 @@ let ListMemo = ({ page, limit, query, select, filter, initialFilter, sort, child
 		filter,
 		initialFilter,
 		sort,
+		processFilter,
+		updatedIndex,
 	]);
 
 	React.useEffect(() => () => {
@@ -62,7 +80,7 @@ let ListMemo = ({ page, limit, query, select, filter, initialFilter, sort, child
 	]);
 
 	return <StyledWrapper { ...props }>
-		{withFilter && <PaperFilter />}
+		{withFilter && <PaperFilter ManageComponent={ManageComponent} />}
 		{children}
 	</StyledWrapper>;
 };
@@ -148,9 +166,11 @@ let List = ({ querySource, ...props }) => {
 List = React.memo(List);
 List.defaultProps = {
 	querySource: 'url',
+	processFilter: (data) => data,
 };
 List.propTypes = {
 	querySource: PropTypes.string,
+	processFilter: PropTypes.func,
 };
 
 export default List;

@@ -4,7 +4,7 @@ import PaperList from 'components/Paper/List';
 import ListManager from '../../../components/List/Manager';
 
 let List = () => {
-	return <ContextRoute.Provider value="filesList">
+	return <ContextRoute.Provider value="filesManagerList">
 		<PaperList>
 			<ListManager />
 		</PaperList>

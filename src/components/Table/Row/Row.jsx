@@ -16,6 +16,7 @@ import {
 import { 
 	arr as utilsCheckArr,
 	obj as utilsCheckObj, 
+	func as utilsCheckFunc,
 } from '@nest-datum-utils/check';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
@@ -33,6 +34,12 @@ let Row = ({
 	isNotDelete,
 	createdAt,
 	updatedAt,
+	onDrop,
+	onDropForce,
+	onRestore,
+	onCheck,
+	onMenu,
+	onEdit,
 	...props
 }) => {
 	const serviceName = React.useContext(ContextService);
@@ -50,26 +57,41 @@ let Row = ({
 		},
 	} = React.useContext(ContextProps);
 	const checked = useSelector(selectorMainArrayIncludes([ 'api', 'list', storeName, 'selected' ], id));
-	const onDrop = React.useCallback(() => actionDialogOpen(isDeleted ? 'drop' : 'disable', { entityId: id })(), [
+	const onDropWrapper = React.useCallback((e) => (utilsCheckFunc(onDrop))
+		? onDrop(e, { id, isDeleted })
+		: actionDialogOpen(isDeleted ? 'drop' : 'disable', { entityId: id })(), [
 		id,
 		isDeleted,
+		onDrop,
 	]);
-	const onDropForce = React.useCallback(() => actionDialogOpen('drop-force', { entityId: id })(), [
+	const onDropForceWrapper = React.useCallback((e) => (utilsCheckFunc(onDropForce))
+		? onDropForce(e, { id })
+		: actionDialogOpen('drop-force', { entityId: id })(), [
 		id,
+		onDropForce,
 	]);
-	const onRestore = React.useCallback(() => actionApiFormRestore(storeName, { apiUrl, entityId: id, type: 'list' })(), [
+	const onRestoreWrapper = React.useCallback((e) => (utilsCheckFunc(onRestore))
+		? onRestore(e, { id })
+		: actionApiFormRestore(storeName, { apiUrl, entityId: id, type: 'list' })(), [
 		storeName,
 		apiUrl,
 		id,
+		onRestore,
 	]);
-	const onCheck = React.useCallback((e) => actionApiListCheck(storeName, id, isNotDelete, isDeleted)(e), [
+	const onCheckWrapper = React.useCallback((e) => (utilsCheckFunc(onCheck))
+		? onCheck(e, { id, isNotDelete, isDeleted })
+		: actionApiListCheck(storeName, id, isNotDelete, isDeleted)(e), [
 		storeName,
 		id,
 		isNotDelete,
 		isDeleted,
+		onCheck,
 	]);
-	const onMenu = React.useCallback((e) => actionMenuOpen(id, e.target)(), [
+	const onMenuWrapper = React.useCallback((e) => (utilsCheckFunc(onMenu))
+		? onMenu(e, { id })
+		: actionMenuOpen(id, e.target)(), [
 		id,
+		onMenu,
 	]);
 	const averageWidth = 100 / rowColumns.length;
 	const firstCellWith = bulkDeletion
@@ -87,7 +109,7 @@ let Row = ({
 				sx={{ minWidth: '1%' }}>
 				<Checkbox 
 					checked={!!checked}
-					onChange={onCheck} />
+					onChange={onCheckWrapper} />
 			</TableCell>}
 		{utilsCheckArr(children)
 			? children.map((item, index) => (utilsCheckObj(item) && typeof item['$$typeof'] === 'symbol')
@@ -104,21 +126,22 @@ let Row = ({
 			</TableCell>}
 		{withForceDropMenu
 			? <TableCell sx={{ width: '1%' }}>
-				<IconButton color="error" onClick={onDropForce}>
+				<IconButton color="error" onClick={onDropForceWrapper}>
 					<CloseIcon color="error" />
 				</IconButton>
 			</TableCell>
 			: (withContextMenu
 				&& <TableCell sx={{ width: '1%' }}>
-					<IconButton onClick={onMenu}>
+					<IconButton onClick={onMenuWrapper}>
 						<MoreVertIcon />
 					</IconButton>
 					<MenuContext 
 						id={id}
 						isDeleted={isDeleted}
 						isNotDelete={isNotDelete}
-						onDrop={onDrop}
-						onRestore={onRestore} />
+						onEdit={onEdit}
+						onDrop={onDropWrapper}
+						onRestore={onRestoreWrapper} />
 				</TableCell>)}
 	</StyledWrapper>;
 };
@@ -131,11 +154,23 @@ Row.propTypes = {
 		PropTypes.string,
 		PropTypes.number,
 	]).isRequired,
-	isDeleted: PropTypes.bool,
-	isNotDelete: PropTypes.bool,
+	isDeleted: PropTypes.oneOfType([
+		PropTypes.bool,
+		PropTypes.number,
+	]),
+	isNotDelete: PropTypes.oneOfType([
+		PropTypes.bool,
+		PropTypes.number,
+	]),
 	createdAt: PropTypes.string,
 	updatedAt: PropTypes.string,
-	storeName: PropTypes.string, 
+	storeName: PropTypes.string,
+	onDrop: PropTypes.func,
+	onDropForce: PropTypes.func,
+	onRestore: PropTypes.func,
+	onCheck: PropTypes.func,
+	onMenu: PropTypes.func, 
+	onEdit: PropTypes.func,
 };
 
 export default Row;

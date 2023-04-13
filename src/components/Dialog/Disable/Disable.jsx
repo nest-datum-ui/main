@@ -20,15 +20,24 @@ let Disable = ({
 	content,
 	buildListPath,
 	buildFormPath,
+	apiUrl: propApiUrl,
 	...props
 }) => {
 	const serviceName = React.useContext(ContextService);
 	const routeName = React.useContext(ContextRoute);
-	const { [serviceName]: { [routeName]: { storeName, apiFullUrl } } } = React.useContext(ContextProps);
+	const { 
+		[serviceName]: { 
+			[routeName]: { 
+				storeName, 
+				apiFullUrl, 
+			}, 
+		}, 
+	} = React.useContext(ContextProps);
 	const entityId = useSelector(selectorMainExtract([ 'dialog', id, 'entityId' ]));
-	const onSubmit = React.useCallback(() => actionApiFormDrop(storeName, { apiUrl: apiFullUrl, entityId, type })(), [
+	const apiUrl = propApiUrl ?? apiFullUrl;
+	const onSubmit = React.useCallback(() => actionApiFormDrop(storeName, { apiUrl, entityId, type })(), [
 		storeName,
-		apiFullUrl,
+		apiUrl,
 		entityId,
 		type,
 	]);

@@ -4,7 +4,7 @@ import {
 } from '@nest-datum-ui/Store';
 
 const providerList = {
-	parentName: 'files',
+	parentName: 'filesProvider',
 	
 	id: 'files-providers-list',
 	storeName: 'files-providers-list',

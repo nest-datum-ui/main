@@ -6,18 +6,22 @@ import MenuTabsTab from 'components/Menu/Tabs/Tab';
 
 let Tabs = () => {
 	const { 
-		'data-type': { 
-			dataTypeAccess,
-			dataTypeSetting,
-			dataType,
+		files: { 
+			filesManager,
+			filesAccess,
+			filesSetting,
+			filesProvider,
+			filesSystem,
 		}, 
 	} = React.useContext(ContextProps);
 
 	return <MenuTabs>
 		{([
-			dataType,
-			dataTypeAccess,
-			dataTypeSetting,
+			filesManager,
+			filesProvider,
+			filesSystem,
+			filesAccess,
+			filesSetting,
 		]).map((item) => ({
 			label: item.headerTabMenuTitle,
 			to: item.pageFullUrl,

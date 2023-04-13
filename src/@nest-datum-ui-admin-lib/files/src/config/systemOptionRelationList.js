@@ -6,7 +6,7 @@ import {
 const systemOptionRelationList = {
 	title: 'Systems',
 	subtitle: 'List of systems that own the current setting.',
-	formName: 'filesOptionRelationForm',
+	formName: 'filesSystemOptionRelationForm',
 
 	id: 'files-option-relations-list',
 	storeName: 'files-option-relations-list',

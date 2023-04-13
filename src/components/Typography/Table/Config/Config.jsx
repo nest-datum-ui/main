@@ -55,8 +55,14 @@ Config = React.memo(Config);
 Config.defaultProps = {
 };
 Config.propTypes = {
-	isRequired: PropTypes.bool,
-	isMultiline: PropTypes.bool,
+	isRequired: PropTypes.oneOfType([
+		PropTypes.bool,
+		PropTypes.number,
+	]),
+	isMultiline: PropTypes.oneOfType([
+		PropTypes.bool,
+		PropTypes.number,
+	]),
 	regex: PropTypes.string,
 };
 

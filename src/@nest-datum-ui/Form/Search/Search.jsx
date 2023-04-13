@@ -16,20 +16,21 @@ import handlerSubmit from './handler/submit.js';
 let Search = ({
 	name,
 	onSearch,
+	loader,
 	...props
 }) => {
 	const serviceName = React.useContext(ContextService);
 	const routeName = React.useContext(ContextRoute);
 	const { [serviceName]: { [routeName]: { storeName } } } = React.useContext(ContextProps);
 	const [ id ] = React.useState(() => uuidv4());
-	const onSubmit = React.useCallback((e) => handlerSubmit(e, name, onSearch, storeName), [
+	const onSubmit = React.useCallback((e) => handlerSubmit(e, name, onSearch, `${storeName}_query`), [
 		name,
 		onSearch,
 		storeName,
 	]);
 
 	return <StyledWrapper
-		storeName={storeName}
+		storeName={`${storeName}_query`}
 		id={id}
 		onSubmit={onSubmit}>
 		<Input 

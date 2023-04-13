@@ -64,6 +64,7 @@ export const fireFormDrop = (storeName, options = {}) => async (callback = () =>
 				},
 			});
 		}
+		setTimeout(() => callback(), 0);
 	}
 	catch (err) {
 		(type === 'form')

@@ -4,7 +4,7 @@ import {
 } from '@nest-datum-ui/Store';
 
 const systemOptionList = {
-	parentName: 'filesOption',
+	parentName: 'filesSystemOption',
 	
 	id: 'files-system-options-list',
 	storeName: 'files-system-options-list',

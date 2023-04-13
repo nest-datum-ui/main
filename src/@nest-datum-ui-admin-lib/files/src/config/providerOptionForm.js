@@ -1,7 +1,7 @@
 
 const providerOptionForm = {
-	parentName: 'filesOption',
-	relationListName: 'filesOptionRelationList',
+	parentName: 'filesProviderOption',
+	relationListName: 'filesProviderOptionRelationList',
 
 	displayInBreadcrumbsMenu: true,
 	breadcrumbsMenuTitle: 'Option',

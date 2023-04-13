@@ -59,7 +59,7 @@ let Context = ({
 		|| drop;
 
 	return <Menu id={id} { ...props }>
-		{(!isDefault || edit)
+		{!!(!isDefault || edit)
 			&& <ButtonMenu icon={<EditIcon />}
 				{ ...(utilsCheckFunc(onEdit))
 					? { onClick: onContextEdit }
@@ -69,17 +69,17 @@ let Context = ({
 					} }>
 				Edit
 			</ButtonMenu>}
-		{(!isDefault || copy)
+		{!!(!isDefault || copy)
 			&& <ButtonMenu disabled icon={<FileCopyIcon />}>
 				Copy
 			</ButtonMenu>}
-		{((!isDefault || restore) && isDeleted)
+		{!!((!isDefault || restore) && isDeleted)
 			&& <ButtonMenu
 				icon={<SettingsBackupRestoreIcon />}
 				onClick={onContextRestore}>
 				Restore
 			</ButtonMenu>}
-		{((!isDefault || drop) && !isNotDelete)
+		{!!((!isDefault || drop) && !isNotDelete)
 			&& <ButtonMenu
 				icon={<DeleteIcon
 					color={isDeleted
@@ -101,8 +101,14 @@ Context.propTypes = {
 	onClose: PropTypes.func,
 	onDrop: PropTypes.func,
 	onRestore: PropTypes.func,
-	isDeleted: PropTypes.bool,
-	isNotDelete: PropTypes.bool,
+	isDeleted: PropTypes.oneOfType([
+		PropTypes.bool,
+		PropTypes.number,
+	]),
+	isNotDelete: PropTypes.oneOfType([
+		PropTypes.bool,
+		PropTypes.number,
+	]),
 	edit: PropTypes.bool,
 	copy: PropTypes.bool,
 	restore: PropTypes.bool,

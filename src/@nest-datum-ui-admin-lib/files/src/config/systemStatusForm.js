@@ -1,6 +1,6 @@
 
 const systemStatusForm = {
-	parentName: 'filesStatus',
+	parentName: 'filesSystemStatus',
 
 	displayInBreadcrumbsMenu: true,
 	breadcrumbsMenuTitle: 'Status',

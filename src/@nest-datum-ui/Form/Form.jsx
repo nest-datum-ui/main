@@ -57,7 +57,6 @@ Form.defaultProps = {
 Form.propTypes = {
 	storeName: PropTypes.string.isRequired,
 	id: PropTypes.string.isRequired,
-	loader: PropTypes.bool,
 	onSubmit: PropTypes.func,
 };
 

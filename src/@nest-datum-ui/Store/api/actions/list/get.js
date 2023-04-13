@@ -28,6 +28,7 @@ export const fireListGet = (storeName, {
 	filter, 
 	sort, 
 	data,
+	processData = (data) => data,
 }) => async (callback = () => {}, prefix = 'api') => {
 	try {
 		if (!utilsCheckStrUrl(apiUrl)) {
@@ -93,7 +94,7 @@ export const fireListGet = (storeName, {
 				storeName,
 				url: apiUrl,
 				total: request.data.total,
-				data: request.data.rows,
+				data: processData(request.data.rows),
 				callback,
 				merge,
 			},

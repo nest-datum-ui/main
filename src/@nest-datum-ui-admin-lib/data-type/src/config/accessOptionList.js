@@ -18,6 +18,7 @@ const accessOptionList = {
 
 	entity: 'accessId', 
 	entityOptionRelation: 'accessAccessOptionId',
+	entityRelation: 'accessOptionId',
 	relation: 'accessAccessOptions', 
 	relationContent: 'accessAccessAccessOptions',
 

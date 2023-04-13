@@ -37,9 +37,11 @@ let Files = () => {
 			filesAccess,
 			filesAccessOption,
 			filesAccessStatus,
-			files,
+			filesManager,
 			filesSetting,
 			filesProvider,
+			filesSystemOption,
+			filesSystemStatus,
 			filesSystem,
 			filesProviderOption,
 			filesProviderStatus,
@@ -55,7 +57,7 @@ let Files = () => {
 					index
 					element={<RouteManagerList />} />
 				<Route
-					path={files.pageUrl}
+					path={filesManager.pageUrl}
 					element={<RouteManagerList />} />
 				<Route
 					path={filesSystem.pageUrl}

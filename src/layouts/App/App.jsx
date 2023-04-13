@@ -25,7 +25,8 @@ let App = ({ children }) => {
 			<Grid
 				item
 				sm={12}
-				md={2}>
+				md={2}
+				sx={{ zIndex: 2, backgroundColor: '#FFF' }}>
 				<MenuAside />
 			</Grid>
 			<Grid
@@ -42,22 +43,22 @@ let App = ({ children }) => {
 						justifyContent="space-between">
 						<Grid
 							item
-							xs={false}>
+							xs={false}
+							sx={{ zIndex: 2, backgroundColor: '#FFF' }}>
 							<MenuBreadcrumbs 
 								name="breadcrumbs-header"
 								onClick={onBreadcrumbs} />
 						</Grid>
 						<Grid
 							item
-							xs={false}>
+							xs={false}
+							sx={{ zIndex: 2, backgroundColor: '#FFF' }}>
 							<FormHeader />
 						</Grid>
 					</Grid>
 				</Box>
-				<Box pr={2}>
-					<Outlet />
-					{children}
-				</Box>
+				<Outlet />
+				{children}
 			</Grid>
 		</SsoLayoutAuthed>
 	</StyledWrapper>;

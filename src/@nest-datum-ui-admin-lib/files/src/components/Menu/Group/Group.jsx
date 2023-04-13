@@ -5,61 +5,82 @@ import StyledWrapper from './Styled/Wrapper.jsx';
 
 let Group = (props) => {
 	const { 
-		'data-type': { 
-			dataTypeAccess,
-			dataTypeSetting,
-			dataType,
+		files: { 
+			filesAccess,
+			filesSetting,
+			filesManager,
+			filesProvider,
+			filesSystem,
 		}, 
 	} = React.useContext(ContextProps);
 	const { pathname } = useLocation();
-	const isTypesGroup = pathname.indexOf(dataType.pageFullUrl) === 0;
-	const isTypesGroupOptions = pathname.indexOf(`${dataType.pageFullUrl}/options`) === 0;
-	const isTypesGroupStatuses = pathname.indexOf(`${dataType.pageFullUrl}/statuses`) === 0;
-	const isAccessesGroup = pathname.indexOf(dataTypeAccess.pageFullUrl) === 0;
-	const isAccessesGroupOptions = pathname.indexOf(`${dataTypeAccess.pageFullUrl}/options`) === 0;
-	const isAccessesGroupStatuses = pathname.indexOf(`${dataTypeAccess.pageFullUrl}/statuses`) === 0;
+	const isProviderGroup = pathname.indexOf(filesProvider.pageFullUrl) === 0;
+	const isProviderGroupOptions = pathname.indexOf(`${filesProvider.pageFullUrl}/options`) === 0;
+	const isProviderGroupStatuses = pathname.indexOf(`${filesProvider.pageFullUrl}/statuses`) === 0;
+	const isSystemGroup = pathname.indexOf(filesSystem.pageFullUrl) === 0;
+	const isSystemGroupOptions = pathname.indexOf(`${filesSystem.pageFullUrl}/options`) === 0;
+	const isSystemGroupStatuses = pathname.indexOf(`${filesSystem.pageFullUrl}/statuses`) === 0;
+	const isAccessesGroup = pathname.indexOf(filesAccess.pageFullUrl) === 0;
+	const isAccessesGroupOptions = pathname.indexOf(`${filesAccess.pageFullUrl}/options`) === 0;
+	const isAccessesGroupStatuses = pathname.indexOf(`${filesAccess.pageFullUrl}/statuses`) === 0;
 
-	return (pathname.indexOf(dataTypeSetting.pageFullUrl) === -1)
+	return ((pathname.indexOf(filesSetting.pageFullUrl) === -1)
+		&& (pathname.indexOf(filesManager.pageFullUrl) === -1))
 		&& <StyledWrapper { ...props }>
 			{([{
 				text: 'Data',
-				check: isTypesGroup
+				check: isProviderGroup
 					? [{
-						flag: (pathname.length > dataType.pageFullUrl.length && (isTypesGroupOptions || isTypesGroupStatuses)),
-						to: dataType.pageFullUrl,
+						flag: (pathname.length > filesProvider.pageFullUrl.length && (isProviderGroupOptions || isProviderGroupStatuses)),
+						to: filesProvider.pageFullUrl,
 					}]
-					: (isAccessesGroup
+					: (isSystemGroup
 						? [{
-							flag: (pathname.length > dataTypeAccess.pageFullUrl.length && (isAccessesGroupOptions || isAccessesGroupStatuses)),
-							to: dataTypeAccess.pageFullUrl,
+							flag: (pathname.length > filesSystem.pageFullUrl.length && (isSystemGroupOptions || isSystemGroupStatuses)),
+							to: filesSystem.pageFullUrl,
 						}]
-						: []),
+						: (isAccessesGroup
+							? [{
+								flag: (pathname.length > filesAccess.pageFullUrl.length && (isAccessesGroupOptions || isAccessesGroupStatuses)),
+								to: filesAccess.pageFullUrl,
+							}]
+							: [])),
 			}, {
 				text: 'Options',
-				check: isTypesGroup
+				check: isProviderGroup
 					? [{
-						flag: !isTypesGroupOptions,
-						to: `${dataType.pageFullUrl}/options`,
+						flag: !isProviderGroupOptions,
+						to: `${filesProvider.pageFullUrl}/options`,
 					}]
-					: (isAccessesGroup
+					: (isSystemGroup
 						? [{
-							flag: !isAccessesGroupOptions,
-							to: `${dataTypeAccess.pageFullUrl}/options`,
+							flag: !isSystemGroupOptions,
+							to: `${filesSystem.pageFullUrl}/options`,
 						}]
-						: []),
+						: (isAccessesGroup
+							? [{
+								flag: !isAccessesGroupOptions,
+								to: `${filesAccess.pageFullUrl}/options`,
+							}]
+							: [])),
 			}, {
 				text: 'Statuses',
-				check: isTypesGroup
+				check: isProviderGroup
 					? [{
-						flag: !isTypesGroupStatuses,
-						to: `${dataType.pageFullUrl}/statuses`,
+						flag: !isProviderGroupStatuses,
+						to: `${filesProvider.pageFullUrl}/statuses`,
 					}]
-					: (isAccessesGroup
+					: (isSystemGroup
 						? [{
-							flag: !isAccessesGroupStatuses,
-							to: `${dataTypeAccess.pageFullUrl}/statuses`,
+							flag: !isSystemGroupStatuses,
+							to: `${filesSystem.pageFullUrl}/statuses`,
 						}]
-						: []),
+						: (isAccessesGroup
+							? [{
+								flag: !isAccessesGroupStatuses,
+								to: `${filesAccess.pageFullUrl}/statuses`,
+							}]
+							: [])),
 			}])}
 		</StyledWrapper>;
 };

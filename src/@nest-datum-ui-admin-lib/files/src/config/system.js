@@ -1,14 +1,14 @@
 
 const config = {
 	displayInBreadcrumbsMenu: true,
-	breadcrumbsMenuTitle: 'Providers',
+	breadcrumbsMenuTitle: 'Systems',
 
 	displayInHeaderTabMenu: true,
 	orderInHeaderTabMenu: 1,
-	headerTabMenuTitle: 'Providers',
+	headerTabMenuTitle: 'Systems',
 
-	pageUrl: 'providers',
-	pageTitle: 'Providers',
+	pageUrl: 'systems',
+	pageTitle: 'Systems',
 };
 
 export default config;

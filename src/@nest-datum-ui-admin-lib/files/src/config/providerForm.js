@@ -1,6 +1,6 @@
 
 const providerForm = {
-	parentName: 'files',
+	parentName: 'filesProvider',
 	optionName: 'filesProviderOption',
 	optionListName: 'filesProviderOptionList',
 	optionFormName: 'filesProviderOptionForm',

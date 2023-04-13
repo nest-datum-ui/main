@@ -6,7 +6,7 @@ import {
 const providerOptionRelationList = {
 	title: 'Providers',
 	subtitle: 'List of providers that own the current setting.',
-	formName: 'filesOptionRelationForm',
+	formName: 'filesProviderOptionRelationForm',
 
 	id: 'files-option-relations-list',
 	storeName: 'files-option-relations-list',

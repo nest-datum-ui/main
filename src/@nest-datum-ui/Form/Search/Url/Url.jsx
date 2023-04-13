@@ -13,7 +13,7 @@ let Url = ({ onSearch, ...props }) => {
 	const routeName = React.useContext(ContextRoute);
 	const { [serviceName]: { [routeName]: { storeName } } } = React.useContext(ContextProps);
 	const onSearchWrapper = React.useCallback((value) => {
-		actionUrlQuery(storeName, value);
+		actionUrlQuery(`${storeName}_query`, value);
 		onSearch(value);
 	}, [
 		onSearch,

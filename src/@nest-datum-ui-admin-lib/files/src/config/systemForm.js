@@ -1,6 +1,6 @@
 
 const systemForm = {
-	parentName: 'files',
+	parentName: 'filesSystem',
 	optionName: 'filesSystemOption',
 	optionListName: 'filesSystemOptionList',
 	optionFormName: 'filesSystemOptionForm',

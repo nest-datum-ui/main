@@ -27,7 +27,7 @@ import FormIsDeleted from 'components/Form/IsDeleted';
 import FormIsNotDelete from 'components/Form/IsNotDelete';
 import StyledWrapper from './Styled/Wrapper.jsx';
 
-let Filter = (props) => {
+let Filter = ({ ManageComponent, ...props }) => {
 	const serviceName = React.useContext(ContextService);
 	const routeName = React.useContext(ContextRoute);
 	const { [serviceName]: { [routeName]: list } } = React.useContext(ContextProps);
@@ -69,27 +69,35 @@ let Filter = (props) => {
 		<Grid
 			item
 			xs={false}>
-			<Grid container spacing={1}>
-			{Object
-				.keys(manage)
-				.map((key, index) => ((utilsCheckFunc(manage[key].showStrategy) && manage[key].showStrategy(selected, selectedForDrop, selectedForDropPermanently)) || !utilsCheckObj(manage[key]) || !manage[key].showStrategy)
-					&& <Grid
-						key={index} 
-						item
-						xs={false}>
-						<Button 
-							to={manage[key].to} 
-							variant={manage[key].variant || 'contained'} 
-							color={manage[key].color || 'inherit'}
-							{ ...utilsCheckFunc(manage[key].onClick)
-								? { onClick: onManage(manage[key].onClick, index, selected, selectedForDrop, selectedForDropPermanently) }
-								: {} }>
-							{utilsCheckFunc(manage[key].text)
-								? manage[key].text(index, selected, selectedForDrop, selectedForDropPermanently)
-								: manage[key].text}
-						</Button>
-					</Grid>)}
-			</Grid>
+			{ManageComponent
+				? <ManageComponent
+					query={query}
+					filter={filterStr}
+					length={length}
+					selected={selected}
+					selectedForDrop={selectedForDrop}
+					selectedForDropPermanently={selectedForDropPermanently} />
+				: <Grid container spacing={1}>
+					{Object
+						.keys(manage)
+						.map((key, index) => ((utilsCheckFunc(manage[key].showStrategy) && manage[key].showStrategy(selected, selectedForDrop, selectedForDropPermanently)) || !utilsCheckObj(manage[key]) || !manage[key].showStrategy)
+							&& <Grid
+								key={index} 
+								item
+								xs={false}>
+								<Button 
+									to={manage[key].to} 
+									variant={manage[key].variant || 'contained'} 
+									color={manage[key].color || 'inherit'}
+									{ ...utilsCheckFunc(manage[key].onClick)
+										? { onClick: onManage(manage[key].onClick, index, selected, selectedForDrop, selectedForDropPermanently) }
+										: {} }>
+									{utilsCheckFunc(manage[key].text)
+										? manage[key].text(index, selected, selectedForDrop, selectedForDropPermanently)
+										: manage[key].text}
+								</Button>
+							</Grid>)}
+				</Grid>}
 		</Grid>
 		{search && <FormSearchUrl />}
 		{filters
@@ -125,8 +133,20 @@ let Filter = (props) => {
 								md={4}
 								lg={3}
 								xl={2}>
-								{(key === 'isDeleted' && filters[key]) && <FormIsDeleted />}
-								{(key === 'isNotDeleted' && filters[key]) && <FormIsNotDelete />}
+								{filters[key]
+									&& ((key === 'isNotDeleted') 
+										? <FormIsNotDelete />
+										: (key === 'isDeleted')
+											? <FormIsDeleted />
+											: (() => {
+												const Component = filters[key];
+
+												return <Component
+													query={query}
+													filterStr={filterStr}
+													length={length}
+													storeName={storeName} />;
+											})())}
 							</Grid>)}
 				</Grid>
 			</React.Fragment>}

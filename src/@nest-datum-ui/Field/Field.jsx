@@ -118,7 +118,10 @@ Field.defaultProps = {
 	onChange: () => {},
 };
 Field.propTypes = {
-	Component: PropTypes.object.isRequired,
+	Component: PropTypes.oneOfType([
+		PropTypes.object,
+		PropTypes.func,
+	]).isRequired,
 	name: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	storeName: PropTypes.string,

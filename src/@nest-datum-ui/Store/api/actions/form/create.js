@@ -15,7 +15,6 @@ import {
 } from '../../../Store.js';
 import hookPrevPathItem from '../../../url/hooks/hookPrevPathItem.js';
 import { fireFormProp } from './prop.js';
-import { fireFormCreateFile } from './createFile.js';
 
 export const fireFormCreate = (storeName, options = {}) => async (callback = () => {}, prefix = 'api') => {
 	if (!utilsCheckStr(storeName)) {
@@ -35,40 +34,35 @@ export const fireFormCreate = (storeName, options = {}) => async (callback = () 
 			...mergeData,
 			callback,
 		},
-		payload,
 		newId;
 
 	delete data['fetched'];
 	delete data['loader'];
 	delete data['errors'];
+	delete data['userId'];
+	delete data['updatedAt'];
+	delete data['createdAt'];
+	delete data['callback'];
 
 	if (!utilsCheckStrUrl(options.apiUrl)) {
 		return await storeDispatch(prefix, prefix +'.formCreate', {
 			payload: data,
 		});
 	}
-	const { formData, filesResponses } = await fireFormCreateFile(data)();
-
-	if (storeName !== process.env.URL_API_FILES_FILE) {
-		const request = await axios.post(utilsFormatUrlApiStr(options.apiUrl), formData);
+	const request = await axios.post(utilsFormatUrlApiStr(options.apiUrl), data);
 			
-		newId = request.data.id;
+	newId = request.data.id;
 
-		return await storeDispatch(prefix, prefix +'.formCreate', {
-			payload: {
-				storeName,
-				newId,
-				url: options.apiUrl,
-				data: request.data,
-				redirect,
-				callback,
-			},
-		});
-	}
-	return {
-		payload,
-		filesResponses,
-	};
+	return await storeDispatch(prefix, prefix +'.formCreate', {
+		payload: {
+			storeName,
+			newId,
+			url: options.apiUrl,
+			data: request.data,
+			redirect,
+			callback,
+		},
+	});
 };
 
 export const reducerFormCreate = (state, action) => {

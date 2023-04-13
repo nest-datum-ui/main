@@ -11,7 +11,7 @@ import { getStore } from '../../../Store.js';
 import { hookSnackbar } from '../../../snackbar/hooks';
 import { fireFormProp } from './prop.js';
 
-export const fireFormUpdate = (storeName, options = {}) => async (prefix = 'api') => {
+export const fireFormUpdate = (storeName, options = {}) => async (callback = () => {}, prefix = 'api') => {
 	const processedUrl = `${options.apiUrl}${options.entityId ? ('/'+ options.entityId) : ''}`;
 
 	if (utilsCheckStrUrl(storeName)) {
@@ -19,9 +19,11 @@ export const fireFormUpdate = (storeName, options = {}) => async (prefix = 'api'
 	}
 	await fireFormProp(storeName, 'loader', true)();
 
-	let data = { ...(((getStore()
-		.getState()[prefix] || {})
-		.form || {})[storeName] || {}) };
+	let data = options.data ?? { 
+		...(((getStore()
+			.getState()[prefix] || {})
+			.form || {})[storeName] || {}), 
+		};
 
 	if (utilsCheckArr(options.excludeFromFetchPayload)) {
 		options.excludeFromFetchPayload.forEach((key) => {
@@ -29,8 +31,12 @@ export const fireFormUpdate = (storeName, options = {}) => async (prefix = 'api'
 		});
 	}
 	try {
+		delete data['fetched'];
 		delete data['loader'];
 		delete data['errors'];
+		delete data['userId'];
+		delete data['updatedAt'];
+		delete data['createdAt'];
 
 		if (!utilsCheckStrUrl(processedUrl)) {
 			throw new Error(`Can't update api store form. Property apiUrl "${processedUrl}" is not valid.`);
@@ -39,7 +45,7 @@ export const fireFormUpdate = (storeName, options = {}) => async (prefix = 'api'
 
 		hookSnackbar('Entity successfully updated.', { variant: 'success' });
 		
-		return setTimeout(() => fireFormProp(storeName, 'loader', false)(), 0);
+		return setTimeout(() => fireFormProp(storeName, 'loader', false)(callback), 0);
 	}
 	catch (err) {
 		fireFormProp(storeName, 'loader', false)();

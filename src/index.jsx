@@ -21,6 +21,17 @@ import SsoRouteReset from '@nest-datum-ui-admin-lib/sso/src/routes/Reset';
 import SsoRouteVerify from '@nest-datum-ui-admin-lib/sso/src/routes/Verify';
 import Sso from '@nest-datum-ui-admin-lib/sso/src';
 import DataType from '@nest-datum-ui-admin-lib/data-type/src';
+import Files from '@nest-datum-ui-admin-lib/files/src';
+import Http from '@nest-datum-ui-admin-lib/http/src';
+import WebSocket from '@nest-datum-ui-admin-lib/web-socket/src';
+import Mail from '@nest-datum-ui-admin-lib/mail/src';
+import Forms from '@nest-datum-ui-admin-lib/forms/src';
+import Cv from '@nest-datum-ui-admin-lib/cv/src';
+import Lensa from '@nest-datum-ui-admin-lib/lensa/src';
+import Dictionary from '@nest-datum-ui-admin-lib/dictionary/src';
+import Countries from '@nest-datum-ui-admin-lib/countries/src';
+import Jobs from '@nest-datum-ui-admin-lib/jobs/src';
+import JohnConnor from '@nest-datum-ui-admin-lib/john-connor/src';
 import GlobalStyles from './globalStyles.js';
 import importSchema from './importSchema.js';
 
@@ -60,6 +71,17 @@ root.render(<ContextProps.Provider value={importSchema}>
 									element={<LayoutApp>
 										<Sso />
 										<DataType />
+										<Files />
+										<Http />
+										<WebSocket />
+										<Mail />
+										<Forms />
+										<Cv />
+										<Lensa />
+										<Dictionary />
+										<Countries />
+										<Jobs />
+										<JohnConnor />
 									</LayoutApp>}>
 									<Route
 										index

@@ -64,7 +64,7 @@ const settingList = {
 		order: 1,
 	}, {
 		name: 'Data type',
-		id: 'files',
+		id: 'dataType',
 		order: 2,
 	}, {
 		name: 'Value',

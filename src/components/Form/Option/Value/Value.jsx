@@ -105,7 +105,7 @@ let Value = ({ storeName: propStoreName, title: propTtitle, loadOnFirstRender, p
 				actionApiListProp(storeName, 'data', [
 					...list
 						.data
-						.map((item, index) => {
+						.map(({ ...item }, index) => {
 							const itemProcessed = (item[relation][0][relationContent].length === 0)
 								? ({ 
 									...item, 
@@ -119,13 +119,6 @@ let Value = ({ storeName: propStoreName, title: propTtitle, loadOnFirstRender, p
 									}] 
 								}) 
 								: item;
-
-							itemProcessed[relation][0][relationContent] = (item[relation][0][relationContent].length >= 2)
-								? [{ 
-									...(item[relation][0][relationContent][1] || {}),
-									// typeId: item[relation][0][relationContent][0]['typeId'],
-								}]
-								: itemProcessed[relation][0][relationContent];
 
 							return itemProcessed;
 						}),

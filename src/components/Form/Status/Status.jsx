@@ -45,7 +45,7 @@ let Option = () => {
 		entityId,
 		isDeleted,
 	]);
-	const onRestore = React.useCallback(() => actionApiFormRestore(storeName, { apiUrl: apiFullUrl, entityId }), [
+	const onRestore = React.useCallback(() => actionApiFormRestore(storeName, { apiUrl: apiFullUrl, entityId })(), [
 		storeName,
 		apiFullUrl,
 		entityId,

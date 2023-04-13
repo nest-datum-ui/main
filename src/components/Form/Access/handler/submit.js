@@ -51,8 +51,6 @@ const submit = async (e, {
 		},
 	});
 
-	console.log('validatedData', validatedData, entityId);
-
 	if (validatedData) {
 		if (utilsCheckStrIdExists(entityId)) {
 			actionApiFormUpdate(storeName, { apiUrl, entityId })();

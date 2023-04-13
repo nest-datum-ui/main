@@ -41,27 +41,46 @@ let Row = ({
 	} = React.useContext(ContextProps);
 	const { [serviceName]: { [parentName]: { pageFullUrl } } } = React.useContext(ContextProps);
 
-	return <StyledWrapper id={id} isDeleted={isDeleted} isNotDelete={isNotDelete} createdAt={createdAt} updatedAt={updatedAt}>
+	return <StyledWrapper 
+		id={id} 
+		isDeleted={isDeleted} 
+		isNotDelete={isNotDelete} 
+		createdAt={createdAt} 
+		updatedAt={updatedAt}>
 		{([{ 
-			children: <TypographyTable key={0} to={`${pageFullUrl}/${id}`} isDeleted={isDeleted}>
+			children: <TypographyTable 
+				key={0} 
+				to={`${pageFullUrl}/${id}`} 
+				isDeleted={isDeleted}>
 				{id}
 			</TypographyTable>, 
 		}, { 
 			children: <React.Fragment key={1}>
-				<TypographyTable to={`${pageFullUrl}/${id}`} isDeleted={isDeleted} variant="h6">
+				<TypographyTable 
+					to={`${pageFullUrl}/${id}`} 
+					isDeleted={isDeleted} 
+					variant="h6">
 					{name}
 				</TypographyTable>
 				<div />
-				<TypographyTable to={`${pageFullUrl}/${id}`} isDeleted={isDeleted} variant="subtitle1">
+				<TypographyTable 
+					to={`${pageFullUrl}/${id}`} 
+					isDeleted={isDeleted} 
+					variant="subtitle1">
 					{description}
 				</TypographyTable>
 			</React.Fragment>, 
 		}, { 
-			children: <TypographyFetch key={2} apiUrl={dataTypeStatusListApiUrl}>
+			children: <TypographyFetch 
+				key={2} 
+				apiUrl={dataTypeStatusListApiUrl}>
 				{typeStatusId}
 			</TypographyFetch>, 
 		}, { 
-			children: <TypographyFetch key={3} abel="login" apiUrl={ssoUserListApiUrl} label="login">
+			children: <TypographyFetch 
+				key={3} 
+				apiUrl={ssoUserListApiUrl} 
+				label="login">
 				{userId}
 			</TypographyFetch>, 
 		}])}

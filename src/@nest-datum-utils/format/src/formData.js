@@ -18,6 +18,9 @@ const formData = (data = {}) => {
 		if (data['path']) {
 			formData.append('path', data['path']);
 		}
+		if (data['parentId']) {
+			formData.append('parentId', data['parentId']);
+		}
 		return formData;
 	}
 	return null;
